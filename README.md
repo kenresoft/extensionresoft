@@ -11,8 +11,9 @@ and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+A collection of Dart/Flutter Extension functions and Helper functions for faster development.
+This was developed to aide developers write minimized but powerful codes.
+This makes for codes re-usability and easy coding reading.
 
 ## Features
 
