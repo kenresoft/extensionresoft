@@ -1,8 +1,8 @@
 library extensionresoft;
 
-export 'context.dart';
-export 'helper.dart';
-export 'icon.dart';
-export 'list.dart';
-export 'num.dart';
-export 'string.dart';
+export 'src/context.dart';
+export 'src/helper.dart';
+export 'src/icon.dart';
+export 'src/list.dart';
+export 'src/num.dart';
+export 'src/string.dart';

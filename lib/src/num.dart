@@ -6,19 +6,25 @@ extension SpaceExtention on num {
   SizedBox spaceY([Widget? child]) => SizedBox(height: toDouble(), child: child);
 
   SizedBox spaceXY([Widget? child]) => SizedBox(height: toDouble(), width: toDouble(), child: child);
+
+  SizedBox get spX => SizedBox(width: toDouble());
+
+  SizedBox get spY => SizedBox(height: toDouble());
+
+  SizedBox get spXY => SizedBox(height: toDouble(), width: toDouble());
 }
 
 extension CustomCard on num {
   Widget radius(
       {required Widget child,
-        double elevation = 1,
-        double? height,
-        double? width,
-        Color? color,
-        Color? strokeColor = Colors.transparent,
-        Color? shadowColor,
-        EdgeInsets? margin,
-        bool applyElevationTint = false}) {
+      double elevation = 1,
+      double? height,
+      double? width,
+      Color? color,
+      Color? strokeColor = Colors.transparent,
+      Color? shadowColor,
+      EdgeInsets? margin,
+      bool applyElevationTint = false}) {
     return SizedBox(
       height: height,
       width: width,
