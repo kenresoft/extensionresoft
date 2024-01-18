@@ -1,7 +1,7 @@
 #!/bin/sh
 # This is a generated file; do not edit or check into version control.
-export "FLUTTER_ROOT=C:\Users\user\AndroidStudioPlugins\flutter"
-export "FLUTTER_APPLICATION_PATH=C:\Users\user\AndroidStudioProjects\PROJECTS\extensionresoft"
+export "FLUTTER_ROOT=C:\Users\kenre\AndroidStudioPlugins\flutter"
+export "FLUTTER_APPLICATION_PATH=C:\Users\kenre\AndroidStudioProjects\Flutter\packages\extensionresoft"
 export "COCOAPODS_PARALLEL_CODE_SIGN=true"
 export "FLUTTER_TARGET=lib\main.dart"
 export "FLUTTER_BUILD_DIR=build"
