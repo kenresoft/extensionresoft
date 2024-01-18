@@ -15,6 +15,12 @@ T condition<T>(bool condition, T trueCase, T falseCase) {
   return condition ? trueCase : falseCase;
 }
 
+T conditionFunction<T>(bool condition, T Function() trueCase, T Function() falseCase) {
+  // If the condition is true, invoke the trueCase function.
+  // Otherwise, invoke the falseCase function.
+  return condition ? trueCase() : falseCase();
+}
+
 /// This function gets the value associated with the key.
 /// If the key does not exist, the value is set to the default value. <br /><br />
 ///
