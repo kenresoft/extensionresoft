@@ -8,6 +8,7 @@
 /// @param falseCase The value to return if the condition is false. <br /><br />
 ///
 /// @return The T value that corresponds to the condition. ///
+library;
 
 T condition<T>(bool condition, T trueCase, T falseCase) {
   // If the condition is true, return the trueCase value.
