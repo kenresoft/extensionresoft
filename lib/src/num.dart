@@ -18,10 +18,10 @@ extension SpaceExtension on num {
 
   /// Creates a SizedBox with a height equal to the value of the number.
   ///
-  /// The `spaceY()` function takes an optional `Widget` child.
+  /// The `spaceY()` function takes an optional `Widget` child. <br /><br />
   ///
-  /// @param child The optional `Widget` child.
-  /// @return A SizedBox with a height equal to the value of the number.
+  /// @param child The optional `Widget` child. <br /><br />
+  /// @return A SizedBox with a height equal to the value of the number. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -31,10 +31,10 @@ extension SpaceExtension on num {
 
   /// Creates a SizedBox with both width and height equal to the value of the number.
   ///
-  /// The `spaceXY()` function takes an optional `Widget` child.
+  /// The `spaceXY()` function takes an optional `Widget` child. <br /><br />
   ///
-  /// @param child The optional `Widget` child.
-  /// @return A SizedBox with both width and height equal to the value of the number.
+  /// @param child The optional `Widget` child. <br /><br />
+  /// @return A SizedBox with both width and height equal to the value of the number. <br /><br />
   ///
   /// Example:
   /// ```dart
