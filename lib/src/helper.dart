@@ -1,5 +1,7 @@
+/// This function returns a value based on a boolean condition.
 ///
-/// This function takes a boolean condition, a T value for the true case, and a T value for the false case.
+/// The function takes a boolean condition, a value for the true case, and a value for the false case.
+/// It returns the value that corresponds to the condition.
 ///
 /// The function returns the T value that corresponds to the condition. <br /><br />
 ///
@@ -16,6 +18,17 @@ T condition<T>(bool condition, T trueCase, T falseCase) {
   return condition ? trueCase : falseCase;
 }
 
+/// This function returns a value based on a boolean condition using functions.
+///
+/// The function takes a boolean condition, a function to be executed if the condition is true,
+/// and a function to be executed if the condition is false.
+/// It returns the result of the executed function.
+///
+/// @param condition The boolean condition.
+/// @param trueCase The function to be executed if the condition is true.
+/// @param falseCase The function to be executed if the condition is false.
+///
+/// @return The result of the executed function.
 T conditionFunction<T>(bool condition, T Function() trueCase, T Function() falseCase) {
   // If the condition is true, invoke the trueCase function.
   // Otherwise, invoke the falseCase function.
