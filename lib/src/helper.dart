@@ -22,11 +22,11 @@ T condition<T>(bool condition, T trueCase, T falseCase) {
 ///
 /// The function takes a boolean condition, a function to be executed if the condition is true,
 /// and a function to be executed if the condition is false.
-/// It returns the result of the executed function.
+/// It returns the result of the executed function. <br /><br />
 ///
-/// @param condition The boolean condition.
-/// @param trueCase The function to be executed if the condition is true.
-/// @param falseCase The function to be executed if the condition is false.
+/// @param condition The boolean condition. <br /><br />
+/// @param trueCase The function to be executed if the condition is true. <br /><br />
+/// @param falseCase The function to be executed if the condition is false. <br /><br />
 ///
 /// @return The result of the executed function.
 T conditionFunction<T>(bool condition, T Function() trueCase, T Function() falseCase) {

@@ -5,12 +5,12 @@ extension TextExtension on String {
 
   /// Creates a Text widget with customizable properties.
   ///
-  /// The `edit()` function creates a Text widget with the specified textStyle, textAlign, and selectionColor.
+  /// The `edit()` function creates a Text widget with the specified textStyle, textAlign, and selectionColor. <br /><br />
   ///
-  /// @param textStyle The TextStyle to apply to the text.
-  /// @param textAlign The alignment of the text within its container.
-  /// @param selectionColor The color to use for the text selection highlight.
-  /// @return A Text widget with the specified properties.
+  /// @param textStyle The TextStyle to apply to the text. <br /><br />
+  /// @param textAlign The alignment of the text within its container. <br /><br />
+  /// @param selectionColor The color to use for the text selection highlight. <br /><br />
+  /// @return A Text widget with the specified properties. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -29,16 +29,16 @@ extension CustomImageExtension on String {
 
   /// Creates an Image widget from an asset with customizable properties.
   ///
-  /// The `img()` function creates an Image widget from the asset path with customizable scale, width, height, color, fit, alignment, and repeat properties.
+  /// The `img()` function creates an Image widget from the asset path with customizable scale, width, height, color, fit, alignment, and repeat properties. <br /><br />
   ///
-  /// @param scale The scale factor for the image.
-  /// @param width The width of the image.
-  /// @param height The height of the image.
-  /// @param color The color to blend with the image.
-  /// @param fit How the image should be inscribed into the space.
-  /// @param alignment How the image should be aligned within its container.
-  /// @param repeat How the image should be repeated.
-  /// @return An Image widget with the specified properties.
+  /// @param scale The scale factor for the image. <br /><br />
+  /// @param width The width of the image. <br /><br />
+  /// @param height The height of the image. <br /><br />
+  /// @param color The color to blend with the image. <br /><br />
+  /// @param fit How the image should be inscribed into the space. <br /><br />
+  /// @param alignment How the image should be aligned within its container. <br /><br />
+  /// @param repeat How the image should be repeated. <br /><br />
+  /// @return An Image widget with the specified properties. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -66,14 +66,14 @@ extension CustomImageExtension on String {
 
   /// Creates a circular image container with customizable properties.
   ///
-  /// The `circleImage()` function creates a circular image container with customizable fit, alignment, repeat, scale, and opacity properties.
+  /// The `circleImage()` function creates a circular image container with customizable fit, alignment, repeat, scale, and opacity properties. <br /><br />
   ///
-  /// @param fit How the image should be inscribed into the space.
-  /// @param alignment How the image should be aligned within its container.
-  /// @param repeat How the image should be repeated.
-  /// @param scale The scale factor for the image.
-  /// @param opacity The opacity of the image.
-  /// @return A circular image container with the specified properties.
+  /// @param fit How the image should be inscribed into the space. <br /><br />
+  /// @param alignment How the image should be aligned within its container. <br /><br />
+  /// @param repeat How the image should be repeated. <br /><br />
+  /// @param scale The scale factor for the image. <br /><br />
+  /// @param opacity The opacity of the image. <br /><br />
+  /// @return A circular image container with the specified properties. <br /><br />
   ///
   /// Example:
   /// ```dart
