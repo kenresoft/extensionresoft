@@ -1,3 +1,5 @@
+library;
+
 /// This function returns a value based on a boolean condition.
 ///
 /// The function takes a boolean condition, a value for the true case, and a value for the false case.
@@ -10,7 +12,6 @@
 /// @param falseCase The value to return if the condition is false. <br /><br />
 ///
 /// @return The T value that corresponds to the condition. ///
-library;
 
 T condition<T>(bool condition, T trueCase, T falseCase) {
   // If the condition is true, return the trueCase value.
@@ -29,7 +30,8 @@ T condition<T>(bool condition, T trueCase, T falseCase) {
 /// @param falseCase The function to be executed if the condition is false. <br /><br />
 ///
 /// @return The result of the executed function.
-T conditionFunction<T>(bool condition, T Function() trueCase, T Function() falseCase) {
+T conditionFunction<T>(
+    bool condition, T Function() trueCase, T Function() falseCase) {
   // If the condition is true, invoke the trueCase function.
   // Otherwise, invoke the falseCase function.
   return condition ? trueCase() : falseCase();

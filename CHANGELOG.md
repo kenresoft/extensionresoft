@@ -13,3 +13,10 @@
 **Changes:**
 
 * Updated documentation
+
+## [0.0.3] - 2024-02-09
+
+**Changes:**
+
+* Formatted dart codes
+* Further updated documentation

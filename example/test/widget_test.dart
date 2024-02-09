@@ -14,7 +14,8 @@ void main() {
       expect(spacerY.height, equals(24.0));
     });
 
-    test('spaceXY should return a SizedBox with specified width and height', () {
+    test('spaceXY should return a SizedBox with specified width and height',
+        () {
       final spacerXY = 32.spaceXY();
       expect(spacerXY.width, equals(32.0));
       expect(spacerXY.height, equals(32.0));
@@ -30,7 +31,8 @@ void main() {
       expect(spacerYGetter.height, equals(30.0));
     });
 
-    test('spXY getter should return a SizedBox with specified width and height', () {
+    test('spXY getter should return a SizedBox with specified width and height',
+        () {
       final spacerXYGetter = 40.spXY;
       expect(spacerXYGetter.width, equals(40.0));
       expect(spacerXYGetter.height, equals(40.0));
@@ -61,8 +63,11 @@ void main() {
   });
 
   group('TextExtension', () {
-    test('edit function should return a Text widget with specified properties', () {
-      final textWidget = 'Hello'.edit(textStyle: const TextStyle(fontSize: 20), textAlign: TextAlign.center);
+    test('edit function should return a Text widget with specified properties',
+        () {
+      final textWidget = 'Hello'.edit(
+          textStyle: const TextStyle(fontSize: 20),
+          textAlign: TextAlign.center);
       expect(textWidget.data, equals('Hello'));
       expect(textWidget.style!.fontSize, equals(20));
       expect(textWidget.textAlign, equals(TextAlign.center));
@@ -70,32 +75,42 @@ void main() {
   });
 
   group('CustomImageExtension', () {
-    test('img function should return an Image widget with specified properties', () {
-      final imageWidget = 'assets/image.png'.img(width: 100, height: 100, fit: BoxFit.cover);
+    test('img function should return an Image widget with specified properties',
+        () {
+      final imageWidget =
+          'assets/image.png'.img(width: 100, height: 100, fit: BoxFit.cover);
       expect(imageWidget.width, equals(100.0));
       expect(imageWidget.height, equals(100.0));
     });
 
-    test('circleImage function should return a Container widget with circular image decoration', () {
-      final circleImageContainer = 'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8);
+    test(
+        'circleImage function should return a Container widget with circular image decoration',
+        () {
+      final circleImageContainer =
+          'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8);
       //expect(circleImageContainer.decoration!.shape, equals(BoxShape.circle));
     });
   });
 
   group('Conditional Function', () {
-    test('condition function should return correct value based on condition', () {
+    test('condition function should return correct value based on condition',
+        () {
       final result = condition(true, 'True Value', 'False Value');
       expect(result, equals('True Value'));
     });
 
-    test('conditionFunction should invoke correct function based on condition', () {
-      final result = conditionFunction(true, () => 'True Value', () => 'False Value');
+    test('conditionFunction should invoke correct function based on condition',
+        () {
+      final result =
+          conditionFunction(true, () => 'True Value', () => 'False Value');
       expect(result, equals('True Value'));
     });
   });
 
   group('Get Function', () {
-    test('get function should return correct value based on key and default value', () {
+    test(
+        'get function should return correct value based on key and default value',
+        () {
       final result = get('Existing Value', 'Default Value');
       expect(result, equals('Existing Value'));
     });
