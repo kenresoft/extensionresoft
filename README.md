@@ -40,7 +40,7 @@ To use the extensionresoft library in your Flutter project, add it to your `pubs
 
 ```yaml
 dependencies:
-  extensionresoft: ^0.0.2
+  extensionresoft: ^0.0.3
 ```
 
 Then, run:
@@ -60,15 +60,15 @@ import 'package:extensionresoft/extensionresoft.dart';
 You can now use any of the extensions provided by the library in your Flutter project.
 
 ## Features
-The extensionresoft library includes the following extensions:
+The extensionresoft library includes the following major extensions among others:
 
-- **SpaceExtension**: Provides methods for creating SizedBox widgets with customizable dimensions.
-- **CustomCardExtension**: Offers methods for creating custom Card widgets with rounded corners and other properties.
-- **PathExtension**: Provides a method for applying functions to numbers.
-- **TextExtension**: Offers a method for creating Text widgets with customizable properties from strings.
-- **CustomImageExtension**: Provides methods for creating Image widgets and circular image containers with customizable properties.
-- **Conditional Function**: Provides functions for conditionally returning values.
-- **Get Function**: Provides a function for getting values with optional default values.
+- **_SpaceExtension_**: Provides methods for creating SizedBox widgets with customizable dimensions.
+- **_CustomCardExtension_**: Offers methods for creating custom Card widgets with rounded corners and other properties.
+- **_PathExtension_**: Provides a method for applying functions to numbers.
+- **_TextExtension_**: Offers a method for creating Text widgets with customizable properties from strings.
+- **_CustomImageExtension_**: Provides methods for creating Image widgets and circular image containers with customizable properties.
+- **_Conditional Function_**: Provides functions for conditionally returning values.
+- **_Get Function_**: Provides a function for getting values with optional default values.
 
 ## Examples
 
@@ -117,6 +117,8 @@ void main() {
 ```
 
 ## Tests
+
+Check out unit tests for the extensionresoft library to ensure the functionality of each extension.
 
 ```dart
 import 'package:flutter/material.dart';

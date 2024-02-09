@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 
 /// Extension on num to create SizedBox widgets for spacing.
 extension SpaceExtension on num {
-
   /// Creates a SizedBox with a width equal to the value of the number.
   ///
-  /// The `spaceX()` function takes an optional `Widget` child.
+  /// The `spaceX()` function takes an optional `Widget` child. <br /><br />
   ///
-  /// @param child The optional `Widget` child.
-  /// @return A SizedBox with a width equal to the value of the number.
+  /// @param child The optional `Widget` child. <br /><br />
+  /// @return A SizedBox with a width equal to the value of the number. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -27,7 +26,8 @@ extension SpaceExtension on num {
   /// ```dart
   /// final spacer = 16.spaceY();
   /// ```
-  SizedBox spaceY([Widget? child]) => SizedBox(height: toDouble(), child: child);
+  SizedBox spaceY([Widget? child]) =>
+      SizedBox(height: toDouble(), child: child);
 
   /// Creates a SizedBox with both width and height equal to the value of the number.
   ///
@@ -40,11 +40,12 @@ extension SpaceExtension on num {
   /// ```dart
   /// final spacer = 16.spaceXY();
   /// ```
-  SizedBox spaceXY([Widget? child]) => SizedBox(height: toDouble(), width: toDouble(), child: child);
+  SizedBox spaceXY([Widget? child]) =>
+      SizedBox(height: toDouble(), width: toDouble(), child: child);
 
   /// A Getter function that returns a SizedBox with a width equal to the value of the number.
   ///
-  /// @return A SizedBox with a width equal to the value of the number.
+  /// @return A SizedBox with a width equal to the value of the number. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -54,8 +55,8 @@ extension SpaceExtension on num {
 
   /// A Getter function that returns a SizedBox with a height equal to the value of the number.
   ///
-  /// The `spY` getter function takes no parameters.
-  /// @return A SizedBox with a height equal to the value of the number.
+  /// The `spY` getter function takes no parameters. <br /><br />
+  /// @return A SizedBox with a height equal to the value of the number. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -65,8 +66,8 @@ extension SpaceExtension on num {
 
   /// A Getter function that returns a SizedBox with both width and height equal to the value of the number.
   ///
-  /// The spXY getter function takes no parameters.
-  /// @return A SizedBox with both width and height equal to the value of the number.
+  /// The spXY getter function takes no parameters. <br /><br />
+  /// @return A SizedBox with both width and height equal to the value of the number. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -77,21 +78,21 @@ extension SpaceExtension on num {
 
 /// Extension on num to create a rounded card with a border.
 extension CustomCardExtension on num {
-
   /// Creates a rounded card with a border.
   ///
-  /// The `radius()` function creates a rounded card with a border. It takes a number as input and returns a `Widget`.
+  /// The `radius()` function creates a rounded card with a border. It takes a number as input and returns a `Widget`. <br /><br />
   ///
-  /// @param child The required `Widget` child.
-  /// @param elevation The elevation of the card.
-  /// @param height The height of the card.
-  /// @param width The width of the card.
-  /// @param color The color of the card.
-  /// @param strokeColor The color of the border.
-  /// @param shadowColor The color of the shadow.
-  /// @param margin The margin of the card.
-  /// @param applyElevationTint Whether to apply the elevation tint to the card.
-  /// @return A `Widget` that creates a rounded card with a border.
+  /// @param `child` The required `Widget` child. <br /><br />
+  /// @param `elevation` The elevation of the card. <br /><br />
+  /// @param `height` The height of the card. <br /><br />
+  /// @param `width` The width of the card. <br /><br />
+  /// @param `color` The color of the card. <br /><br />
+  /// @param `strokeColor` The color of the border. <br /><br />
+  /// @param `shadowColor` The color of the shadow. <br /><br />
+  /// @param `margin` The margin of the card. <br /><br />
+  /// @param `applyElevationTint` Whether to apply the elevation tint to the card. <br /><br />
+  ///
+  /// @return A `Widget` that creates a rounded card with a border. <br /><br />
   ///
   /// Example:
   /// ```dart
@@ -118,7 +119,9 @@ extension CustomCardExtension on num {
       width: width,
       child: Card(
         surfaceTintColor: !applyElevationTint ? Colors.white : null,
-        shape: RoundedRectangleBorder(side: BorderSide(color: strokeColor!), borderRadius: BorderRadius.all(Radius.circular(toDouble()))),
+        shape: RoundedRectangleBorder(
+            side: BorderSide(color: strokeColor!),
+            borderRadius: BorderRadius.all(Radius.circular(toDouble()))),
         elevation: elevation,
         color: color,
         shadowColor: shadowColor ?? color,
@@ -131,7 +134,6 @@ extension CustomCardExtension on num {
 
 /// Extension on num to apply a function to the number.
 extension PathExtension on num {
-
   /// Applies a function to the number.
   ///
   /// The `p()` function takes a function as input and applies it to the number.
@@ -149,4 +151,3 @@ extension PathExtension on num {
     return toDouble();
   }
 }
-

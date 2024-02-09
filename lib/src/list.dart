@@ -1,5 +1,4 @@
 extension ListExtension<T> on List<T> {
-
   /// Combines the current list with another list and optionally sorts the result.
   ///
   /// This extension concatenates the current list with another list and optionally sorts the result.
@@ -54,7 +53,8 @@ extension ListExtension<T> on List<T> {
       }
       return newList;
     } else {
-      throw ArgumentError.value(times, "times", "Unable to perform List operation: argument must be greater than 0");
+      throw ArgumentError.value(times, "times",
+          "Unable to perform List operation: argument must be greater than 0");
     }
   }
 
@@ -102,7 +102,6 @@ extension ListExtension<T> on List<T> {
 }
 
 extension ListExtension2 on List<int> {
-
   /// Converts a list of integers into a map where the keys are the indices of the list elements.
   ///
   /// This extension converts a list of integers into a map where the keys are the indices of the list elements.

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Extension on String to create Text widgets with customizable properties.
 extension TextExtension on String {
-
   /// Creates a Text widget with customizable properties.
   ///
   /// The `edit()` function creates a Text widget with the specified textStyle, textAlign, and selectionColor. <br /><br />
@@ -16,7 +15,11 @@ extension TextExtension on String {
   /// ```dart
   /// final textWidget = 'Hello'.edit(textStyle: TextStyle(fontSize: 20), textAlign: TextAlign.center);
   /// ```
-  Text edit({TextStyle? textStyle, TextAlign? textAlign, Color? selectionColor}) => Text(
+  Text edit(
+          {TextStyle? textStyle,
+          TextAlign? textAlign,
+          Color? selectionColor}) =>
+      Text(
         this,
         style: textStyle,
         textAlign: textAlign,
@@ -26,7 +29,6 @@ extension TextExtension on String {
 
 /// Extension on String to create Image widgets with customizable properties.
 extension CustomImageExtension on String {
-
   /// Creates an Image widget from an asset with customizable properties.
   ///
   /// The `img()` function creates an Image widget from the asset path with customizable scale, width, height, color, fit, alignment, and repeat properties. <br /><br />

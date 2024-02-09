@@ -1,7 +1,7 @@
 name: extensionresoft
 description: A collection of Dart/Flutter Extension functions and Helper functions for faster development. 
   It absolutely makes for codes re-usability and easy coding reading.
-version: 0.0.2
+version: 0.0.3
 homepage: https://github.com/kenresoft/extensionresoft
 
 environment:
