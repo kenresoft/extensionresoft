@@ -40,7 +40,7 @@ To use the extensionresoft library in your Flutter project, add it to your `pubs
 
 ```yaml
 dependencies:
-  extensionresoft: ^0.0.3
+  extensionresoft: ^0.0.6
 ```
 
 Then, run:
@@ -69,6 +69,7 @@ The extensionresoft library includes the following major extensions among others
 - **_CustomImageExtension_**: Provides methods for creating Image widgets and circular image containers with customizable properties.
 - **_Conditional Function_**: Provides functions for conditionally returning values.
 - **_Get Function_**: Provides a function for getting values with optional default values.
+- **_SharedPreferencesService_**: Manages SharedPreferences for storing and retrieving various data types.
 
 ## Examples
 
@@ -112,6 +113,11 @@ void main() {
 
   // Get Function Example
   final value = get('Existing Value', 'Default Value'); // Returns 'Existing Value' if not null, otherwise returns 'Default Value'.
+
+  // SharedPreferencesService Example
+  await SharedPreferencesService.init(); // Initializes SharedPreferencesService.
+  await SharedPreferencesService.setBool('isDarkMode', true); // Sets a boolean value in SharedPreferences.
+  final isDarkMode = SharedPreferencesService.getBool('isDarkMode'); // Retrieves the boolean value from SharedPreferences.
 }
 
 ```
