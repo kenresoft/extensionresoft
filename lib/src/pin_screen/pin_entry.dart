@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'pin_code_input_field.dart';
-import 'pin_code_keyboard.dart';
+import 'pin_configurations.dart';
+import 'pin_input_field.dart';
+import 'pin_keyboard.dart';
 
-class PinCodeEntry extends StatefulWidget {
+class PinEntry extends StatefulWidget {
   final int pinLength;
   final Function(String pin)? onInputComplete;
 
@@ -15,7 +16,7 @@ class PinCodeEntry extends StatefulWidget {
   final KeyboardConfiguration keyboardConfiguration;
   final InputFieldConfiguration inputFieldConfiguration; // Added input field configuration
 
-  const PinCodeEntry({
+  const PinEntry({
     super.key,
     this.pinLength = 4,
     this.onInputComplete,
@@ -28,10 +29,10 @@ class PinCodeEntry extends StatefulWidget {
   });
 
   @override
-  State<PinCodeEntry> createState() => _PinCodeEntryState();
+  State<PinEntry> createState() => _PinEntryState();
 }
 
-class _PinCodeEntryState extends State<PinCodeEntry> {
+class _PinEntryState extends State<PinEntry> {
   late List<String> _pin;
   late List<TextEditingController> _controllers;
   late List<FocusNode> _focusNodes;
@@ -57,7 +58,7 @@ class _PinCodeEntryState extends State<PinCodeEntry> {
   }
 
   @override
-  void didUpdateWidget(covariant PinCodeEntry oldWidget) {
+  void didUpdateWidget(covariant PinEntry oldWidget) {
     super.didUpdateWidget(oldWidget);
 
     // Handle obscure text changes
@@ -134,7 +135,7 @@ class _PinCodeEntryState extends State<PinCodeEntry> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          PinCodeInputField(
+          PinInputField(
             controllers: _controllers,
             focusNodes: _focusNodes,
             fieldCount: widget.pinLength,
@@ -155,7 +156,7 @@ class _PinCodeEntryState extends State<PinCodeEntry> {
                   )
                 : widget.middleWidget!,
           SizedBox(height: verticalPadding),
-          PinCodeKeyboard(
+          PinKeyboard(
             onKeyPressed: (key) {
               _handleKeyInput(key);
               widget.keyboardConfiguration.onKeyPressed?.call(key);
@@ -172,4 +173,3 @@ class _PinCodeEntryState extends State<PinCodeEntry> {
     );
   }
 }
-

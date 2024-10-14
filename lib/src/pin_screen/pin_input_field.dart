@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PinCodeInputField extends StatelessWidget {
+class PinInputField extends StatelessWidget {
   final List<TextEditingController> controllers;
   final List<FocusNode> focusNodes;
   final int fieldCount;
@@ -12,7 +12,7 @@ class PinCodeInputField extends StatelessWidget {
   final String obscuringCharacter;
   final double inputHeight; // Added inputHeight
 
-  const PinCodeInputField({
+  const PinInputField({
     super.key,
     required this.controllers,
     required this.focusNodes,
@@ -119,28 +119,4 @@ class PinCodeInputField extends StatelessWidget {
       return 1.2; // Increased line height for smaller buttons
     }
   }
-}
-
-class InputFieldConfiguration {
-  final Color fieldFillColor;
-  final Color borderColor;
-  final Color focusedBorderColor;
-  final TextStyle textStyle;
-  final bool obscureText;
-  final String obscuringCharacter;
-  final double inputHeight;
-
-  const InputFieldConfiguration({
-    this.fieldFillColor = const Color(0xFF282828),
-    this.borderColor = Colors.grey,
-    this.focusedBorderColor = const Color(0xFF2FA2B9),
-    this.textStyle = const TextStyle(
-      color: Color(0xFFEFEFEF),
-      fontSize: 21,
-      fontWeight: FontWeight.w600,
-    ),
-    this.obscureText = true,
-    this.obscuringCharacter = '⁕',
-    this.inputHeight = 56.0, // Default height for input fields
-  });
 }

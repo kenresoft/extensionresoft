@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-class PinCodeKeyboard extends StatefulWidget {
+class PinKeyboard extends StatefulWidget {
   final Function(String key) onKeyPressed;
   final List<String> keys;
   final Color keyBackgroundColor;
@@ -11,7 +11,7 @@ class PinCodeKeyboard extends StatefulWidget {
   final double buttonHeight;
   final bool flexibleButton;
 
-  const PinCodeKeyboard({
+  const PinKeyboard({
     super.key,
     required this.onKeyPressed,
     required this.keys,
@@ -23,10 +23,10 @@ class PinCodeKeyboard extends StatefulWidget {
   });
 
   @override
-  State<PinCodeKeyboard> createState() => _PinCodeKeyboardState();
+  State<PinKeyboard> createState() => _PinKeyboardState();
 }
 
-class _PinCodeKeyboardState extends State<PinCodeKeyboard> {
+class _PinKeyboardState extends State<PinKeyboard> {
   late List<String> _keys;
 
   @override
@@ -36,7 +36,7 @@ class _PinCodeKeyboardState extends State<PinCodeKeyboard> {
   }
 
   @override
-  void didUpdateWidget(covariant PinCodeKeyboard oldWidget) {
+  void didUpdateWidget(covariant PinKeyboard oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (!listEquals(widget.keys, oldWidget.keys)) {
       setState(() {
@@ -178,25 +178,4 @@ class _PinCodeKeyboardState extends State<PinCodeKeyboard> {
       return 30;
     }
   }
-}
-
-class KeyboardConfiguration {
-  final Function(String)? onKeyPressed;
-  final List<String> keys;
-  final Color keyBackgroundColor;
-  final Color keyTextColor;
-  final TextStyle? keyTextStyle;
-  final double buttonHeight;
-  final bool flexibleButton;
-
-  const KeyboardConfiguration({
-    this.onKeyPressed,
-    // Default keypad values if not provided by the user
-    this.keys = const ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'delete'],
-    this.keyBackgroundColor = const Color(0xff222222),
-    this.keyTextColor = const Color(0xffC5C5C5),
-    this.keyTextStyle,
-    this.buttonHeight = 56.0,
-    this.flexibleButton = false,
-  });
 }
