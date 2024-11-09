@@ -12,8 +12,8 @@ dependencies:
   flutter:
     sdk: flutter
 
-  shared_preferences: ^2.3.2
-  connectivity_plus: ^6.0.5
+  shared_preferences: ^2.3.3
+  connectivity_plus: ^6.1.0
   equatable: ^2.0.5
   rxdart: ^0.28.0
 
