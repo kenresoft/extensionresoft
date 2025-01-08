@@ -10,6 +10,7 @@ For general information about developing packages, see the Dart guide for
 and the Flutter guide for
 [developing packages and plugins](https://flutter.dev/developing-packages).
 -->
+
 # extensionresoft
 
 [![pub package](https://img.shields.io/pub/v/extensionresoft.svg?label=extensionresoft&color=blue)](https://pub.dev/packages/extensionresoft)
@@ -20,12 +21,11 @@ and the Flutter guide for
 <a href="https://github.com/Solido/awesome-flutter">![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)</a>
 <a href="https://opensource.org/license/bsd-3-clause">![License: BSD](https://img.shields.io/badge/license-BSD_3--Clause-teal.svg)</a>
 
-A collection of useful Dart/Flutter Extension functions and Helper functions for faster development.
-This was developed to aide developers write minimized but powerful codes.
-This makes for codes re-usability and easy coding reading.
-It's aimed at enhancing productivity and improving code readability.
+A comprehensive collection of reusable widgets, utilities, and extensions designed to streamline your Flutter development process.
+**Ideal for:** Faster development, streamlined app development, building secure login screens, and managing app settings.
 
 ## Table of Contents
+
 - [Installation](#installation)
 - [Usage](#usage)
 - [Features](#features)
@@ -36,11 +36,12 @@ It's aimed at enhancing productivity and improving code readability.
 - [License](#license)
 
 ## Installation
+
 To use the extensionresoft library in your Flutter project, add it to your `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  extensionresoft: ^0.0.6
+  extensionresoft: ^1.0.0
 ```
 
 Then, run:
@@ -52,24 +53,92 @@ flutter pub get
 to install the dependencies.
 
 ## Usage
+
 Import the extensionresoft library in your Dart files:
 
 ```dart
 import 'package:extensionresoft/extensionresoft.dart';
 ```
+
 You can now use any of the extensions provided by the library in your Flutter project.
 
 ## Features
+
 The extensionresoft library includes the following major extensions among others:
 
-- **_SpaceExtension_**: Provides methods for creating SizedBox widgets with customizable dimensions.
-- **_CustomCardExtension_**: Offers methods for creating custom Card widgets with rounded corners and other properties.
-- **_PathExtension_**: Provides a method for applying functions to numbers.
-- **_TextExtension_**: Offers a method for creating Text widgets with customizable properties from strings.
-- **_CustomImageExtension_**: Provides methods for creating Image widgets and circular image containers with customizable properties.
-- **_Conditional Function_**: Provides functions for conditionally returning values.
-- **_Get Function_**: Provides a function for getting values with optional default values.
-- **_SharedPreferencesService_**: Manages SharedPreferences for storing and retrieving various data types.
+### Image Processing
+
+#### Advanced Image Handling
+
+- **Widget Versatility**: Implement both circular and rectangular image widgets with comprehensive placeholder support, error handling, caching
+  mechanisms, and fallback options.
+- **Resource Management**: Efficiently handle network and asset images for optimal display performance across your application.
+
+### Security Features
+
+#### PIN Authentication System
+
+- **Widget Implementation**: Create robust and customizable PIN entry widgets designed for secure user authentication.
+- **Security Enhancement**: Enhance user experience and security in your login screens.
+
+### Network Operations
+
+#### Connectivity Management
+
+- **Real-time Monitoring**: Implement continuous network status checks for immediate connectivity awareness.
+- **Graceful Handling**: Ensure seamless application performance during network state transitions.
+
+### Data Management
+
+#### Storage Solutions
+
+- **SharedPreferencesService Implementation**: Utilize comprehensive persistent storage capabilities for multiple data types, including:
+  - Boolean values
+  - String data
+  - Integer values
+  - Double-precision numbers
+- **Preference Management**: Implement efficient systems for handling application settings and user preferences.
+
+### Extension Libraries
+
+#### Context Extensions
+
+- **Navigation Enhancement**: Streamline navigation operations with intuitive context extensions.
+- **Code Optimization**: Implement cleaner, more maintainable code structures.
+
+#### UI Extensions
+
+- Icon Extensions
+- List Extensions
+- Numeric Extensions
+- String Extensions
+
+#### Logic Utilities
+
+##### Conditional Operations
+
+- **Logic Implementation**: Create concise conditional logic using optimized operators.
+
+##### Value Management
+
+- **Data Retrieval**: Implement robust value retrieval systems with configurable fallback options.
+
+### Benefits
+
+#### Development Efficiency
+
+- **Code Reduction**: Minimize boilerplate code through reusable component implementation.
+- **Task Simplification**: Streamline common development tasks with intuitive utilities.
+
+#### Code Quality
+
+- **Maintainability**: Improve code readability through well-structured extensions.
+- **Documentation**: Implement clear, consistent naming conventions for enhanced understanding.
+
+#### Productivity Enhancement
+
+- **Focus Optimization**: Concentrate on core application logic development.
+- **Time Management**: Reduce time spent on repetitive development tasks.
 
 ## Examples
 
@@ -80,6 +149,63 @@ import 'package:extensionresoft/extensionresoft.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+
+  // Secure PIN Entry
+  PinEntry(
+    pinLength: 4,
+    onInputComplete: (pin) => print('Entered PIN: $pin'),
+    inputFieldConfiguration: InputFieldConfiguration(
+      obscureText: true,
+      fieldFillColor: Colors.grey[200],
+      focusedBorderColor: Colors.blue,
+    ),
+    keyboardConfiguration: KeyboardConfiguration(
+      keyBackgroundColor: Colors.white,
+      keyTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+  );
+
+  // Internet Connection Management
+  final connectionChecker = InternetConnectionChecker();
+
+  // Listen to detailed connectivity changes
+  connectionChecker.onInternetConnectivityChanged.listen((result) {
+    print('Connection Status: ${result.hasInternetAccess}');
+    print('Connection Type: ${result.connectionType}');
+  });
+
+  // Quick connection check
+  final isConnected = await connectionChecker.isInternetConnected;
+
+  // Circular Network/Asset Image
+  AppCircleImage(
+    'https://example.com/profile.jpg',
+    radius: 40,
+    assetFallback: 'assets/default_avatar.png',
+    placeholder: CircularProgressIndicator(),
+    errorWidget: Icon(Icons.error),
+  );
+
+  // Flexible Image Widget
+  AppImage(
+    'https://example.com/image.jpg',
+    width: 200,
+    height: 150,
+    fit: BoxFit.cover,
+    assetFallback: 'assets/placeholder.png',
+  );
+
+  // - as decoration image -
+  Container(
+    decoration: BoxDecoration(
+      image: AppImage('https://example.com/background.jpg')
+              .toDecorationImage(
+        fit: BoxFit.cover,
+        fallbackAsset: 'assets/default_bg.png',
+      ),
+    ),
+  );
+  
   // SpaceExtension Example
   final spacerX = 16.spaceX(); // Creates a SizedBox with a width of 16.
   final spacerY = 24.spaceY(); // Creates a SizedBox with a height of 24.
@@ -104,8 +230,10 @@ void main() {
   final textWidget = 'Hello'.edit(textStyle: const TextStyle(fontSize: 20), textAlign: TextAlign.center); // Creates a customized Text widget.
 
   // CustomImageExtension Example
-  final imageWidget = 'assets/image.png'.img(width: 100, height: 100, fit: BoxFit.cover); // Creates an Image widget from an asset with specified properties.
-  final circleImageContainer = 'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8); // Creates a circular image container with specified properties.
+  final imageWidget = 'assets/image.png'.img(
+          width: 100, height: 100, fit: BoxFit.cover); // Creates an Image widget from an asset with specified properties.
+  final circleImageContainer = 'assets/avatar.png'.circleImage(
+          fit: BoxFit.cover, opacity: 0.8); // Creates a circular image container with specified properties.
 
   // Conditional Function Example
   final conditionResult = condition(true, 'True Value', 'False Value'); // Returns 'True Value' based on the condition.
@@ -234,12 +362,16 @@ void main() {
 ```
 
 ## Screenshots
+
 (None applicable in this current release)
 
 [//]: # (Include any relevant screenshots or GIFs showcasing the extensions in action &#40;if applicable&#41;.)
 
 ## Contributing
-Contributions to the extensionresoft library are welcome! If you have any ideas for new extensions or improvements to existing ones, please open an issue or submit a pull request on GitHub.
+
+Contributions to the extensionresoft library are welcome! If you have any ideas for new extensions or improvements to existing ones, please open an
+issue or submit a pull request on GitHub.
 
 ## License
+
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
