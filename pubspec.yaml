@@ -6,7 +6,7 @@ homepage: https://github.com/kenresoft/extensionresoft
 repository: https://github.com/kenresoft/extensionresoft
 issue_tracker: https://github.com/kenresoft/extensionresoft/issues
 #documentation: https://github.com/kenresoft/extensionresoft
-topics: [ flutter, widgets, extensions, image, network, connectivity, storage, PIN entry, development, efficiency, productivity ]
+topics: [ extensions, image, connectivity, pin-entry, productivity ]
 
 environment:
   sdk: '>=3.2.3 <4.0.0'
