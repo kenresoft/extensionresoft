@@ -3,17 +3,16 @@
 ## [1.0.0] - 2025-01-08 (Major Release)
 
 ### **Features:**
-- **PIN Screen**: Added an advanced PIN entry widget with customizable configurations for better security.
-- **Internet Connection Checker**: Integrated utilities for real-time internet connectivity status updates.
-- **App Image**: Added customizable image widget features, including circular and rectangular image widgets with support for placeholders, error handling, and fallbacks.
+- **PIN Screen**: Introduced a secure and customizable PIN entry widget for robust user authentication.
+- **Internet Connection Checker**: Integrated utilities for real-time internet connectivity monitoring, enabling developers to build apps that gracefully handle network availability.
+- **Versatile Image Handling**: Added customizable image widget features, including circular and rectangular shapes with placeholders, error handling, and fallbacks, simplifying image management in Flutter apps.
 
 ### **Deprecated:**
-- `SharedPreferencesService`: Replaced by more advanced methods for managing shared preferences.
+- Streamlined API: Deprecated `SharedPreferencesService` in favor of leveraging the latest `shared_preferences` package API for a more efficient approach to managing shared preferences.
 
 ### **Other Changes:**
 - Bug fixes and general improvements across the library.
 - Enhanced usability and code readability by streamlining utility functions and extensions.
-- Performance optimizations in image handling and conditional functions.
 
 ---
 
