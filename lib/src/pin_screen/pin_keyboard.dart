@@ -2,13 +2,42 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+/// A widget representing a numeric PIN keyboard with configurable keys, styles, and functionality.
+///
+/// The `PinKeyboard` widget provides a customizable PIN input keyboard, suitable for numeric and symbol keys.
+/// It supports features like dynamic button sizing and flexible layouts.
+///
+/// ### Example
+/// ```dart
+/// PinKeyboard(
+///   onKeyPressed: (key) => print(key),
+///   keys: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'delete'],
+///   keyBackgroundColor: Colors.blue,
+///   keyTextColor: Colors.white,
+///   buttonHeight: 60.0,
+///   flexibleButton: true,
+/// );
+/// ```
 class PinKeyboard extends StatefulWidget {
+  /// Callback triggered when a key is pressed.
   final Function(String key) onKeyPressed;
+
+  /// List of keys to display on the keyboard.
   final List<String> keys;
+
+  /// Background color for the keys.
   final Color keyBackgroundColor;
+
+  /// Text color for the keys.
   final Color keyTextColor;
+
+  /// Custom text style for the key labels. If null, default styles are applied.
   final TextStyle? keyTextStyle;
+
+  /// Height of the individual keys.
   final double buttonHeight;
+
+  /// Whether the buttons should adjust their size dynamically.
   final bool flexibleButton;
 
   const PinKeyboard({
@@ -86,7 +115,8 @@ class _PinKeyboardState extends State<PinKeyboard> {
 
         return Flexible(
           child: Card(
-            shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: Colors.grey)),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey)),
+            // shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: Colors.grey)),
             color: Colors.transparent, // Make the card transparent to show custom decoration
             elevation: 0, // Remove shadow
             child: _buildKeyboardButton(
@@ -113,10 +143,10 @@ class _PinKeyboardState extends State<PinKeyboard> {
     return Container(
       width: buttonWidth,
       height: buttonHeight,
-      margin: const EdgeInsets.all(5),
+      margin: const EdgeInsets.all(4),
       decoration: BoxDecoration(
         color: widget.keyBackgroundColor,
-        borderRadius: BorderRadius.circular(8), // Increased radius for better aesthetics
+        borderRadius: BorderRadius.circular(8),
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
