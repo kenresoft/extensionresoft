@@ -1,7 +1,7 @@
 name: extensionresoft
-description: A collection of Dart/Flutter Extension functions and Helper functions for faster development. 
-  It absolutely makes for codes re-usability and easy coding reading.
-version: 0.0.6
+description: Boost Flutter development with this library featuring advanced image widgets,
+  secure PIN entry, internet connectivity checks, storage management, and helpful extensions.
+version: 1.0.0
 homepage: https://github.com/kenresoft/extensionresoft
 
 environment:
@@ -12,20 +12,15 @@ dependencies:
   flutter:
     sdk: flutter
 
-  shared_preferences: ^2.3.2
-  connectivity_plus: ^6.0.5
-  equatable: ^2.0.5
+  shared_preferences: ^2.3.5
+  connectivity_plus: ^6.1.1
+  equatable: ^2.0.7
   rxdart: ^0.28.0
-
-  logger: ^2.4.0
+  cached_network_image: ^3.4.1
+  logger: ^2.5.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
   flutter_lints: ^5.0.0
-
-#flutter:
-#  uses-material-design: true
-
-
