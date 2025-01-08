@@ -70,7 +70,20 @@ class KeyboardConfiguration {
   const KeyboardConfiguration({
     this.onKeyPressed,
     // Default keypad values if not provided by the user
-    this.keys = const ['1', '2', '3', '4', '5', '6', '7', '8', '9', '*', '0', 'delete'],
+    this.keys = const [
+      '1',
+      '2',
+      '3',
+      '4',
+      '5',
+      '6',
+      '7',
+      '8',
+      '9',
+      '*',
+      '0',
+      'delete'
+    ],
     this.keyBackgroundColor = const Color(0xff222222),
     this.keyTextColor = const Color(0xffC5C5C5),
     this.keyTextStyle,

@@ -92,7 +92,8 @@ class _PinKeyboardState extends State<PinKeyboard> {
               _buildRow([0, 1, 2], buttonWidth, buttonHeight),
               _buildRow([3, 4, 5], buttonWidth, buttonHeight),
               _buildRow([6, 7, 8], buttonWidth, buttonHeight),
-              _buildRow([9, 10, 11], buttonWidth, buttonHeight), // '*', '0', 'delete'
+              _buildRow(
+                  [9, 10, 11], buttonWidth, buttonHeight), // '*', '0', 'delete'
             ],
           ),
         );
@@ -115,9 +116,12 @@ class _PinKeyboardState extends State<PinKeyboard> {
 
         return Flexible(
           child: Card(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: Colors.grey)),
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+                side: BorderSide(color: Colors.grey)),
             // shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: Colors.grey)),
-            color: Colors.transparent, // Make the card transparent to show custom decoration
+            color: Colors
+                .transparent, // Make the card transparent to show custom decoration
             elevation: 0, // Remove shadow
             child: _buildKeyboardButton(
               index,
@@ -150,7 +154,8 @@ class _PinKeyboardState extends State<PinKeyboard> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: () => widget.onKeyPressed(text), // Trigger the onKeyPressed callback
+        onTap: () =>
+            widget.onKeyPressed(text), // Trigger the onKeyPressed callback
         child: Center(
           child: iconData == null
               ? Text(
@@ -161,14 +166,17 @@ class _PinKeyboardState extends State<PinKeyboard> {
                   style: widget.keyTextStyle ??
                       TextStyle(
                         color: widget.keyTextColor,
-                        fontSize: _getFontSize(buttonHeight), // Dynamic font size based on height
-                        height: _getTextHeight(buttonHeight), // Dynamic line height based on height
+                        fontSize: _getFontSize(
+                            buttonHeight), // Dynamic font size based on height
+                        height: _getTextHeight(
+                            buttonHeight), // Dynamic line height based on height
                         fontWeight: FontWeight.w500,
                       ),
                 )
               : Icon(
                   iconData,
-                  size: _getIconSize(buttonHeight), // Dynamic icon size based on height
+                  size: _getIconSize(
+                      buttonHeight), // Dynamic icon size based on height
                   color: widget.keyTextColor,
                 ), // Icon for delete button
         ),

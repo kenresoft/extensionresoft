@@ -59,7 +59,8 @@ class ConnectionBannerStyle {
       borderRadius: borderRadius ?? 8.0,
       animationDuration: animationDuration ?? const Duration(milliseconds: 300),
       boxShadow: boxShadow,
-      textStyle: textStyle ?? const TextStyle(color: Colors.white, fontSize: 16),
+      textStyle:
+          textStyle ?? const TextStyle(color: Colors.white, fontSize: 16),
     );
   }
 }

@@ -10,7 +10,8 @@ class AppCircleImage extends StatelessWidget {
   final Widget? errorWidget;
   final String? assetFallback;
 
-  const AppCircleImage(this.image, {
+  const AppCircleImage(
+    this.image, {
     super.key,
     this.radius = 30.0,
     this.placeholder,
@@ -24,7 +25,9 @@ class AppCircleImage extends StatelessWidget {
       radius: radius,
       backgroundColor: Colors.grey.shade200,
       child: ClipOval(
-        child: _isNetworkImage(image) ? _buildCachedNetworkImage() : _buildAssetImage(),
+        child: _isNetworkImage(image)
+            ? _buildCachedNetworkImage()
+            : _buildAssetImage(),
       ),
     );
   }
@@ -63,7 +66,8 @@ class AppCircleImage extends StatelessWidget {
       height: radius * 2,
       fit: BoxFit.cover,
       placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
-      errorWidget: (context, url, error) => errorWidget ?? _defaultErrorWidget(),
+      errorWidget: (context, url, error) =>
+          errorWidget ?? _defaultErrorWidget(),
     );
   }
 

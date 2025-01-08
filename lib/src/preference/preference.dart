@@ -9,7 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// The `preference` legacy is deprecated in the SharedPreferences library.
 /// Please update your implementation to use modern alternatives or recommended patterns.
 
-@Deprecated('SharedPreferencesService is deprecated and will be removed in a future stable release. '
+@Deprecated(
+    'SharedPreferencesService is deprecated and will be removed in a future stable release. '
     'Please migrate to a modern implementation as the preference legacy is deprecated in SharedPreferences.')
 class SharedPreferencesService {
   static late SharedPreferences _preferences;

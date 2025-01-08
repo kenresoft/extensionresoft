@@ -1,8 +1,12 @@
 name: extensionresoft
-description: Boost Flutter development with this library featuring advanced image widgets,
-  secure PIN entry, internet connectivity checks, storage management, and helpful extensions.
+description: Boost your Flutter development with reusable widgets, utilities, and extensions
+  for advanced image handling, secure PIN entry, internet connectivity checks, storage management, and more.
 version: 1.0.0
 homepage: https://github.com/kenresoft/extensionresoft
+repository: https://github.com/kenresoft/extensionresoft
+issue_tracker: https://github.com/kenresoft/extensionresoft/issues
+#documentation: https://github.com/kenresoft/extensionresoft
+topics: [ flutter, widgets, extensions, image, network, connectivity, storage, PIN entry, development, efficiency, productivity ]
 
 environment:
   sdk: '>=3.2.3 <4.0.0'

@@ -65,7 +65,8 @@ class PinInputField extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(fieldCount, (index) {
             return Flexible(
-              child: _buildPinInputField(context, index, inputWidth, inputHeight),
+              child:
+                  _buildPinInputField(context, index, inputWidth, inputHeight),
             );
           }),
         );
@@ -85,7 +86,8 @@ class PinInputField extends StatelessWidget {
   }
 
   // Helper method to build each input field widget
-  Widget _buildPinInputField(BuildContext context, int index, double inputWidth, double inputHeight) {
+  Widget _buildPinInputField(
+      BuildContext context, int index, double inputWidth, double inputHeight) {
     return Container(
       width: inputWidth,
       height: inputHeight, // Use definite inputHeight
@@ -110,7 +112,8 @@ class PinInputField extends StatelessWidget {
           fillColor: fieldFillColor,
           enabledBorder: _inputBorderStyle(borderColor),
           focusedBorder: _inputBorderStyle(focusedBorderColor),
-          contentPadding: EdgeInsets.symmetric(vertical: inputHeight * 0.2), // Adjust padding based on height
+          contentPadding: EdgeInsets.symmetric(
+              vertical: inputHeight * 0.2), // Adjust padding based on height
         ),
         onChanged: (value) {
           if (value.isNotEmpty) {

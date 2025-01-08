@@ -85,7 +85,6 @@ class ConnectionBanner extends StatelessWidget {
 }
 */
 
-
 import 'package:flutter/material.dart';
 
 import 'connection_banner_style.dart';
@@ -106,7 +105,8 @@ class ConnectionBanner extends StatefulWidget {
   State<ConnectionBanner> createState() => _ConnectionBannerState();
 }
 
-class _ConnectionBannerState extends State<ConnectionBanner> with SingleTickerProviderStateMixin {
+class _ConnectionBannerState extends State<ConnectionBanner>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
 
@@ -117,7 +117,8 @@ class _ConnectionBannerState extends State<ConnectionBanner> with SingleTickerPr
       duration: widget.style.animationDuration,
       vsync: this,
     );
-    _slideAnimation = Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(
+    _slideAnimation =
+        Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
     _controller.forward(); // Start the animation when the banner is shown
@@ -175,7 +176,8 @@ class _ConnectionBannerState extends State<ConnectionBanner> with SingleTickerPr
                   size: 24,
                 ),
                 onPressed: () {
-                  _controller.reverse().then((_) => widget.onClose()); // Dismiss animation before closing
+                  _controller.reverse().then((_) =>
+                      widget.onClose()); // Dismiss animation before closing
                 },
               ),
             ],

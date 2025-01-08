@@ -17,7 +17,9 @@ extension InternetConnectionResultExtension on InternetResult {
   ///
   /// Returns `false` if all three statuses are the same.
   bool isDifferent(InternetResult other) {
-    return dnsSuccess != other.dnsSuccess || socketSuccess != other.socketSuccess || httpSuccess != other.httpSuccess;
+    return dnsSuccess != other.dnsSuccess ||
+        socketSuccess != other.socketSuccess ||
+        httpSuccess != other.httpSuccess;
   }
 }
 
