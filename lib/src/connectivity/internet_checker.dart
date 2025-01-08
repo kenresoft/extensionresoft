@@ -2,9 +2,11 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
-import 'package:extensionresoft/src/connection_result.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:rxdart/rxdart.dart';
 
-import 'internet_connection_result.dart';
+import 'connection_type.dart';
+import 'internet_result.dart';
 
 /// A singleton class responsible for checking reliable internet connectivity.
 /// It verifies connection reliability by performing a three-stage process:
@@ -13,22 +15,22 @@ import 'internet_connection_result.dart';
 /// 3. HTTP request.
 ///
 /// The class provides detailed feedback using an `InternetConnectionResult` object.
-base class InternetConnectionCheckerBase {
+base class InternetChecker {
   // Private constructor to ensure the singleton pattern.
-  InternetConnectionCheckerBase();
+  InternetChecker();
 
   // Stores the last successful connection result with its timestamp.
-  InternetConnectionResult? _lastResult;
+  InternetResult? _lastResult;
   DateTime? _lastChecked;
 
   // StreamController to broadcast connection changes.
-  final StreamController<InternetConnectionResult> _connectionStreamController = StreamController<InternetConnectionResult>.broadcast();
+  final StreamController<InternetResult> _internetStreamController = StreamController<InternetResult>.broadcast();
 
   // Timer for periodic connection checking.
   Timer? _timer;
 
   // Field to track whether the connection checker is currently listening.
-  bool isListening = false;
+  bool isInternetListening = false;
 
   /// Periodically checks for a reliable internet connection and broadcasts the result.
   /// - [interval]: Duration between consecutive checks.
@@ -41,46 +43,127 @@ base class InternetConnectionCheckerBase {
     Duration cacheDuration = const Duration(seconds: 10),
     int maxRetries = 3,
   }) {
-    if (isListening) return; // Prevent multiple listeners from starting
+    if (isInternetListening) return; // Prevent multiple listeners from starting
 
-    isListening = true; // Set the flag to true when listening starts
+    isInternetListening = true; // Set the flag to true when listening starts
     _timer?.cancel(); // Cancel any existing timer if already running
 
-    _timer = Timer.periodic(interval, (_) async {
-      final result = await internetConnectionResult(
-        timeout: timeout,
-        cacheDuration: cacheDuration,
-        maxRetries: maxRetries,
-        useCaching: false, // Disable caching to ensure fresh checks each time
-      );
+    ///
+    ///
+    ///
+    ///
+    ///
+
+    Future<InternetResult> getResult(List<ConnectivityResult> connectivityResult) async {
+      InternetResult result;
+      if (connectivityResult.last == ConnectivityResult.none) {
+        result = InternetResult.noInternetAccess();
+      } else {
+        result = await internetResult(
+          timeout: timeout,
+          cacheDuration: cacheDuration,
+          maxRetries: maxRetries,
+          useCaching: false, // Disable caching to ensure fresh checks each time
+        );
+      }
+      return result;
+    }
+
+    // Main stream emitting events at regular intervals
+    final Stream<int> mainStream = Stream.periodic(interval, (x) => x);
+    final Stream<List<ConnectivityResult>> innerStream = Connectivity().onConnectivityChanged;
+
+    final Stream<InternetResult> streamA = mainStream.asyncExpand((_) async* {
+      // Tick received from mainStream
+      print("Tick from mainStream");
+
+      // DNS Lookup Phase
+      final dnsResult = await performDNSCheck();
+      yield dnsResult;
+
+      // Socket Connection Phase (only if DNS is successful)
+      if (dnsResult.dnsSuccess) {
+        final socketResult = await performSocketCheck();
+        yield socketResult;
+
+        // HTTP Request Phase (only if socket is successful)
+        if (socketResult.socketSuccess) {
+          final httpResult = await performHttpRequest();
+          yield httpResult;
+        }
+      }
+    });
+
+    Stream<InternetResult> streamB = innerStream.asyncMap((List<ConnectivityResult> result) async {
+      return await getResult(result);
+    });
+
+    final cStream = Rx.merge([
+      streamA,
+      streamB,
+    ]);
+
+    cStream.listen((event) {
+      print(event.hasInternetAccess);
+
+      // If connection state changes, broadcast the new result
+      if (_lastResult == null || _lastResult!.isDifferent(event)) {
+        print('${DateTime.now()}: Connection result changed: $event');
+        _lastResult = event;
+        _internetStreamController.add(event);
+      } else {
+        print('${DateTime.now()}: Connection result unchanged');
+      }
+    });
+
+    ///
+    ///
+    ///
+    ///
+
+    /*_timer = Timer.periodic(interval, (_) async {
+      InternetResult result;
+      final connectivityResult = await Connectivity().checkConnectivity();
+      if (connectivityResult.last == ConnectivityResult.none) {
+        result = InternetResult.noInternetAccess();
+      } else {
+        result = await internetResult(
+          timeout: timeout,
+          cacheDuration: cacheDuration,
+          maxRetries: maxRetries,
+          useCaching: false, // Disable caching to ensure fresh checks each time
+        );
+      }
 
       // If connection state changes, broadcast the new result
       if (_lastResult == null || _lastResult!.isDifferent(result)) {
+        print('${DateTime.now()}: Connection result changed: $result');
         _lastResult = result;
-        _connectionStreamController.add(result);
+        _internetStreamController.add(result);
+      } else {
+        print('${DateTime.now()}: Connection result unchanged');
       }
-    });
+    });*/
   }
 
   /// Stops the periodic connection check.
-  void stopListening() {
-    if (!isListening) return; // Avoid stopping if not listening
+  void stopInternetListening() {
+    if (!isInternetListening) return; // Avoid stopping if not listening
 
     _timer?.cancel();
-    isListening = false; // Set the flag to false when listening stops
+    isInternetListening = false; // Set the flag to false when listening stops
   }
 
   /// Returns a stream that listeners can subscribe to, to get notified about connection changes.
-  Stream<InternetConnectionResult> get connectionStream => _connectionStreamController.stream;
+  Stream<InternetResult> get onInternetChanged => _internetStreamController.stream;
 
   /// Clean up resources.
   void dispose() {
     _timer?.cancel();
-    _connectionStreamController.close();
-    isListening = false;
+    _internetStreamController.close();
+    isInternetListening = false;
   }
 
-  /// Same `hasInternetConnection` function as before...
   /// Checks for a reliable internet connection by performing multiple stages of verification:
   /// 1. DNS lookup on a list of test hosts (e.g., Google, Cloudflare) to validate DNS resolution.
   /// 2. Socket connection to ensure the device can establish a connection on port 443 (HTTPS).
@@ -99,7 +182,7 @@ base class InternetConnectionCheckerBase {
   /// Returns:
   /// - An `InternetConnectionResult` object that indicates whether the DNS, socket, and HTTP stages succeeded.
   /// - In case of failure, the object includes a `failureReason` with a descriptive error message.
-  Future<InternetConnectionResult> internetConnectionResult({
+  Future<InternetResult> internetResult({
     Duration timeout = const Duration(seconds: 5),
     Duration cacheDuration = const Duration(seconds: 10),
     int maxHostsToTest = 2,
@@ -122,7 +205,7 @@ base class InternetConnectionCheckerBase {
     final Random random = Random();
     final List<String> selectedHosts = List.from(testHosts)..shuffle(random);
 
-    InternetConnectionResult result;
+    InternetResult result;
 
     for (int attempt = 1; attempt <= maxRetries; attempt++) {
       try {
@@ -138,7 +221,7 @@ base class InternetConnectionCheckerBase {
             }
           } on SocketException catch (e) {
             if (attempt == maxRetries) {
-              return InternetConnectionResult(
+              return InternetResult(
                 dnsSuccess: false,
                 socketSuccess: false,
                 httpSuccess: false,
@@ -149,7 +232,7 @@ base class InternetConnectionCheckerBase {
         }
 
         if (!dnsSuccess && attempt == maxRetries) {
-          return InternetConnectionResult(
+          return InternetResult(
             dnsSuccess: false,
             socketSuccess: false,
             httpSuccess: false,
@@ -166,7 +249,7 @@ base class InternetConnectionCheckerBase {
             break; // Stop trying if one host works
           } on SocketException catch (e) {
             if (attempt == maxRetries) {
-              return InternetConnectionResult(
+              return InternetResult(
                 dnsSuccess: true,
                 socketSuccess: false,
                 httpSuccess: false,
@@ -175,7 +258,7 @@ base class InternetConnectionCheckerBase {
             }
           } on TimeoutException catch (e) {
             if (attempt == maxRetries) {
-              return InternetConnectionResult(
+              return InternetResult(
                 dnsSuccess: true,
                 socketSuccess: false,
                 httpSuccess: false,
@@ -186,7 +269,7 @@ base class InternetConnectionCheckerBase {
         }
 
         if (!socketSuccess && attempt == maxRetries) {
-          return InternetConnectionResult(
+          return InternetResult(
             dnsSuccess: true,
             socketSuccess: false,
             httpSuccess: false,
@@ -205,7 +288,7 @@ base class InternetConnectionCheckerBase {
           }
         } on SocketException catch (e) {
           if (attempt == maxRetries) {
-            return InternetConnectionResult(
+            return InternetResult(
               dnsSuccess: true,
               socketSuccess: true,
               httpSuccess: false,
@@ -214,11 +297,29 @@ base class InternetConnectionCheckerBase {
           }
         } on TimeoutException catch (e) {
           if (attempt == maxRetries) {
-            return InternetConnectionResult(
+            return InternetResult(
               dnsSuccess: true,
               socketSuccess: true,
               httpSuccess: false,
               failureReason: 'TimeoutException during HTTP request: $e',
+            );
+          }
+        } on HttpException catch (e) {
+          if (attempt == maxRetries) {
+            return InternetResult(
+              dnsSuccess: true,
+              socketSuccess: true,
+              httpSuccess: false,
+              failureReason: 'HttpException during HTTP request: $e',
+            );
+          }
+        } catch (e) {
+          if (attempt == maxRetries) {
+            return InternetResult(
+              dnsSuccess: true,
+              socketSuccess: true,
+              httpSuccess: false,
+              failureReason: 'Unexpected error during HTTP request: $e',
             );
           }
         } finally {
@@ -230,7 +331,7 @@ base class InternetConnectionCheckerBase {
         }
       } catch (e) {
         if (attempt == maxRetries) {
-          return InternetConnectionResult(
+          return InternetResult(
             dnsSuccess: false,
             socketSuccess: false,
             httpSuccess: false,
@@ -245,7 +346,7 @@ base class InternetConnectionCheckerBase {
     }
 
     // Cache the result and timestamp if caching is enabled
-    result = InternetConnectionResult(
+    result = InternetResult(
       dnsSuccess: dnsSuccess,
       socketSuccess: socketSuccess,
       httpSuccess: httpSuccess,
@@ -259,5 +360,70 @@ base class InternetConnectionCheckerBase {
 
     // Return the result for first-time or non-cached calls
     return result;
+  }
+
+  // DNS Lookup Phase (uses part of your internetResult code)
+  Future<InternetResult> performDNSCheck() async {
+    final List<String> testHosts = ['google.com', 'cloudflare.com'];
+    for (String host in testHosts) {
+      try {
+        final lookupResult = await InternetAddress.lookup(host);
+        if (lookupResult.isNotEmpty && lookupResult[0].rawAddress.isNotEmpty) {
+          return InternetResult(dnsSuccess: true, socketSuccess: false, httpSuccess: false);
+        }
+      } catch (e) {
+        // Return failure on DNS lookup error
+        return InternetResult(
+          dnsSuccess: false,
+          socketSuccess: false,
+          httpSuccess: false,
+          failureReason: "DNS lookup failed for $host: $e",
+        );
+      }
+    }
+    return InternetResult(dnsSuccess: false, socketSuccess: false, httpSuccess: false);
+  }
+
+  // Socket Connection Phase
+  Future<InternetResult> performSocketCheck() async {
+    try {
+      final socket = await Socket.connect('google.com', 443, timeout: Duration(seconds: 5));
+      socket.destroy();
+      return InternetResult(dnsSuccess: true, socketSuccess: true, httpSuccess: false);
+    } catch (e) {
+      return InternetResult(
+        dnsSuccess: true,
+        socketSuccess: false,
+        httpSuccess: false,
+        failureReason: "Socket connection failed: $e",
+      );
+    }
+  }
+
+  // HTTP Request Phase
+  Future<InternetResult> performHttpRequest() async {
+    final HttpClient httpClient = HttpClient();
+    try {
+      final HttpClientRequest request = await httpClient.getUrl(Uri.parse('https://www.google.com'));
+      final HttpClientResponse response = await request.close();
+      if (response.statusCode == 200) {
+        return InternetResult(dnsSuccess: true, socketSuccess: true, httpSuccess: true);
+      }
+    } catch (e) {
+      return InternetResult(
+        dnsSuccess: true,
+        socketSuccess: true,
+        httpSuccess: false,
+        failureReason: "HTTP request failed: $e",
+      );
+    } finally {
+      httpClient.close();
+    }
+    return InternetResult(
+      dnsSuccess: true,
+      socketSuccess: true,
+      httpSuccess: false,
+      failureReason: "HTTP request failed",
+    );
   }
 }
