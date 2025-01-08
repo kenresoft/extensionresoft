@@ -68,7 +68,8 @@ class AppImage extends StatelessWidget {
       height: height,
       fit: fit,
       placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
-      errorWidget: (context, url, error) => errorWidget ?? _defaultErrorWidget(),
+      errorWidget: (context, url, error) =>
+          errorWidget ?? _defaultErrorWidget(),
     );
   }
 
@@ -116,7 +117,8 @@ class AppImage extends StatelessWidget {
           alignment: alignment,
           colorFilter: colorFilter,
           onError: (exception, stackTrace) {
-            logger.e('Error loading network image: $exception', stackTrace: stackTrace);
+            logger.e('Error loading network image: $exception',
+                stackTrace: stackTrace);
           },
         );
       } else if (image != null && image!.isNotEmpty) {
@@ -147,9 +149,12 @@ class AppImage extends StatelessWidget {
       }
     } catch (e, stackTrace) {
       // Comprehensive fallback for unexpected errors
-      logger.e('Unexpected error in toDecorationImage: $e', error: e, stackTrace: stackTrace);
+      logger.e('Unexpected error in toDecorationImage: $e',
+          error: e, stackTrace: stackTrace);
       return DecorationImage(
-        image: fallbackAsset != null ? AssetImage(fallbackAsset) as ImageProvider : CachedNetworkImageProvider(defaultFallbackNetworkImage),
+        image: fallbackAsset != null
+            ? AssetImage(fallbackAsset) as ImageProvider
+            : CachedNetworkImageProvider(defaultFallbackNetworkImage),
         fit: fit,
         alignment: alignment,
         colorFilter: colorFilter,
