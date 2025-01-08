@@ -1,16 +1,39 @@
 import 'package:flutter/material.dart';
 
+/// A stateless widget representing the input fields for PIN entry.
+///
+/// The `PinInputField` widget displays a row of input fields for entering PIN
+/// characters. It supports customization of styles, behaviors, and layout.
 class PinInputField extends StatelessWidget {
+  /// Controllers for each input field.
   final List<TextEditingController> controllers;
+
+  /// Focus nodes for each input field.
   final List<FocusNode> focusNodes;
+
+  /// Number of input fields.
   final int fieldCount;
+
+  /// Background color for the input fields.
   final Color fieldFillColor;
+
+  /// Border color for the input fields.
   final Color borderColor;
+
+  /// Border color when an input field is focused.
   final Color focusedBorderColor;
+
+  /// Text style for the input characters.
   final TextStyle textStyle;
+
+  /// Whether to obscure the text input for security.
   final bool obscureText;
+
+  /// Character used to obscure text.
   final String obscuringCharacter;
-  final double inputHeight; // Added inputHeight
+
+  /// Height of the input fields.
+  final double inputHeight;
 
   const PinInputField({
     super.key,

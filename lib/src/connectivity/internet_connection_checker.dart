@@ -1,86 +1,32 @@
 import 'dart:async';
 
-import 'package:connectivity_plus/connectivity_plus.dart';
-
-import 'connection_type.dart';
 import 'internet_checker.dart';
 import 'internet_result.dart';
 
-final class InternetConnectionChecker extends InternetChecker {
-  InternetConnectionChecker();
+/// **InternetConnectionChecker**
+///
+/// A high-level class to provide easy access to internet connectivity information.
+/// It offers streams and methods to check the current internet status.
+class InternetConnectionChecker {
+  final InternetChecker _internetChecker = InternetChecker.instance;
 
-  final Connectivity _connectivity = Connectivity();
+  /// Stream that emits detailed [InternetResult] on connectivity changes.
+  Stream<InternetResult> get onConnectivityChanged => _internetChecker.connectivityStream.distinct();
 
-  List<ConnectivityResult> _connectionStatus = [ConnectivityResult.none];
+  /// Stream that emits results based on changes in internet connectivity.
+  Stream<InternetResult> get onInternetChanged => _internetChecker.internetStream.distinct();
 
-  InternetResult _internetResult = InternetResult.noInternetAccess();
+  /// Stream that emits combined results from both connectivity and internet checks.
+  Stream<InternetResult> get onInternetConnectivityChanged => _internetChecker.internetConnectivityStream.distinct();
 
-  Future<InternetResult> _updateConnectionStatus(List<ConnectivityResult> result) async {
-    _connectionStatus = result;
-    final isNotConnected = result.last == ConnectivityResult.none;
-    if (isNotConnected) {
-      _internetResult = InternetResult.noInternetAccess();
-    } else {
-      _internetResult = await super.internetResult();
-    }
-    return _internetResult;
+  /// Stream that emits a boolean indicating whether internet is connected.
+  Stream<bool> get onIsInternetConnected {
+    return _internetChecker.internetConnectivityStream.map((event) => event.hasInternetAccess).distinct();
   }
 
-  /// Start listening for connectivity changes
-  Stream<InternetResult> get onInternetConnectivityChanged {
-    return _connectivity.onConnectivityChanged.asyncMap((List<ConnectivityResult> result) async {
-      final updatedResult = await _updateConnectionStatus(result);
-      return updatedResult;
-    });
-  }
-
-  /// Stream for combined connectivity and internet status
-  Stream<bool> get onConnectedToInternet {
-    super.startInternetListening();
-    return super.onInternetChanged.asyncMap((InternetResult event) {
-      /*final connectivityResult = await _connectivity.checkConnectivity();
-      return connectivityResult.last == ConnectivityResult.none ? false : event.hasInternetAccess;*/
-      return event.hasInternetAccess;
-    });
-  }
-
-/*  Stream<bool> get onConnectedToInternet {
-    // Stream for connectivity status (Wi-Fi, mobile, ethernet, etc.)
-    final Stream<List<ConnectivityResult>> connectivityStream = _connectivity.onConnectivityChanged;
-
-    // Stream for internet status (actual connection to the internet)
-    final Stream<InternetResult> internetStream = super.onInternetChanged;
-
-    // Combine the streams
-    return Rx.combineLatest2(
-      connectivityStream,
-      internetStream,
-      (List<ConnectivityResult> connectivityResult, InternetResult internetResult) {
-        // Determine if device has both network connectivity and internet access
-        final noConnectivity = connectivityResult.last == ConnectivityResult.none;
-
-        final hasInternet = internetResult.hasInternetAccess;
-
-        // Return true if the device has both connectivity and internet access
-        if (noConnectivity) {
-          return false;
-        } else {
-          return !noConnectivity && hasInternet;
-        }
-      },
-    );
-  }*/
-
-  Future<bool> hasInternetAccess() async {
-    final internetResult = await super.internetResult(useCaching: false);
-    return internetResult.hasInternetAccess;
-  }
-
-  List<ConnectionType> get connectionStatus {
-    return _connectionStatus.map(
-      (e) {
-        return e.toConnectionType();
-      },
-    ).toList();
+  /// Checks whether the device currently has internet access.
+  Future<bool> get isInternetConnected async {
+    final InternetResult(:hasInternetAccess) = await _internetChecker.internetResult;
+    return hasInternetAccess;
   }
 }

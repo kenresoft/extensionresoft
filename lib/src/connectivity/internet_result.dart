@@ -1,54 +1,100 @@
 import 'package:equatable/equatable.dart';
+import 'package:extensionresoft/src/connectivity/connection_type.dart';
 
-/// A data class that represents the result of an internet connectivity check.
-/// It holds the success or failure status of DNS resolution, socket connection,
-/// and HTTP request stages, along with a detailed failure reason, if applicable.
+/// A data class that encapsulates the result of an internet connectivity check.
 ///
-/// The class uses the Equatable package to enable value comparison and
-/// improve performance when comparing objects.
+/// The `InternetResult` class tracks the success or failure of three key stages:
+/// - DNS resolution
+/// - Socket connection
+/// - HTTP request validation
+///
+/// Additionally, it provides a reason for failure if any stage fails.
+/// The class extends [Equatable], allowing for value-based comparison
+/// and better performance when checking for equality between instances.
 ///
 /// Properties:
-/// - [dnsSuccess]: Indicates whether the DNS lookup was successful.
-/// - [socketSuccess]: Indicates whether a socket connection to the test hosts succeeded.
-/// - [httpSuccess]: Indicates whether an HTTP request to validate data transfer succeeded.
-/// - [failureReason]: An optional string containing a detailed message explaining the reason for failure (if any).
+/// - [dnsSuccess]: Boolean indicating if DNS lookup was successful.
+/// - [socketSuccess]: Boolean indicating if socket connection to the test hosts succeeded.
+/// - [httpSuccess]: Boolean indicating if an HTTP request to validate data transfer succeeded.
+/// - [failureReason]: An optional string providing a detailed failure reason if the checks failed.
 ///
 /// Getter:
-/// - [isConnected]: A convenience getter that returns `true` if all three checks (DNS, socket, and HTTP) succeeded, otherwise `false`.
+/// - [hasInternetAccess]: A computed property that returns `true` if all three checks (DNS, socket, and HTTP) succeeded.
 ///
 /// Methods:
-/// - [props]: Overrides the props from Equatable to compare the [isConnected] status when two instances are compared.
-/// - [stringify]: Enables the string representation of the object for easier logging and debugging.
-class InternetConnectionResult extends Equatable {
+/// - [props]: Overrides the properties from `Equatable` to facilitate object comparison based on the connectivity status.
+/// - [stringify]: Enables automatic string conversion, making it easier to log and debug instances of this class.
+class InternetResult extends Equatable {
+  /// Whether the DNS lookup was successful.
   final bool dnsSuccess;
-  final bool socketSuccess;
-  final bool httpSuccess;
-  final String? failureReason; // Holds detailed error message
 
-  const InternetConnectionResult({
-    required this.dnsSuccess,
-    required this.socketSuccess,
-    required this.httpSuccess,
+  /// Whether a socket connection to the test hosts succeeded.
+  final bool socketSuccess;
+
+  /// Whether an HTTP request to validate data transfer succeeded.
+  final bool httpSuccess;
+
+  /// Optional string containing the reason for failure, if any.
+  final String? failureReason;
+
+  final ConnectionType? connectionType;
+
+  /// Constructor to initialize all fields of the class.
+  const InternetResult({
+    this.dnsSuccess = false,
+    this.socketSuccess = false,
+    this.httpSuccess = false,
     this.failureReason,
+    this.connectionType,
   });
 
-  factory InternetConnectionResult.notConnected() {
-    return const InternetConnectionResult(
+  /// Factory constructor for a scenario where no internet access is available.
+  ///
+  /// This provides a default [InternetResult] instance where all checks failed
+  /// and the [failureReason] is set to 'Not connected'.
+  factory InternetResult.noInternetAccess() {
+    return const InternetResult(
       dnsSuccess: false,
       socketSuccess: false,
       httpSuccess: false,
       failureReason: 'Not connected',
+      connectionType: ConnectionType.none,
     );
   }
 
-  /// Returns true if DNS, socket, and HTTP checks all succeeded.
-  bool get isConnected => dnsSuccess && socketSuccess && httpSuccess;
+  /// Convenience getter that returns `true` if all three checks succeeded.
+  ///
+  /// The device is considered to have internet access if DNS, socket, and HTTP checks
+  /// all report success. This getter simplifies checking overall internet connectivity.
+  bool get hasInternetAccess => dnsSuccess && socketSuccess && httpSuccess;
 
-  /// Overrides props for value comparison, focusing on the [isConnected] status.
+  /// Overrides the equality comparison properties from [Equatable].
+  ///
+  /// The comparison is primarily focused on the [hasInternetAccess] property, but
+  /// can also include other properties if needed.
   @override
-  List<Object?> get props => [isConnected];
+  List<Object?> get props => [hasInternetAccess];
 
-  /// Enables automatic string conversion for better debugging and logging output.
+  /// Enables automatic string representation of the class for easier debugging and logging.
+  ///
+  /// When logging instances of this class, `stringify` ensures that the output includes
+  /// the string version of the object, making the data more human-readable in logs.
   @override
   bool? get stringify => true;
 }
+
+/*  Future<InternetResult> getResult([List<ConnectivityResult>? connectivityResult]) async {
+    InternetResult result;
+    if (connectivityResult != null && connectivityResult.last == ConnectivityResult.none) {
+      result = InternetResult.noInternetAccess();
+    } else {
+      final dnsResult = _performDNSCheck();
+      final socketResult = _performSocketCheck();
+      final httpResult = _performHttpRequest();
+
+      final allResults = await Future.wait([dnsResult, socketResult, httpResult]);
+      final defaultResult = InternetResult(dnsSuccess: false, socketSuccess: false, httpSuccess: false);
+      result = allResults.fold(defaultResult, (previousValue, element) => element);
+    }
+    return result;
+  }*/
