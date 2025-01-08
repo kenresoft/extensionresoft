@@ -1,7 +1,63 @@
 import 'package:extensionresoft/extensionresoft.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+Future<void> main() async {
+  // Secure PIN Entry
+  PinEntry(
+    pinLength: 4,
+    onInputComplete: (pin) => print('Entered PIN: $pin'),
+    inputFieldConfiguration: InputFieldConfiguration(
+      obscureText: true,
+      fieldFillColor: Colors.grey[200]!,
+      focusedBorderColor: Colors.blue,
+    ),
+    keyboardConfiguration: const KeyboardConfiguration(
+      keyBackgroundColor: Colors.white,
+      keyTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+    ),
+  );
+
+  // Internet Connection Management
+  final connectionChecker = InternetConnectionChecker();
+
+  // Listen to detailed connectivity changes
+  connectionChecker.onInternetConnectivityChanged.listen((result) {
+    debugPrint('Connection Status: ${result.hasInternetAccess}');
+    debugPrint('Connection Type: ${result.connectionType}');
+  });
+
+  // Quick connection check
+  final isConnected = await connectionChecker.isInternetConnected;
+
+  // Circular Network/Asset Image
+  const AppCircleImage(
+    'https://example.com/profile.jpg',
+    radius: 40,
+    assetFallback: 'assets/default_avatar.png',
+    placeholder: CircularProgressIndicator(),
+    errorWidget: Icon(Icons.error),
+  );
+
+  // Flexible Image Widget
+  const AppImage(
+    'https://example.com/image.jpg',
+    width: 200,
+    height: 150,
+    fit: BoxFit.cover,
+    assetFallback: 'assets/placeholder.png',
+  );
+
+  // - as decoration image -
+  Container(
+    decoration: BoxDecoration(
+      image: const AppImage('https://example.com/background.jpg')
+          .toDecorationImage(
+        fit: BoxFit.cover,
+        fallbackAsset: 'assets/default_bg.png',
+      ),
+    ),
+  );
+
   // SpaceExtension Example
   final spacerX = 16.spaceX(); // Creates a SizedBox with a width of 16.
   final spacerY = 24.spaceY(); // Creates a SizedBox with a height of 24.
