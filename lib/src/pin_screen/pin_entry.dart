@@ -4,17 +4,39 @@ import 'pin_configurations.dart';
 import 'pin_input_field.dart';
 import 'pin_keyboard.dart';
 
+/// A widget for handling PIN entry, integrating input fields and a keyboard.
+///
+/// The `PinEntry` widget provides a comprehensive solution for PIN entry,
+/// combining input fields, a keyboard, and additional widgets for customization.
+///
+/// ### Example
+/// ```dart
+/// PinEntry(
+///   pinLength: 6,
+///   onInputComplete: (pin) => print('Entered PIN: $pin'),
+///   middleWidget: Text('Enter your PIN'),
+///   keyboardConfiguration: KeyboardConfiguration(),
+///   inputFieldConfiguration: InputFieldConfiguration(),
+/// );
+/// ```
 class PinEntry extends StatefulWidget {
+  /// Length of the PIN to be entered.
   final int pinLength;
+
+  /// Callback triggered when the PIN entry is complete.
   final Function(String pin)? onInputComplete;
 
-  // final Widget? topWidget;
+  /// Widget displayed between the input fields and keyboard.
   final Widget? middleWidget;
 
-  // final Widget? bottomWidget;
+  /// Whether to center the middle widget.
   final bool centerMiddleWidget;
+
+  /// Configuration for the PIN keyboard.
   final KeyboardConfiguration keyboardConfiguration;
-  final InputFieldConfiguration inputFieldConfiguration; // Added input field configuration
+
+  /// Configuration for the input fields.
+  final InputFieldConfiguration inputFieldConfiguration;
 
   const PinEntry({
     super.key,
