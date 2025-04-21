@@ -19,10 +19,6 @@ extension IconExtension on IconData {
   /// final editIcon = Icons.contact.edit(size: 24, color: Colors.blue);
   /// ```
   Icon edit({double? size, Color? color}) {
-    return Icon(
-      this,
-      size: size,
-      color: color,
-    );
+    return Icon(this, size: size, color: color);
   }
 }

@@ -30,8 +30,7 @@ extension SpaceExtension on num {
   /// ```dart
   /// final spacer = 16.spaceY();
   /// ```
-  SizedBox spaceY([Widget? child]) =>
-      SizedBox(height: toDouble(), child: child);
+  SizedBox spaceY([Widget? child]) => SizedBox(height: toDouble(), child: child);
 
   /// Creates a SizedBox with both width and height equal to the value of the number.
   ///
@@ -108,24 +107,26 @@ extension CustomCardExtension on num {
   ///   shadowColor: Colors.grey,
   /// );
   /// ```
-  Widget radius(
-      {required Widget child,
-      double elevation = 1,
-      double? height,
-      double? width,
-      Color? color,
-      Color? strokeColor = Colors.transparent,
-      Color? shadowColor,
-      EdgeInsets? margin,
-      bool applyElevationTint = false}) {
+  Widget radius({
+    required Widget child,
+    double elevation = 1,
+    double? height,
+    double? width,
+    Color? color,
+    Color? strokeColor = Colors.transparent,
+    Color? shadowColor,
+    EdgeInsets? margin,
+    bool applyElevationTint = false,
+  }) {
     return SizedBox(
       height: height,
       width: width,
       child: Card(
         surfaceTintColor: !applyElevationTint ? Colors.white : null,
         shape: RoundedRectangleBorder(
-            side: BorderSide(color: strokeColor!),
-            borderRadius: BorderRadius.all(Radius.circular(toDouble()))),
+          side: BorderSide(color: strokeColor!),
+          borderRadius: BorderRadius.all(Radius.circular(toDouble())),
+        ),
         elevation: elevation,
         color: color,
         shadowColor: shadowColor ?? color,
