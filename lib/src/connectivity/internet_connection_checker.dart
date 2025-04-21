@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 
 import 'internet_checker.dart';
@@ -31,8 +35,7 @@ class InternetConnectionChecker {
 
   /// Checks whether the device currently has internet access.
   Future<bool> get isInternetConnected async {
-    final InternetResult(:hasInternetAccess) =
-        await _internetChecker.internetResult;
+    final InternetResult(:hasInternetAccess) = await _internetChecker.internetResult;
     return hasInternetAccess;
   }
 }
