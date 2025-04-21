@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 
 /// Configuration options for input fields used in the PIN entry widget.
@@ -82,7 +86,7 @@ class KeyboardConfiguration {
       '9',
       '*',
       '0',
-      'delete'
+      'delete',
     ],
     this.keyBackgroundColor = const Color(0xff222222),
     this.keyTextColor = const Color(0xffC5C5C5),
