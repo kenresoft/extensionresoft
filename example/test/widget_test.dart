@@ -1,6 +1,6 @@
+import 'package:extensionresoft/extensionresoft.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:extensionresoft/extensionresoft.dart';
 
 void main() {
   group('SpaceExtension', () {
@@ -87,7 +87,7 @@ void main() {
         'circleImage function should return a Container widget with circular image decoration',
         () {
       final circleImageContainer =
-          'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8);
+          'assets/avatar.png'.circleImage(fit: BoxFit.cover);
       //expect(circleImageContainer.decoration!.shape, equals(BoxShape.circle));
     });
   });

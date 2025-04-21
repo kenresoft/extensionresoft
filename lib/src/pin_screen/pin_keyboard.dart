@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +97,10 @@ class _PinKeyboardState extends State<PinKeyboard> {
               _buildRow([3, 4, 5], buttonWidth, buttonHeight),
               _buildRow([6, 7, 8], buttonWidth, buttonHeight),
               _buildRow(
-                  [9, 10, 11], buttonWidth, buttonHeight), // '*', '0', 'delete'
+                [9, 10, 11],
+                buttonWidth,
+                buttonHeight,
+              ), // '*', '0', 'delete'
             ],
           ),
         );
@@ -105,34 +112,37 @@ class _PinKeyboardState extends State<PinKeyboard> {
   Widget _buildRow(List<int> indexes, double buttonWidth, double buttonHeight) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: indexes.map((index) {
-        String keyLabel = _keys[index];
-        IconData? keyIcon;
+      children:
+          indexes.map((index) {
+            String keyLabel = _keys[index];
+            IconData? keyIcon;
 
-        // Icon for the delete button
-        if (keyLabel == 'delete') {
-          keyIcon = CupertinoIcons.arrow_turn_up_left;
-        }
+            // Icon for the delete button
+            if (keyLabel == 'delete') {
+              keyIcon = CupertinoIcons.arrow_turn_up_left;
+            }
 
-        return Flexible(
-          child: Card(
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-                side: BorderSide(color: Colors.grey)),
-            // shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: Colors.grey)),
-            color: Colors
-                .transparent, // Make the card transparent to show custom decoration
-            elevation: 0, // Remove shadow
-            child: _buildKeyboardButton(
-              index,
-              keyLabel,
-              keyIcon,
-              buttonWidth,
-              buttonHeight,
-            ),
-          ),
-        );
-      }).toList(),
+            return Flexible(
+              child: Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  side: BorderSide(color: Colors.grey),
+                ),
+                // shape: BeveledRectangleBorder(borderRadius: BorderRadius.circular(8), side: BorderSide(color: Colors.grey)),
+                color:
+                    Colors
+                        .transparent, // Make the card transparent to show custom decoration
+                elevation: 0, // Remove shadow
+                child: _buildKeyboardButton(
+                  index,
+                  keyLabel,
+                  keyIcon,
+                  buttonWidth,
+                  buttonHeight,
+                ),
+              ),
+            );
+          }).toList(),
     );
   }
 
@@ -154,31 +164,35 @@ class _PinKeyboardState extends State<PinKeyboard> {
       ),
       child: InkWell(
         borderRadius: BorderRadius.circular(8),
-        onTap: () =>
-            widget.onKeyPressed(text), // Trigger the onKeyPressed callback
+        onTap: () => widget.onKeyPressed(text), // Trigger the onKeyPressed callback
         child: Center(
-          child: iconData == null
-              ? Text(
-                  text,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: widget.keyTextStyle ??
-                      TextStyle(
-                        color: widget.keyTextColor,
-                        fontSize: _getFontSize(
-                            buttonHeight), // Dynamic font size based on height
-                        height: _getTextHeight(
-                            buttonHeight), // Dynamic line height based on height
-                        fontWeight: FontWeight.w500,
-                      ),
-                )
-              : Icon(
-                  iconData,
-                  size: _getIconSize(
-                      buttonHeight), // Dynamic icon size based on height
-                  color: widget.keyTextColor,
-                ), // Icon for delete button
+          child:
+              iconData == null
+                  ? Text(
+                    text,
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style:
+                        widget.keyTextStyle ??
+                        TextStyle(
+                          color: widget.keyTextColor,
+                          fontSize: _getFontSize(
+                            buttonHeight,
+                          ), // Dynamic font size based on height
+                          height: _getTextHeight(
+                            buttonHeight,
+                          ), // Dynamic line height based on height
+                          fontWeight: FontWeight.w500,
+                        ),
+                  )
+                  : Icon(
+                    iconData,
+                    size: _getIconSize(
+                      buttonHeight,
+                    ), // Dynamic icon size based on height
+                    color: widget.keyTextColor,
+                  ), // Icon for delete button
         ),
       ),
     );

@@ -117,10 +117,10 @@ class _ConnectionBannerState extends State<ConnectionBanner>
       duration: widget.style.animationDuration,
       vsync: this,
     );
-    _slideAnimation =
-        Tween<Offset>(begin: const Offset(0, -1), end: Offset.zero).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -1),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
     _controller.forward(); // Start the animation when the banner is shown
   }
 
@@ -144,10 +144,11 @@ class _ConnectionBannerState extends State<ConnectionBanner>
           decoration: BoxDecoration(
             color: widget.style.backgroundColor,
             borderRadius: BorderRadius.circular(widget.style.borderRadius),
-            boxShadow: widget.style.boxShadow ??
+            boxShadow:
+                widget.style.boxShadow ??
                 [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.2),
+                    color: Colors.black.withValues(alpha: 0.2),
                     blurRadius: 8,
                     offset: const Offset(0, 2),
                   ),
@@ -156,11 +157,7 @@ class _ConnectionBannerState extends State<ConnectionBanner>
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Icon(
-                widget.style.icon,
-                color: widget.style.iconColor,
-                size: 24,
-              ),
+              Icon(widget.style.icon, color: widget.style.iconColor, size: 24),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -170,14 +167,11 @@ class _ConnectionBannerState extends State<ConnectionBanner>
                 ),
               ),
               IconButton(
-                icon: Icon(
-                  Icons.close,
-                  color: widget.style.iconColor,
-                  size: 24,
-                ),
+                icon: Icon(Icons.close, color: widget.style.iconColor, size: 24),
                 onPressed: () {
-                  _controller.reverse().then((_) =>
-                      widget.onClose()); // Dismiss animation before closing
+                  _controller.reverse().then(
+                    (_) => widget.onClose(),
+                  ); // Dismiss animation before closing
                 },
               ),
             ],

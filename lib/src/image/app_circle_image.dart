@@ -1,14 +1,23 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-/// A reusable widget for displaying circular images with network and asset fallbacks.
-/// Provides support for error handling, placeholders, and fallback images.
+/// Source type for the image
+enum ImageSourceType { network, asset, file, none }
+
+/// A reusable widget for displaying circular images with auto-detection for network, asset, and file sources.
+/// Provides optimized handling with placeholders and fallbacks.
 class AppCircleImage extends StatelessWidget {
-  final String? image;
+  /// The image source - can be a network URL, asset path, or File object
+  final dynamic image;
   final double radius;
   final Widget? placeholder;
   final Widget? errorWidget;
-  final String? assetFallback;
+  final String? fallbackImage;
+  final BoxFit fit;
+  final Color? backgroundColor;
 
   const AppCircleImage(
     this.image, {
@@ -16,59 +25,128 @@ class AppCircleImage extends StatelessWidget {
     this.radius = 30.0,
     this.placeholder,
     this.errorWidget,
-    this.assetFallback,
+    this.fallbackImage,
+    this.fit = BoxFit.cover,
+    this.backgroundColor = const Color(0xFFE0E0E0),
   });
 
   @override
   Widget build(BuildContext context) {
     return CircleAvatar(
       radius: radius,
-      backgroundColor: Colors.grey.shade200,
-      child: ClipOval(
-        child: _isNetworkImage(image)
-            ? _buildCachedNetworkImage()
-            : _buildAssetImage(),
-      ),
+      backgroundColor: backgroundColor,
+      child: ClipOval(child: _buildImage(context)),
     );
+  }
+
+  /// Determines the image source type
+  ImageSourceType _getImageSourceType() {
+    if (image == null) {
+      return ImageSourceType.none;
+    }
+
+    if (image is File) {
+      return ImageSourceType.file;
+    }
+
+    if (image is! String || (image as String).isEmpty) {
+      return ImageSourceType.none;
+    }
+
+    if (_isNetworkImage(image as String)) {
+      return ImageSourceType.network;
+    }
+
+    return ImageSourceType.asset;
   }
 
   /// Checks if the provided image path is a network URL.
-  bool _isNetworkImage(String? image) {
-    return image != null && Uri.tryParse(image)?.hasAbsolutePath == true;
+  bool _isNetworkImage(String path) {
+    // Primary check: starts with http:// or https://
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return true;
+    }
+
+    // Secondary check: using Uri parser for more complex cases
+    final uri = Uri.tryParse(path);
+    return uri != null && uri.hasScheme && uri.hasAuthority;
   }
 
-  /// Builds an asset-based image with an optional fallback on error.
-  Widget _buildAssetImage() {
+  /// Builds the appropriate image widget based on source type
+  Widget _buildImage(BuildContext context) {
+    final imageSourceType = _getImageSourceType();
+    final double size = radius * 2;
+
+    switch (imageSourceType) {
+      case ImageSourceType.network:
+        return _buildCachedNetworkImage(size, context);
+      case ImageSourceType.asset:
+        return _buildAssetImage(size, context);
+      case ImageSourceType.file:
+        return _buildFileImage(size);
+      case ImageSourceType.none:
+        return _buildFallbackOrError(size, context);
+    }
+  }
+
+  /// Builds a file image with error handling
+  Widget _buildFileImage(double size) {
+    return Image.file(
+      image as File,
+      width: size,
+      height: size,
+      fit: fit,
+      errorBuilder:
+          (context, error, stackTrace) => _buildFallbackOrError(size, context),
+    );
+  }
+
+  /// Builds an asset-based image with error handling
+  Widget _buildAssetImage(double size, BuildContext context) {
     return Image.asset(
-      image ?? '',
-      width: radius * 2,
-      height: radius * 2,
-      fit: BoxFit.cover,
-      errorBuilder: (context, error, stackTrace) {
-        if (assetFallback != null) {
-          return Image.asset(
-            assetFallback!,
-            width: radius * 2,
-            height: radius * 2,
-            fit: BoxFit.cover,
-          );
-        }
-        return _defaultErrorWidget();
-      },
+      image as String,
+      width: size,
+      height: size,
+      fit: fit,
+      errorBuilder:
+          (context, error, stackTrace) => _buildFallbackOrError(size, context),
+      cacheWidth: _calculateCacheWidth(size, context),
     );
   }
 
-  /// Builds a cached network image with placeholders and error widgets.
-  Widget _buildCachedNetworkImage() {
+  /// Builds a cached network image with optimized settings
+  Widget _buildCachedNetworkImage(double size, BuildContext context) {
     return CachedNetworkImage(
-      imageUrl: image ?? '',
-      width: radius * 2,
-      height: radius * 2,
-      fit: BoxFit.cover,
+      imageUrl: image as String,
+      width: size,
+      height: size,
+      fit: fit,
+      memCacheWidth: _calculateCacheWidth(size, context),
       placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
-      errorWidget: (context, url, error) =>
-          errorWidget ?? _defaultErrorWidget(),
+      errorWidget: (context, url, error) => _buildFallbackOrError(size, context),
     );
+  }
+
+  /// Calculate appropriate cache width based on device pixel ratio
+  int _calculateCacheWidth(double size, BuildContext context) {
+    return (size * (kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio.ceil()))
+        .toInt();
+  }
+
+  /// Builds either a fallback image or error widget
+  Widget _buildFallbackOrError(double size, BuildContext context) {
+    if (fallbackImage != null) {
+      return Image.asset(
+        fallbackImage!,
+        width: size,
+        height: size,
+        fit: fit,
+        cacheWidth: _calculateCacheWidth(size, context),
+        errorBuilder:
+            (context, error, stackTrace) => errorWidget ?? _defaultErrorWidget(),
+      );
+    }
+    return errorWidget ?? _defaultErrorWidget();
   }
 
   /// Default widget displayed while the image is loading.
@@ -88,11 +166,7 @@ class AppCircleImage extends StatelessWidget {
   /// Default widget displayed when an error occurs while loading the image.
   Widget _defaultErrorWidget() {
     return Center(
-      child: Icon(
-        Icons.person,
-        size: radius,
-        color: Colors.grey.shade500,
-      ),
+      child: Icon(Icons.person, size: radius, color: Colors.grey.shade500),
     );
   }
 }

@@ -35,7 +35,10 @@ T condition<T>(bool condition, T trueCase, T falseCase) {
 ///
 /// @return The result of the executed function.
 T conditionFunction<T>(
-    bool condition, T Function() trueCase, T Function() falseCase) {
+  bool condition,
+  T Function() trueCase,
+  T Function() falseCase,
+) {
   // If the condition is true, invoke the trueCase function.
   // Otherwise, invoke the falseCase function.
   return condition ? trueCase() : falseCase();

@@ -4,6 +4,9 @@
 
 import 'package:flutter/material.dart';
 
+import '../image/app_circle_image.dart';
+import '../image/app_image.dart';
+
 /// Extension on String to create Text widgets with customizable properties.
 extension TextExtension on String {
   /// Creates a Text widget with customizable properties.
@@ -19,10 +22,7 @@ extension TextExtension on String {
   /// ```dart
   /// final textWidget = 'Hello'.edit(textStyle: TextStyle(fontSize: 20), textAlign: TextAlign.center);
   /// ```
-  Text edit(
-          {TextStyle? textStyle,
-          TextAlign? textAlign,
-          Color? selectionColor}) =>
+  Text edit({TextStyle? textStyle, TextAlign? textAlign, Color? selectionColor}) =>
       Text(
         this,
         style: textStyle,
@@ -55,7 +55,7 @@ extension CustomImageExtension on String {
     double? width,
     double? height,
     Color? color,
-    BoxFit? fit,
+    BoxFit fit = BoxFit.contain,
     AlignmentGeometry alignment = Alignment.center,
     ImageRepeat repeat = ImageRepeat.noRepeat,
   }) {
@@ -67,6 +67,14 @@ extension CustomImageExtension on String {
       fit: fit,
       alignment: alignment,
       repeat: repeat,
+      errorBuilder:
+          (_, _, _) => AppImage(
+            this,
+            fit: fit,
+            height: height,
+            width: width,
+            backgroundColor: color,
+          ),
     );
   }
 
@@ -85,25 +93,11 @@ extension CustomImageExtension on String {
   /// ```dart
   /// final circleImageContainer = 'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8);
   /// ```
-  Container circleImage({
-    BoxFit? fit,
-    AlignmentGeometry alignment = Alignment.center,
-    ImageRepeat repeat = ImageRepeat.noRepeat,
-    double scale = 1.0,
-    double opacity = 1.0,
+  Widget circleImage({
+    BoxFit fit = BoxFit.contain,
+    double radius = 30.0,
+    Color? color,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        image: DecorationImage(
-          image: ExactAssetImage(this),
-          fit: fit,
-          alignment: alignment,
-          repeat: repeat,
-          scale: scale,
-          opacity: opacity,
-        ),
-      ),
-    );
+    return AppCircleImage(this, fit: fit, radius: radius, backgroundColor: color);
   }
 }

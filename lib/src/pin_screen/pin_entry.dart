@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 
 import 'pin_configurations.dart';
@@ -65,8 +69,10 @@ class _PinEntryState extends State<PinEntry> {
   void initState() {
     super.initState();
     _pin = List.filled(widget.pinLength, '');
-    _controllers =
-        List.generate(widget.pinLength, (index) => TextEditingController());
+    _controllers = List.generate(
+      widget.pinLength,
+      (index) => TextEditingController(),
+    );
     _focusNodes = List.generate(widget.pinLength, (index) => FocusNode());
   }
 
@@ -92,9 +98,10 @@ class _PinEntryState extends State<PinEntry> {
         for (int i = 0; i < _controllers.length; i++) {
           String currentText = _pin[i];
           if (widget.inputFieldConfiguration.obscureText) {
-            _controllers[i].text = currentText.isNotEmpty
-                ? widget.inputFieldConfiguration.obscuringCharacter
-                : '';
+            _controllers[i].text =
+                currentText.isNotEmpty
+                    ? widget.inputFieldConfiguration.obscuringCharacter
+                    : '';
           } else {
             _controllers[i].text = currentText;
           }
@@ -105,8 +112,10 @@ class _PinEntryState extends State<PinEntry> {
     // Handle pin length changes
     if (widget.pinLength != oldWidget.pinLength) {
       _pin = List.filled(widget.pinLength, '');
-      _controllers =
-          List.generate(widget.pinLength, (index) => TextEditingController());
+      _controllers = List.generate(
+        widget.pinLength,
+        (index) => TextEditingController(),
+      );
       _focusNodes = List.generate(widget.pinLength, (index) => FocusNode());
     }
 
@@ -136,8 +145,9 @@ class _PinEntryState extends State<PinEntry> {
         }
       }
     } else {
-      int emptyIndex =
-          _controllers.indexWhere((controller) => controller.text.isEmpty);
+      int emptyIndex = _controllers.indexWhere(
+        (controller) => controller.text.isEmpty,
+      );
       if (emptyIndex != -1) {
         _controllers[emptyIndex].text =
             widget.inputFieldConfiguration.obscureText
@@ -151,8 +161,9 @@ class _PinEntryState extends State<PinEntry> {
     }
 
     setState(() {
-      _isInputComplete =
-          _controllers.every((controller) => controller.text.isNotEmpty);
+      _isInputComplete = _controllers.every(
+        (controller) => controller.text.isNotEmpty,
+      );
       if (_isInputComplete && widget.onInputComplete != null) {
         widget.onInputComplete!(_pin.join());
       }
@@ -177,11 +188,9 @@ class _PinEntryState extends State<PinEntry> {
             fieldCount: widget.pinLength,
             fieldFillColor: widget.inputFieldConfiguration.fieldFillColor,
             borderColor: widget.inputFieldConfiguration.borderColor,
-            focusedBorderColor:
-                widget.inputFieldConfiguration.focusedBorderColor,
+            focusedBorderColor: widget.inputFieldConfiguration.focusedBorderColor,
             obscureText: widget.inputFieldConfiguration.obscureText,
-            obscuringCharacter:
-                widget.inputFieldConfiguration.obscuringCharacter,
+            obscuringCharacter: widget.inputFieldConfiguration.obscuringCharacter,
             inputHeight: widget.inputFieldConfiguration.inputHeight,
             textStyle: widget.inputFieldConfiguration.textStyle,
           ),
@@ -189,9 +198,9 @@ class _PinEntryState extends State<PinEntry> {
           if (widget.middleWidget != null)
             widget.centerMiddleWidget
                 ? Padding(
-                    padding: EdgeInsets.only(top: verticalPadding),
-                    child: widget.middleWidget!,
-                  )
+                  padding: EdgeInsets.only(top: verticalPadding),
+                  child: widget.middleWidget!,
+                )
                 : widget.middleWidget!,
           SizedBox(height: verticalPadding),
           PinKeyboard(

@@ -1,5 +1,29 @@
 # Changelog
 
+## [1.1.0] - 2025-04-20 (Feature Release)
+
+### **Features:**
+- **Enhanced Image Handling**: Added comprehensive file support (`File` objects) for both `AppImage` and `AppCircleImage` widgets.
+- **Border Radius Support**: Introduced `borderRadius` parameter for `AppImage` to enable custom clipping without additional widgets.
+- **Background Customization**: Added `backgroundColor` parameter to both image widgets for better visual integration.
+- **Performance Optimizations**: Implemented device pixel ratio-aware image caching for improved memory usage.
+- **Robust Source Detection**: Enhanced network URL validation with multiple detection methods for more reliable image loading.
+
+### **Improvements:**
+- **Unified Image API**: Consolidated handling of network, asset, and file sources through a single consistent interface.
+- **Error Handling**: Improved logging and fallback mechanisms for better debugging and user experience.
+- **Customization**: Added `fit` parameter to `AppCircleImage` for more control over image scaling.
+- **Documentation**: Enhanced code documentation and usage examples.
+
+### **Deprecated:**
+- The `assetFallback` parameter is now recommended to be replaced with `fallbackImage` for naming consistency (backward compatible).
+
+### **Other Changes:**
+- Fixed edge cases in network URL detection and fallback image handling.
+- Improved default placeholder and error widgets for better visual consistency.
+
+---
+
 ## [1.0.0] - 2025-01-08 (Major Release)
 
 ### **Features:**
@@ -23,7 +47,7 @@
 ## [0.0.5] - 2024-03-20
 
 - Improved documentation for the `SharedPreferencesService` class.
-- Added example usage in `README.md` documentation.
+- Added example usage in `README.md`.
 - Bug fixes and performance improvements.
 
 ## [0.0.4] - 2024-03-20

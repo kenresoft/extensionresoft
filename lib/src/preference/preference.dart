@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// A service class for managing SharedPreferences in Flutter applications.
@@ -10,8 +14,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// Please update your implementation to use modern alternatives or recommended patterns.
 
 @Deprecated(
-    'SharedPreferencesService is deprecated and will be removed in a future stable release. '
-    'Please migrate to a modern implementation as the preference legacy is deprecated in SharedPreferences.')
+  'SharedPreferencesService is deprecated and will be removed in a future stable release. '
+  'Please migrate to a modern implementation as the preference legacy is deprecated in SharedPreferences.',
+)
 class SharedPreferencesService {
   static late SharedPreferences _preferences;
 

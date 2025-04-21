@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 
 /// A stateless widget representing the input fields for PIN entry.
@@ -65,8 +69,7 @@ class PinInputField extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: List.generate(fieldCount, (index) {
             return Flexible(
-              child:
-                  _buildPinInputField(context, index, inputWidth, inputHeight),
+              child: _buildPinInputField(context, index, inputWidth, inputHeight),
             );
           }),
         );
@@ -87,8 +90,12 @@ class PinInputField extends StatelessWidget {
 
   // Helper method to build each input field widget
   Widget _buildPinInputField(
-      BuildContext context, int index, double inputWidth, double inputHeight) {
-    return Container(
+    BuildContext context,
+    int index,
+    double inputWidth,
+    double inputHeight,
+  ) {
+    return SizedBox(
       width: inputWidth,
       height: inputHeight, // Use definite inputHeight
       // margin: EdgeInsets.only(right: index < fieldCount - 1 ? 10.0 : 0.0),
@@ -99,10 +106,7 @@ class PinInputField extends StatelessWidget {
         maxLines: 1,
         textAlign: TextAlign.center,
         keyboardType: TextInputType.none,
-        style: textStyle.copyWith(
-          fontSize: inputHeight * 0.5,
-          height: 0,
-        ),
+        style: textStyle.copyWith(fontSize: inputHeight * 0.5, height: 0),
         // Responsive font size
         obscureText: obscureText,
         obscuringCharacter: obscuringCharacter,
@@ -113,7 +117,8 @@ class PinInputField extends StatelessWidget {
           enabledBorder: _inputBorderStyle(borderColor),
           focusedBorder: _inputBorderStyle(focusedBorderColor),
           contentPadding: EdgeInsets.symmetric(
-              vertical: inputHeight * 0.2), // Adjust padding based on height
+            vertical: inputHeight * 0.2,
+          ), // Adjust padding based on height
         ),
         onChanged: (value) {
           if (value.isNotEmpty) {
@@ -133,16 +138,5 @@ class PinInputField extends StatelessWidget {
       borderRadius: BorderRadius.circular(8),
       borderSide: BorderSide(color: color, width: 2),
     );
-  }
-
-  // Calculate dynamic line height based on button height
-  double _getTextHeight(double buttonHeight) {
-    if (buttonHeight > 100) {
-      return 1.0; // Suitable line height for very large buttons
-    } else if (buttonHeight > 70) {
-      return 1.1; // Slightly increased line height for medium buttons
-    } else {
-      return 1.2; // Increased line height for smaller buttons
-    }
   }
 }
