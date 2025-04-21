@@ -1,365 +1,264 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
-
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/guides/libraries/writing-package-pages).
-
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-library-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/developing-packages).
--->
-
-# extensionresoft
+# ExtensionResoft
 
 [![pub package](https://img.shields.io/pub/v/extensionresoft.svg?label=extensionresoft&color=blue)](https://pub.dev/packages/extensionresoft)
 [![pub points](https://img.shields.io/pub/points/extensionresoft?logo=dart)](https://pub.dev/packages/extensionresoft/score)
-[![popularity](https://img.shields.io/pub/popularity/extensionresoft?logo=dart&color=yellow)](https://pub.dev/packages/extensionresoft/score)
+[![Pub Monthly Downloads](https://img.shields.io/pub/dm/extensionresoft?logo=dart&color=yellow)](https://pub.dev/packages/extensionresoft/score)
 [![likes](https://img.shields.io/pub/likes/extensionresoft?logo=dart&color=red)](https://pub.dev/packages/extensionresoft/score)
 <a href="https://github.com/kenresoft/extensionresoft">![Star on Github](https://img.shields.io/github/stars/kenresoft/extensionresoft.svg?style=flat&logo=github&colorB=deeppink&label=stars)</a>
 <a href="https://github.com/Solido/awesome-flutter">![Awesome Flutter](https://img.shields.io/badge/Awesome-Flutter-blue.svg?longCache=true&style=flat-square)</a>
 <a href="https://opensource.org/license/bsd-3-clause">![License: BSD](https://img.shields.io/badge/license-BSD_3--Clause-teal.svg)</a>
 
-A comprehensive collection of reusable widgets, utilities, and extensions designed to streamline your Flutter development process.
-**Ideal for:** Faster development, streamlined app development, building secure login screens, and managing app settings.
-
-## Table of Contents
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [Features](#features)
-- [Examples](#examples)
-- [Tests](#tests)
-- [Screenshots](#screenshots)
-- [Contributing](#contributing)
-- [License](#license)
-
-## Installation
-
-To use the extensionresoft library in your Flutter project, add it to your `pubspec.yaml` file:
-
-```yaml
-dependencies:
-  extensionresoft: ^1.0.0
-```
-
-Then, run:
-
-```bash
-flutter pub get
-````
-
-to install the dependencies.
-
-## Usage
-
-Import the extensionresoft library in your Dart files:
-
-```dart
-import 'package:extensionresoft/extensionresoft.dart';
-```
-
-You can now use any of the extensions provided by the library in your Flutter project.
+A comprehensive toolkit of extensions, widgets, and utilities to accelerate Flutter development with less code. ExtensionResoft optimizes common tasks, enhances UI components, and provides robust architecture patterns.
 
 ## Features
 
-The extensionresoft library includes the following major extensions among others:
+### 🖼️ Advanced Image Handling
 
-### Image Processing
+Create robust image components with minimal effort:
 
-#### Advanced Image Handling
+- **Multi-source Support**: Handle network URLs, asset paths, and file objects through a unified API
+- **AppImage**: Rectangular images with custom border radius, intelligent error handling, and fallbacks
+- **AppCircleImage**: Circular avatar images with placeholder and error states
+- **Performance Optimized**: Device pixel ratio-aware caching for memory efficiency
+- **Decoration Support**: Use as BoxDecoration background images easily
 
-- **Widget Versatility**: Implement both circular and rectangular image widgets with comprehensive placeholder support, error handling, caching
-  mechanisms, and fallback options.
-- **Resource Management**: Efficiently handle network and asset images for optimal display performance across your application.
+### 🔐 Secure PIN Authentication
 
-### Security Features
+Build secure user authentication flows:
 
-#### PIN Authentication System
+- **PinEntry Widget**: Customizable PIN entry with multiple security configurations
+- **Visual Customization**: Style input fields and keyboard components separately
+- **Validation Support**: Custom handlers for completion and validation events
 
-- **Widget Implementation**: Create robust and customizable PIN entry widgets designed for secure user authentication.
-- **Security Enhancement**: Enhance user experience and security in your login screens.
+### 🌐 Internet Connectivity Management
 
-### Network Operations
+Detect and respond to network changes reliably:
 
-#### Connectivity Management
+- **Real-time Monitoring**: Observe detailed connectivity state changes through streams
+- **Granular Control**: Monitor specific connectivity aspects with dedicated streams
+- **Simplified API**: Check network status with straightforward methods
+- **Resilient Applications**: Build offline-ready features with minimal effort
 
-- **Real-time Monitoring**: Implement continuous network status checks for immediate connectivity awareness.
-- **Graceful Handling**: Ensure seamless application performance during network state transitions.
+### 🧰 UI Extension Toolkit
 
-### Data Management
+Write less code for common UI patterns:
 
-#### Storage Solutions
+- **Spacing Extensions**: Clean spacer syntax with both method and getter options
+- **Custom Cards**: Create styled cards with simple radius-based extensions
+- **Text Styling**: Format text with fluent extensions for improved readability
+- **Image Path Extensions**: Convert asset paths to image widgets directly
 
-- **SharedPreferencesService Implementation**: Utilize comprehensive persistent storage capabilities for multiple data types, including:
-  - Boolean values
-  - String data
-  - Integer values
-  - Double-precision numbers
-- **Preference Management**: Implement efficient systems for handling application settings and user preferences.
+### 🧠 Logic & Functional Extensions
 
-### Extension Libraries
+Enhance code clarity and maintainance:
 
-#### Context Extensions
+- **Conditional Functions**: Widget-friendly alternatives to ternary operators
+- **Path Extensions**: Apply transformations to values with clean syntax
+- **Value Management**: Robust value retrieval with fallback handling
 
-- **Navigation Enhancement**: Streamline navigation operations with intuitive context extensions.
-- **Code Optimization**: Implement cleaner, more maintainable code structures.
+### 📦 Storage Utilities
 
-#### UI Extensions
+Manage persistent data efficiently:
 
-- Icon Extensions
-- List Extensions
-- Numeric Extensions
-- String Extensions
+- **SharedPreferencesService**: Type-safe storage for app settings and user preferences
+- **Support for Multiple Types**: Store and retrieve booleans, strings, integers, and doubles
 
-#### Logic Utilities
+## Getting Started
 
-##### Conditional Operations
+### Installation
 
-- **Logic Implementation**: Create concise conditional logic using optimized operators.
+Add the package to your `pubspec.yaml`:
 
-##### Value Management
+```yaml
+dependencies:
+  extensionresoft: ^1.1.0
+```
 
-- **Data Retrieval**: Implement robust value retrieval systems with configurable fallback options.
+Then run:
 
-### Benefits
+```bash
+flutter pub get
+```
 
-#### Development Efficiency
+### Basic Usage
 
-- **Code Reduction**: Minimize boilerplate code through reusable component implementation.
-- **Task Simplification**: Streamline common development tasks with intuitive utilities.
-
-#### Code Quality
-
-- **Maintainability**: Improve code readability through well-structured extensions.
-- **Documentation**: Implement clear, consistent naming conventions for enhanced understanding.
-
-#### Productivity Enhancement
-
-- **Focus Optimization**: Concentrate on core application logic development.
-- **Time Management**: Reduce time spent on repetitive development tasks.
-
-## Examples
-
-Check out the Examples section below for code examples demonstrating how to use the extensions provided by the extensionresoft library.
+Import the package:
 
 ```dart
 import 'package:extensionresoft/extensionresoft.dart';
-import 'package:flutter/material.dart';
+```
 
-void main() {
+## Usage Examples
 
-  // Secure PIN Entry
-  PinEntry(
-    pinLength: 4,
-    onInputComplete: (pin) => print('Entered PIN: $pin'),
-    inputFieldConfiguration: InputFieldConfiguration(
-      obscureText: true,
-      fieldFillColor: Colors.grey[200],
-      focusedBorderColor: Colors.blue,
+### Image Handling
+
+```dart
+// Network image with fallback and border radius
+AppImage(
+  'https://example.com/profile.jpg',
+  width: 150,
+  height: 150,
+  fit: BoxFit.cover,
+  borderRadius: BorderRadius.circular(8),
+  backgroundColor: Colors.grey[200],
+  errorWidget: Icon(Icons.broken_image),
+  fallbackImage: 'assets/default_image.png',
+)
+
+// Circle avatar from network or asset
+AppCircleImage(
+  'assets/profile_photo.jpg', // or network URL or File object
+  radius: 40,
+  fit: BoxFit.cover,
+  placeholder: CircularProgressIndicator(strokeWidth: 2),
+  errorWidget: Icon(Icons.person),
+)
+
+// As decoration image
+Container(
+  decoration: BoxDecoration(
+    image: AppImage('https://example.com/bg.jpg')
+        .toDecorationImage(
+      decorationFit: BoxFit.cover,
+      fallbackImage: 'assets/default_bg.png',
     ),
-    keyboardConfiguration: KeyboardConfiguration(
-      keyBackgroundColor: Colors.white,
-      keyTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-    ),
-  );
+  ),
+)
 
-  // Internet Connection Management
-  final connectionChecker = InternetConnectionChecker();
+// Path-based image extensions
+'assets/image.png'.img(width: 100, height: 100)
+'assets/avatar.png'.circleImage(fit: BoxFit.cover)
+```
 
-  // Listen to detailed connectivity changes
-  connectionChecker.onInternetConnectivityChanged.listen((result) {
-    print('Connection Status: ${result.hasInternetAccess}');
-    print('Connection Type: ${result.connectionType}');
-  });
+### Internet Connectivity
 
-  // Quick connection check
-  final isConnected = await connectionChecker.isInternetConnected;
+```dart
+// Create a checker instance
+final connectionChecker = InternetConnectionChecker();
 
-  // Circular Network/Asset Image
-  AppCircleImage(
-    'https://example.com/profile.jpg',
-    radius: 40,
-    assetFallback: 'assets/default_avatar.png',
-    placeholder: CircularProgressIndicator(),
-    errorWidget: Icon(Icons.error),
-  );
+// Check current connection status
+final isConnected = await connectionChecker.isInternetConnected;
+print('Internet connected: $isConnected');
 
-  // Flexible Image Widget
-  AppImage(
-    'https://example.com/image.jpg',
-    width: 200,
-    height: 150,
-    fit: BoxFit.cover,
-    assetFallback: 'assets/placeholder.png',
-  );
-
-  // - as decoration image -
-  Container(
-    decoration: BoxDecoration(
-      image: AppImage('https://example.com/background.jpg')
-              .toDecorationImage(
-        fit: BoxFit.cover,
-        fallbackAsset: 'assets/default_bg.png',
-      ),
-    ),
-  );
+// Listen to detailed connectivity changes
+connectionChecker.onInternetConnectivityChanged.listen((result) {
+  print('Connection Status: ${result.hasInternetAccess}');
+  print('Connection Type: ${result.connectionType}');
   
-  // SpaceExtension Example
-  final spacerX = 16.spaceX(); // Creates a SizedBox with a width of 16.
-  final spacerY = 24.spaceY(); // Creates a SizedBox with a height of 24.
-  final spacerXY = 32.spaceXY(); // Creates a SizedBox with both width and height of 32.
-  final spacerXGetter = 20.spX; // Getter example: Creates a SizedBox with a width of 20.
-  final spacerYGetter = 30.spY; // Getter example: Creates a SizedBox with a height of 30.
-  final spacerXYGetter = 40.spXY; // Getter example: Creates a SizedBox with both width and height of 40.
+  // Update UI based on connectivity
+  if (result.hasInternetAccess) {
+    // Load online data
+  } else {
+    // Show offline mode UI
+  }
+});
 
-  // CustomCardExtension Example
-  final roundedCard = 16.radius(
-    child: const Text('Hello World'),
-    elevation: 4,
-    color: Colors.blue,
-    strokeColor: Colors.black,
-    shadowColor: Colors.grey,
-  ); // Creates a rounded card with specified properties.
-
-  // PathExtension Example
-  final result = 16.p((n) => n * 2); // Applies a function to the number 16 and returns the result.
-
-  // TextExtension Example
-  final textWidget = 'Hello'.edit(textStyle: const TextStyle(fontSize: 20), textAlign: TextAlign.center); // Creates a customized Text widget.
-
-  // CustomImageExtension Example
-  final imageWidget = 'assets/image.png'.img(
-          width: 100, height: 100, fit: BoxFit.cover); // Creates an Image widget from an asset with specified properties.
-  final circleImageContainer = 'assets/avatar.png'.circleImage(
-          fit: BoxFit.cover, opacity: 0.8); // Creates a circular image container with specified properties.
-
-  // Conditional Function Example
-  final conditionResult = condition(true, 'True Value', 'False Value'); // Returns 'True Value' based on the condition.
-  final conditionFunctionResult = conditionFunction(true, () => 'True Value', () => 'False Value'); // Invokes a function based on the condition.
-
-  // Get Function Example
-  final value = get('Existing Value', 'Default Value'); // Returns 'Existing Value' if not null, otherwise returns 'Default Value'.
-
-  // SharedPreferencesService Example
-  await SharedPreferencesService.init(); // Initializes SharedPreferencesService.
-  await SharedPreferencesService.setBool('isDarkMode', true); // Sets a boolean value in SharedPreferences.
-  final isDarkMode = SharedPreferencesService.getBool('isDarkMode'); // Retrieves the boolean value from SharedPreferences.
-}
-
+// Simplified boolean stream for quick status checks
+connectionChecker.onIsInternetConnected.listen((isConnected) {
+  print('Internet status changed: $isConnected');
+});
 ```
 
-## Tests
-
-Check out unit tests for the extensionresoft library to ensure the functionality of each extension.
+### PIN Authentication
 
 ```dart
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:extensionresoft/extensionresoft.dart';
-
-void main() {
-  group('SpaceExtension', () {
-    test('spaceX should return a SizedBox with specified width', () {
-      final spacerX = 16.spaceX();
-      expect(spacerX.width, equals(16.0));
-    });
-
-    test('spaceY should return a SizedBox with specified height', () {
-      final spacerY = 24.spaceY();
-      expect(spacerY.height, equals(24.0));
-    });
-
-    test('spaceXY should return a SizedBox with specified width and height', () {
-      final spacerXY = 32.spaceXY();
-      expect(spacerXY.width, equals(32.0));
-      expect(spacerXY.height, equals(32.0));
-    });
-
-    test('spX getter should return a SizedBox with specified width', () {
-      final spacerXGetter = 20.spX;
-      expect(spacerXGetter.width, equals(20.0));
-    });
-
-    test('spY getter should return a SizedBox with specified height', () {
-      final spacerYGetter = 30.spY;
-      expect(spacerYGetter.height, equals(30.0));
-    });
-
-    test('spXY getter should return a SizedBox with specified width and height', () {
-      final spacerXYGetter = 40.spXY;
-      expect(spacerXYGetter.width, equals(40.0));
-      expect(spacerXYGetter.height, equals(40.0));
-    });
-  });
-
-  group('CustomCardExtension', () {
-    test('radius should return a Card widget with specified properties', () {
-      final Card roundedCard = 16.radius(
-        child: const Text('Test'),
-        elevation: 4,
-        color: Colors.blue,
-        strokeColor: Colors.black,
-        shadowColor: Colors.grey,
-      ) as Card;
-
-      expect(roundedCard.elevation, equals(4));
-      expect(roundedCard.color, equals(Colors.blue));
-      expect(roundedCard.shadowColor, equals(Colors.grey));
-    });
-  });
-
-  group('PathExtension', () {
-    test('p function should apply function to number and return result', () {
-      final result = 16.p((n) => n * 2);
-      expect(result, equals(32.0));
-    });
-  });
-
-  group('TextExtension', () {
-    test('edit function should return a Text widget with specified properties', () {
-      final textWidget = 'Hello'.edit(textStyle: const TextStyle(fontSize: 20), textAlign: TextAlign.center);
-      expect(textWidget.data, equals('Hello'));
-      expect(textWidget.style!.fontSize, equals(20));
-      expect(textWidget.textAlign, equals(TextAlign.center));
-    });
-  });
-
-  group('CustomImageExtension', () {
-    test('img function should return an Image widget with specified properties', () {
-      final imageWidget = 'assets/image.png'.img(width: 100, height: 100, fit: BoxFit.cover);
-      expect(imageWidget.width, equals(100.0));
-      expect(imageWidget.height, equals(100.0));
-    });
-
-    test('circleImage function should return a Container widget with circular image decoration', () {
-      final circleImageContainer = 'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8);
-      //expect(circleImageContainer.decoration!.shape, equals(BoxShape.circle));
-    });
-  });
-
-  group('Conditional Function', () {
-    test('condition function should return correct value based on condition', () {
-      final result = condition(true, 'True Value', 'False Value');
-      expect(result, equals('True Value'));
-    });
-
-    test('conditionFunction should invoke correct function based on condition', () {
-      final result = conditionFunction(true, () => 'True Value', () => 'False Value');
-      expect(result, equals('True Value'));
-    });
-  });
-
-  group('Get Function', () {
-    test('get function should return correct value based on key and default value', () {
-      final result = get('Existing Value', 'Default Value');
-      expect(result, equals('Existing Value'));
-    });
-  });
-}
-
+PinEntry(
+  pinLength: 6,
+  onInputComplete: (pin) {
+    // Handle PIN validation
+  },
+  inputFieldConfiguration: InputFieldConfiguration(
+    obscureText: true,
+    fieldFillColor: Colors.grey[200],
+    focusedBorderColor: Colors.blue,
+  ),
+  keyboardConfiguration: KeyboardConfiguration(
+    keyBackgroundColor: Colors.white,
+    keyTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+  ),
+)
 ```
+
+### UI Extensions
+
+```dart
+// Spacing utilities
+16.spaceX()  // SizedBox(width: 16)
+24.spaceY()  // SizedBox(height: 24)
+32.spaceXY() // SizedBox(width: 32, height: 32)
+
+// Getters for even cleaner code
+20.spX  // SizedBox(width: 20)
+30.spY  // SizedBox(height: 30)
+
+// Custom card with styling
+12.radius(
+  child: Padding(
+    padding: EdgeInsets.all(16),
+    child: Text('Rounded Card Example'),
+  ),
+  elevation: 2,
+  color: Colors.blue[50],
+  strokeColor: Colors.black12,
+)
+
+// Text styling
+'Hello Flutter'.edit(
+  textStyle: TextStyle(
+    fontSize: 20,
+    fontWeight: FontWeight.bold,
+    color: Colors.teal,
+  ),
+  textAlign: TextAlign.center,
+)
+```
+
+### Logic & Functional Extensions
+
+```dart
+// Path extension to transform values
+final doubled = 16.p((n) => n * 2);  // 32
+
+// Widget-friendly conditional logic
+final result = condition(isActive, 'Active', 'Inactive');
+
+// Function-based conditionals (lazy evaluation)
+final message = conditionFunction(
+  hasPermission,
+  () => 'Access granted',
+  () => 'Access denied: ${getErrorMessage()}',
+);
+
+// Safe value retrieval with fallback
+final displayName = get(user.name, 'Guest User');
+```
+
+### Shared Preferences
+
+```dart
+// Initialize service
+await SharedPreferencesService.init();
+
+// Store values
+await SharedPreferencesService.setBool('isDarkMode', true);
+await SharedPreferencesService.setString('username', 'flutter_dev');
+
+// Retrieve values
+final isDarkMode = SharedPreferencesService.getBool('isDarkMode');
+final username = SharedPreferencesService.getString('username', 'guest');
+```
+
+## Advanced Usage
+
+See the [API Reference](https://pub.dev/documentation/extensionresoft/latest/) for comprehensive documentation of all available extensions and utilities.
+
+## Migration from 1.0.0 to 1.1.0
+
+While version 1.1.0 maintains backward compatibility, we recommend the following changes:
+
+- Replace `assetFallback` with `fallbackImage` parameter in image widgets for improved naming consistency
+- Take advantage of the new `File` object support in image widgets
+- Utilize new `borderRadius` and `backgroundColor` parameters for enhanced customization
 
 ## Screenshots
 
@@ -369,9 +268,14 @@ void main() {
 
 ## Contributing
 
-Contributions to the extensionresoft library are welcome! If you have any ideas for new extensions or improvements to existing ones, please open an
-issue or submit a pull request on GitHub.
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/amazing-feature`)
+3. Commit your Changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the Branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the BSD 3-Clause License - see the [LICENSE](LICENSE) file for details.

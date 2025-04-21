@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 import 'dart:io';
 
@@ -45,8 +49,9 @@ class InternetChecker {
       return await _getInternetResult(await _connectivity.checkConnectivity());
     });
 
-    _streamB = _connectivity.onConnectivityChanged
-        .asyncMap((connectivityResult) async {
+    _streamB = _connectivity.onConnectivityChanged.asyncMap((
+      connectivityResult,
+    ) async {
       return await _getInternetResult(connectivityResult);
     });
 
@@ -54,7 +59,8 @@ class InternetChecker {
   }
 
   Future<InternetResult> _getInternetResult(
-      List<ConnectivityResult>? connectivityResult) async {
+    List<ConnectivityResult>? connectivityResult,
+  ) async {
     if (connectivityResult != null &&
         connectivityResult.last == ConnectivityResult.none) {
       return InternetResult.noInternetAccess();
@@ -83,22 +89,25 @@ class InternetChecker {
       'google.com',
       'cloudflare.com',
       'facebook.com',
-      'amazon.com'
+      'amazon.com',
     ];
-    final result = await Future.wait(testHosts.map((host) async {
-      try {
-        final lookupResult = await InternetAddress.lookup(host);
-        return lookupResult.isNotEmpty && lookupResult[0].rawAddress.isNotEmpty;
-      } catch (e) {
-        return false;
-      }
-    }));
+    final result = await Future.wait(
+      testHosts.map((host) async {
+        try {
+          final lookupResult = await InternetAddress.lookup(host);
+          return lookupResult.isNotEmpty && lookupResult[0].rawAddress.isNotEmpty;
+        } catch (e) {
+          return false;
+        }
+      }),
+    );
 
     return InternetResult(
       dnsSuccess: result.any((success) => success),
-      failureReason: result.any((success) => !success)
-          ? 'DNS lookup failed for one or more hosts.'
-          : null,
+      failureReason:
+          result.any((success) => !success)
+              ? 'DNS lookup failed for one or more hosts.'
+              : null,
     );
   }
 
@@ -107,41 +116,48 @@ class InternetChecker {
       'google.com',
       'cloudflare.com',
       'facebook.com',
-      'amazon.com'
+      'amazon.com',
     ];
-    final results = await Future.wait(testHosts.map((host) async {
-      try {
-        final socket = await Socket.connect(host, 443,
-            timeout: const Duration(seconds: 3));
-        socket.destroy();
-        return true; // Socket connection successful
-      } catch (e) {
-        return false; // Socket connection failed
-      }
-    }));
+    final results = await Future.wait(
+      testHosts.map((host) async {
+        try {
+          final socket = await Socket.connect(
+            host,
+            443,
+            timeout: const Duration(seconds: 3),
+          );
+          socket.destroy();
+          return true; // Socket connection successful
+        } catch (e) {
+          return false; // Socket connection failed
+        }
+      }),
+    );
 
     // Check if any connection succeeded
     final socketSuccess = results.any((result) => result);
 
     return InternetResult(
       socketSuccess: socketSuccess,
-      failureReason:
-          socketSuccess ? null : 'Socket connection failed to all hosts.',
+      failureReason: socketSuccess ? null : 'Socket connection failed to all hosts.',
     );
   }
 
   Future<InternetResult> _performHttpRequest() async {
     final HttpClient httpClient = HttpClient();
     try {
-      final HttpClientRequest request =
-          await httpClient.getUrl(Uri.parse('https://www.google.com'));
+      final HttpClientRequest request = await httpClient.getUrl(
+        Uri.parse('https://www.google.com'),
+      );
       final HttpClientResponse response = await request.close();
       if (response.statusCode == 200) {
         return InternetResult(httpSuccess: true);
       }
     } catch (e) {
       return InternetResult(
-          httpSuccess: false, failureReason: "HTTP request failed: $e");
+        httpSuccess: false,
+        failureReason: "HTTP request failed: $e",
+      );
     } finally {
       httpClient.close();
     }

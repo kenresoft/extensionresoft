@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'internet_result.dart';
@@ -47,7 +51,7 @@ enum ConnectionType {
   vpn,
 
   /// Device is connected to an unknown or unsupported network type.
-  other
+  other,
 }
 
 /// The list holds the current connection status, defaulted to [ConnectivityResult.none].
@@ -87,10 +91,8 @@ extension ConnectivityResultMapper on ConnectivityResult {
   ///
   /// This method maps [ConnectivityResult] into [ConnectionType] for easy interpretation.
   List<ConnectionType> get connectionStatus {
-    return _connectionStatus.map(
-      (result) {
-        return result.toConnectionType();
-      },
-    ).toList();
+    return _connectionStatus.map((result) {
+      return result.toConnectionType();
+    }).toList();
   }
 }

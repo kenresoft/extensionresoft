@@ -57,8 +57,11 @@ extension ListExtension<T> on List<T> {
       }
       return newList;
     } else {
-      throw ArgumentError.value(times, "times",
-          "Unable to perform List operation: argument must be greater than 0");
+      throw ArgumentError.value(
+        times,
+        "times",
+        "Unable to perform List operation: argument must be greater than 0",
+      );
     }
   }
 
