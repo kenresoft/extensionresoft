@@ -1,18 +1,25 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../utility/logger.dart';
+import 'app_circle_image.dart' show ImageSourceType;
 
-/// A reusable widget for displaying images with network and asset fallbacks.
-/// Supports error handling, placeholders, and decoration images.
+/// A versatile image widget supporting multiple source types with unified API.
+/// Handles network URLs, asset paths, and File objects with built-in fallbacks.
 class AppImage extends StatelessWidget {
-  final String? image;
+  /// Image source - accepts String (URL/asset path) or File
+  final dynamic image;
   final double? width;
   final double? height;
   final BoxFit fit;
   final Widget? placeholder;
   final Widget? errorWidget;
-  final String? assetFallback;
+  final String? fallbackImage;
+  final BorderRadius? borderRadius;
+  final Color? backgroundColor;
 
   const AppImage(
     this.image, {
@@ -22,69 +29,182 @@ class AppImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.placeholder,
     this.errorWidget,
-    this.assetFallback,
+    this.fallbackImage,
+    this.borderRadius,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (_isNetworkImage(image)) {
-      return _buildCachedNetworkImage();
+    Widget imageWidget = _buildImageBySourceType(context);
+
+    // Apply border radius if specified
+    if (borderRadius != null) {
+      imageWidget = ClipRRect(borderRadius: borderRadius!, child: imageWidget);
     }
-    return _buildAssetImage();
+
+    // Wrap with Container for background color if specified
+    if (backgroundColor != null) {
+      return Container(
+        color: backgroundColor,
+        width: width,
+        height: height,
+        child: imageWidget,
+      );
+    }
+
+    return imageWidget;
   }
 
-  /// Checks if the provided image path is a network URL.
-  bool _isNetworkImage(String? image) {
-    return image != null && Uri.tryParse(image)?.hasAbsolutePath == true;
-    // return image != null && (image.startsWith('http://') || image.startsWith('https://')); legacy code
+  /// Builds the appropriate image widget based on detected source type
+  Widget _buildImageBySourceType(BuildContext context) {
+    final sourceType = _getImageSourceType();
+
+    switch (sourceType) {
+      case ImageSourceType.network:
+        return _buildCachedNetworkImage(context);
+      case ImageSourceType.file:
+        return _buildFileImage(context);
+      case ImageSourceType.asset:
+        return _buildAssetImage(context);
+      case ImageSourceType.none:
+        return _buildFallbackImage(context);
+    }
   }
 
-  /// Builds an asset-based image with optional fallback on error.
-  Widget _buildAssetImage() {
-    return Image.asset(
-      image ?? '',
+  /// Determines the image source type based on the provided image value
+  ImageSourceType _getImageSourceType() {
+    if (image == null) {
+      return ImageSourceType.none;
+    }
+
+    if (image is File) {
+      return ImageSourceType.file;
+    }
+
+    if (image is! String || (image as String).isEmpty) {
+      return ImageSourceType.none;
+    }
+
+    if (_isNetworkImage(image as String)) {
+      return ImageSourceType.network;
+    }
+
+    return ImageSourceType.asset;
+  }
+
+  /// Checks if the provided image path is a network URL
+  bool _isNetworkImage(String path) {
+    // Primary check: starts with http:// or https://
+    if (path.startsWith('http://') || path.startsWith('https://')) {
+      return true;
+    }
+
+    // Secondary check: using Uri parser for more complex cases
+    final uri = Uri.tryParse(path);
+    return uri != null && uri.hasScheme && uri.hasAuthority;
+  }
+
+  /// Builds a file-based image with error handling
+  Widget _buildFileImage(BuildContext context) {
+    return Image.file(
+      image as File,
       width: width,
       height: height,
       fit: fit,
+      cacheWidth: _calculateCacheWidth(context),
       errorBuilder: (context, error, stackTrace) {
-        if (assetFallback != null) {
-          return Image.asset(
-            assetFallback!,
-            width: width,
-            height: height,
-            fit: fit,
-          );
-        }
-        return _defaultErrorWidget();
+        // logger.e('Error loading file image', error: error, stackTrace: stackTrace);
+        return _buildFallbackImage(context);
       },
     );
   }
 
-  /// Builds a cached network image with placeholders and error widgets.
-  Widget _buildCachedNetworkImage() {
-    return CachedNetworkImage(
-      imageUrl: image ?? '',
+  /// Builds an asset-based image with error handling
+  Widget _buildAssetImage(BuildContext context) {
+    return Image.asset(
+      image as String,
       width: width,
       height: height,
       fit: fit,
-      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
-      errorWidget: (context, url, error) =>
-          errorWidget ?? _defaultErrorWidget(),
+      cacheWidth: _calculateCacheWidth(context),
+      errorBuilder: (context, error, stackTrace) {
+        // logger.e('Error loading asset image: ${image as String}', error: error, stackTrace: stackTrace);
+        return _buildFallbackImage(context);
+      },
     );
   }
 
-  /// Default widget displayed while the image is loading.
+  /// Builds a cached network image with optimized settings
+  Widget _buildCachedNetworkImage(BuildContext context) {
+    return CachedNetworkImage(
+      imageUrl: image as String,
+      width: width,
+      height: height,
+      fit: fit,
+      memCacheWidth: _calculateCacheWidth(context),
+      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
+      errorWidget: (context, url, error) {
+        // logger.e('Error loading network image: $url', error: error);
+        return _buildFallbackImage(context);
+      },
+    );
+  }
+
+  /// Builds the fallback image or error widget
+  Widget _buildFallbackImage(BuildContext context) {
+    if (fallbackImage != null && fallbackImage!.isNotEmpty) {
+      return Image.asset(
+        fallbackImage!,
+        width: width,
+        height: height,
+        fit: fit,
+        cacheWidth: _calculateCacheWidth(context),
+        errorBuilder: (context, error, stackTrace) {
+          // logger.e('Error loading fallback image: $fallbackImage', error: error, stackTrace: stackTrace);
+          return errorWidget ?? _defaultErrorWidget();
+        },
+      );
+    }
+    return errorWidget ?? _defaultErrorWidget();
+  }
+
+  /// Calculate appropriate cache width based on device pixel ratio
+  int? _calculateCacheWidth(BuildContext context) {
+    if (width == null || width!.isInfinite || width!.isNaN) return null;
+
+    try {
+      final devicePixelRatio = kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio;
+      final calculatedWidth = width! * devicePixelRatio;
+
+      // Ensure the value is finite and within reasonable bounds
+      if (calculatedWidth.isFinite &&
+          calculatedWidth > 0 &&
+          calculatedWidth < 10000) {
+        return calculatedWidth.toInt();
+      }
+      return null;
+    } catch (e) {
+      logger.e('Error calculating cache width', error: e);
+      return null;
+    }
+  }
+
+  /// Default placeholder widget while loading images
   Widget _defaultPlaceholder() {
     return Center(
       child: SizedBox(
         width: 24.0,
         height: 24.0,
-        child: const CircularProgressIndicator(),
+        child: CircularProgressIndicator(
+          strokeWidth: 2.0,
+          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade400),
+        ),
       ),
     );
   }
 
-  /// Default widget displayed when an error occurs while loading the image.
+  /// Default error widget when image loading fails
   Widget _defaultErrorWidget() {
     return Center(
       child: Icon(
@@ -97,65 +217,91 @@ class AppImage extends StatelessWidget {
 
   /// Converts the current image into a [DecorationImage] with robust error handling and fallbacks.
   DecorationImage toDecorationImage({
-    BoxFit fit = BoxFit.cover,
+    BoxFit? decorationFit,
     Alignment alignment = Alignment.center,
     ColorFilter? colorFilter,
-    String? fallbackAsset,
-    String defaultFallbackNetworkImage = 'https://via.placeholder.com/150',
+    String fallbackAsset = 'assets/img.png',
+    String defaultFallbackNetworkImage = 'https://picsum.photos/150',
   }) {
     assert(
-      fallbackAsset != null || defaultFallbackNetworkImage.isNotEmpty,
+      fallbackAsset.isNotEmpty || defaultFallbackNetworkImage.isNotEmpty,
       'At least one fallback image (asset or network) must be provided.',
     );
 
     try {
-      if (_isNetworkImage(image)) {
-        // Handle network image with fallback
-        return DecorationImage(
-          image: CachedNetworkImageProvider(image!),
-          fit: fit,
-          alignment: alignment,
-          colorFilter: colorFilter,
-          onError: (exception, stackTrace) {
-            logger.e('Error loading network image: $exception',
-                stackTrace: stackTrace);
-          },
-        );
-      } else if (image != null && image!.isNotEmpty) {
-        // Handle asset image
-        return DecorationImage(
-          image: AssetImage(image!),
-          fit: fit,
-          alignment: alignment,
-          colorFilter: colorFilter,
-        );
-      } else if (fallbackAsset != null) {
-        // Use provided fallback asset
-        return DecorationImage(
-          image: AssetImage(fallbackAsset),
-          fit: fit,
-          alignment: alignment,
-          colorFilter: colorFilter,
-        );
-      } else {
-        // Default to a network placeholder as the final fallback
-        // logger.w('Invalid image provided. Using default network fallback.');
-        return DecorationImage(
-          image: CachedNetworkImageProvider(defaultFallbackNetworkImage),
-          fit: fit,
-          alignment: alignment,
-          colorFilter: colorFilter,
-        );
+      final sourceType = _getImageSourceType();
+      final BoxFit actualFit = decorationFit ?? fit;
+
+      switch (sourceType) {
+        case ImageSourceType.network:
+          // Handle network image
+          return DecorationImage(
+            image: CachedNetworkImageProvider(image as String),
+            fit: actualFit,
+            alignment: alignment,
+            colorFilter: colorFilter,
+            onError: (exception, stackTrace) {
+              // logger.e('DecorationImage error loading network image: $exception', stackTrace: stackTrace);
+            },
+          );
+
+        case ImageSourceType.file:
+          // Handle file image
+          return DecorationImage(
+            image: FileImage(image as File),
+            fit: actualFit,
+            alignment: alignment,
+            colorFilter: colorFilter,
+            onError: (exception, stackTrace) {
+              // logger.e('DecorationImage error loading file image: $exception', stackTrace: stackTrace);
+            },
+          );
+
+        case ImageSourceType.asset:
+          // Handle asset image
+          return DecorationImage(
+            image: AssetImage(image as String),
+            fit: actualFit,
+            alignment: alignment,
+            colorFilter: colorFilter,
+            onError: (exception, stackTrace) {
+              // logger.e('DecorationImage error loading asset image: $exception', stackTrace: stackTrace);
+            },
+          );
+
+        case ImageSourceType.none:
+          // Use provided fallback
+          if (fallbackAsset.isNotEmpty) {
+            return DecorationImage(
+              image: AssetImage(fallbackAsset, package: 'extensionresoft'),
+              fit: actualFit,
+              alignment: alignment,
+              colorFilter: colorFilter,
+            );
+          } else {
+            return DecorationImage(
+              image: CachedNetworkImageProvider(defaultFallbackNetworkImage),
+              fit: actualFit,
+              alignment: alignment,
+              colorFilter: colorFilter,
+            );
+          }
       }
     } catch (e, stackTrace) {
       // Comprehensive fallback for unexpected errors
-      logger.e('Unexpected error in toDecorationImage: $e',
-          error: e, stackTrace: stackTrace);
+      logger.e(
+        'Unexpected error in toDecorationImage: $e',
+        error: e,
+        stackTrace: stackTrace,
+      );
+
       return DecorationImage(
-        image: fallbackAsset != null
-            ? AssetImage(fallbackAsset) as ImageProvider
-            : CachedNetworkImageProvider(defaultFallbackNetworkImage),
-        fit: fit,
+        image:
+            fallbackAsset.isNotEmpty
+                ? AssetImage(fallbackAsset, package: 'extensionresoft')
+                    as ImageProvider
+                : CachedNetworkImageProvider(defaultFallbackNetworkImage),
+        fit: decorationFit ?? fit,
         alignment: alignment,
         colorFilter: colorFilter,
       );
