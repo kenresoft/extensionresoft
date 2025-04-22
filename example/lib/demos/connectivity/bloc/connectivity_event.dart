@@ -1,4 +1,3 @@
-// connectivity/bloc/connectivity_event.dart
 part of 'connectivity_bloc.dart';
 
 sealed class ConnectivityEvent {
@@ -6,6 +5,8 @@ sealed class ConnectivityEvent {
 }
 
 class CheckConnectivity extends ConnectivityEvent {}
+
+class StreamConnectivity extends ConnectivityEvent {}
 
 class ConnectivityChanged extends ConnectivityEvent {
   final InternetResult result;

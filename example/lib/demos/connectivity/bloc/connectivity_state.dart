@@ -1,16 +1,15 @@
-// connectivity/bloc/connectivity_state.dart
 part of 'connectivity_bloc.dart';
 
 class ConnectivityState {
   final bool isConnected;
-  final String connectionType;
-  final String lastChecked;
+  final String? connectionType;
+  final String? lastChecked;
   final bool isLoading;
 
   const ConnectivityState({
     required this.isConnected,
-    required this.connectionType,
-    required this.lastChecked,
+    this.connectionType,
+    this.lastChecked,
     this.isLoading = false,
   });
 
