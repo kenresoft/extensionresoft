@@ -1,0 +1,2 @@
+C:/Users/amadi/AndroidStudioProjects/Flutter/packages/extensionresoft/example/android/app/.cxx/Debug/3w392x6g/x86/CMakeFiles/edit_cache.dir
+C:/Users/amadi/AndroidStudioProjects/Flutter/packages/extensionresoft/example/android/app/.cxx/Debug/3w392x6g/x86/CMakeFiles/rebuild_cache.dir
