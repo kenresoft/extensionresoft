@@ -415,6 +415,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   InputDecoration? _cachedDecoration;
   bool _isDirty = false;
   ThemeData? _lastTheme;
+  TextScaler? _lastTextScaler;
 
   @override
   void initState() {
@@ -458,22 +459,8 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       _controller = widget.controller!;
     }
 
-    // Reset cached decoration if relevant properties changed
-    if (_shouldRecalculateDecoration(oldWidget)) {
-      _cachedDecoration = null;
-    }
-  }
-
-  /// Determines if we need to recalculate the decoration
-  bool _shouldRecalculateDecoration(CustomTextField<T> oldWidget) {
-    return widget.decoration != oldWidget.decoration ||
-        widget.labelText != oldWidget.labelText ||
-        widget.hintText != oldWidget.hintText ||
-        widget.borderRadius != oldWidget.borderRadius ||
-        widget.fillColor != oldWidget.fillColor ||
-        widget.focusColor != oldWidget.focusColor ||
-        widget.borderColor != oldWidget.borderColor ||
-        widget.passwordVisibilityConfig != oldWidget.passwordVisibilityConfig;
+    // Always recalculate decoration when widget updates
+    _cachedDecoration = null;
   }
 
   void _onFocusChange() {
@@ -553,13 +540,20 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   InputDecoration _buildDecoration(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final mediaQuery = MediaQuery.of(context);
+    final effectiveTextStyle = _getEffectiveTextStyle(context);
+    final effectiveLabelStyle = _getEffectiveLabelStyle(context);
+    final effectiveHintStyle = _getEffectiveHintStyle(context);
 
-    // Return cached decoration if theme hasn't changed
-    if (_cachedDecoration != null && _lastTheme == theme) {
+    // Return cached decoration if theme and text scale haven't changed
+    if (_cachedDecoration != null &&
+        _lastTheme == theme &&
+        _lastTextScaler == mediaQuery.textScaler) {
       return _cachedDecoration!;
     }
 
     _lastTheme = theme;
+    _lastTextScaler = mediaQuery.textScaler;
 
     _cachedDecoration =
         widget.decoration ??
@@ -568,18 +562,21 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
           hintText: widget.hintText,
           helperText: widget.helperText,
           labelStyle:
-              widget.labelStyle != null
-                  ? theme.textTheme.titleMedium?.merge(widget.labelStyle)
-                  : theme.textTheme.titleMedium?.copyWith(
-                    color:
-                        isDark ? AppColors.darkInputText : AppColors.lightInputText,
-                  ),
+              widget.labelStyle?.copyWith(
+                fontSize: effectiveLabelStyle.fontSize,
+                height: 1.0,
+              ) ??
+              effectiveLabelStyle.copyWith(
+                color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
+              ),
           hintStyle:
-              widget.hintStyle != null
-                  ? theme.textTheme.titleMedium?.merge(widget.hintStyle)
-                  : theme.textTheme.titleMedium?.copyWith(
-                    color: isDark ? AppColors.grey5 : AppColors.white5,
-                  ),
+              widget.hintStyle?.copyWith(
+                fontSize: effectiveHintStyle.fontSize,
+                height: 1.0,
+              ) ??
+              effectiveHintStyle.copyWith(
+                color: isDark ? AppColors.grey5 : AppColors.white5,
+              ),
           helperMaxLines: widget.helperMaxLines,
           filled: true,
           fillColor:
@@ -587,10 +584,14 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
               (isDark ? AppColors.darkOutlinedBg : AppColors.lightOutlinedBg),
           contentPadding:
               widget.contentPadding ??
-              EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: (widget.height != null) ? (widget.height! - 16) / 2 : 14,
-              ),
+              (widget.height != null
+                  ? _calculateDynamicPadding(
+                    widget.height!,
+                    effectiveTextStyle,
+                    mediaQuery.textScaler,
+                  )
+                  : EdgeInsets.symmetric(horizontal: 14, vertical: 14)),
+
           border: OutlineInputBorder(
             borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
             borderSide: BorderSide(
@@ -638,10 +639,93 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
                   )
                   : null,
           suffixIcon: _buildSuffixIcon(isDark, theme),
-          errorStyle: widget.errorStyle ?? const TextStyle(height: 0.5),
+          errorStyle: (widget.errorStyle ?? const TextStyle(height: 0.5)).copyWith(
+            fontSize: effectiveTextStyle.fontSize,
+            height: 1.0,
+          ),
         );
 
     return _cachedDecoration!;
+  }
+
+  /// Gets the effective text style considering text scaling
+  TextStyle _getEffectiveTextStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return (theme.textTheme.titleMedium?.merge(widget.textStyle) ??
+                theme.textTheme.bodyLarge)
+            ?.copyWith(
+              color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
+              fontSize:
+                  (widget.textStyle?.fontSize ??
+                      theme.textTheme.bodyLarge?.fontSize ??
+                      16),
+              height: 1.0,
+            ) ??
+        TextStyle(
+          fontSize: 16,
+          height: 1.0,
+          color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
+        );
+  }
+
+  TextStyle _getEffectiveLabelStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return (theme.textTheme.titleMedium?.merge(widget.labelStyle) ??
+                theme.textTheme.bodyLarge)
+            ?.copyWith(
+              color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
+              fontSize:
+                  (widget.labelStyle?.fontSize ??
+                      theme.textTheme.bodyLarge?.fontSize ??
+                      16),
+              height: 1.0,
+            ) ??
+        TextStyle(
+          fontSize: 16,
+          height: 1.0,
+          color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
+        );
+  }
+
+  TextStyle _getEffectiveHintStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return (theme.textTheme.titleMedium?.merge(widget.hintStyle) ??
+                theme.textTheme.bodyLarge)
+            ?.copyWith(
+              color: isDark ? AppColors.grey5 : AppColors.white5,
+              fontSize:
+                  (widget.hintStyle?.fontSize ??
+                      theme.textTheme.bodyLarge?.fontSize ??
+                      16),
+              height: 1.0,
+            ) ??
+        TextStyle(
+          fontSize: 16,
+          height: 1.0,
+          color: isDark ? AppColors.grey5 : AppColors.white5,
+        );
+  }
+
+  /// Calculates dynamic padding based on text scale
+  EdgeInsets _calculateDynamicPadding(
+    double totalHeight,
+    TextStyle textStyle,
+    TextScaler textScaler,
+  ) {
+    final fontSize = textStyle.fontSize ?? 16;
+    final scaledFontSize = textScaler.scale(fontSize);
+    final verticalPadding = (totalHeight - scaledFontSize) / 2;
+
+    return EdgeInsets.symmetric(
+      horizontal: 14,
+      vertical: verticalPadding.clamp(8, double.infinity),
+    );
   }
 
   /// Build suffix icon with optimized conditional logic
@@ -686,7 +770,6 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       child: InkWell(
         borderRadius: BorderRadius.circular(24),
         onTap: () {
-          // Toggle password visibility with haptic feedback
           HapticFeedback.lightImpact();
           _obscureTextNotifier.value = !_obscureTextNotifier.value;
         },
@@ -754,15 +837,15 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       child: Container(
         width: widget.width,
         margin: widget.margin,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(minHeight: widget.height ?? 48),
-          child: _buildAnimatedFieldContent(theme, isDark),
+        constraints: BoxConstraints(
+          minHeight: widget.height ?? 48,
+          maxHeight: widget.height ?? 48,
         ),
+        child: _buildAnimatedFieldContent(theme, isDark),
       ),
     );
   }
 
-  /// Builds field content with animation support
   Widget _buildAnimatedFieldContent(ThemeData theme, bool isDark) {
     return AnimatedBuilder(
       animation: _shakeAnimation,
@@ -797,7 +880,6 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     );
   }
 
-  /// Builds the text field with optimization for field type
   Widget _buildTextField(
     ThemeData theme,
     bool isDark,
@@ -806,13 +888,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     ValidationResult? validationResult,
   ) {
     final decoration = _getDecorationWithValidation(validationResult);
-
-    // Use dedicated builders for specific field types
-    if (widget.items != null) {
-      return _buildDropdownField(decoration);
-    } else {
-      return _buildStandardTextField(theme, isDark, obscureText, decoration);
-    }
+    return widget.items != null
+        ? _buildDropdownField(decoration)
+        : _buildStandardTextField(theme, isDark, obscureText, decoration);
   }
 
   /// Builds a standard text field with optimized properties
@@ -833,12 +911,8 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       inputFormatters: widget.inputFormatters,
       textCapitalization: widget.textCapitalization,
       textAlign: widget.textAlign,
-      textAlignVertical: widget.textAlignVertical,
-      style:
-          widget.textStyle ??
-          theme.textTheme.bodyLarge?.copyWith(
-            color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
-          ),
+      textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.center,
+      style: _getEffectiveTextStyle(context),
       maxLines: widget.isPassword ? 1 : widget.maxLines,
       maxLength: widget.maxLength,
       decoration: decoration,
@@ -851,9 +925,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       },
       onFieldSubmitted: widget.onSubmitted,
       validator: (value) {
-        // Use our custom validation logic
         _validate();
-        // Return null to satisfy the FormField validator
         return null;
       },
       onSaved: widget.onSaved,
@@ -882,10 +954,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
               : const SizedBox.shrink(),
       isExpanded: true,
       onTap: widget.onTap,
+      style: _getEffectiveTextStyle(context),
       validator: (value) {
-        // Use our custom validation logic
         _validate();
-        // Return null to satisfy the FormField validator
         return null;
       },
       onSaved: widget.onSaved as void Function(T?)?,
@@ -901,7 +972,6 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       return baseDecoration;
     }
 
-    // Apply appropriate styling based on validation severity
     final TextStyle? feedbackStyle =
         validationResult.isSeverity(ValidationSeverity.error)
             ? widget.errorStyle
@@ -909,7 +979,6 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
             ? widget.warningStyle
             : widget.infoStyle;
 
-    // Apply appropriate colors based on validation severity
     final Color feedbackColor =
         validationResult.isSeverity(ValidationSeverity.error)
             ? AppColors.error
@@ -940,12 +1009,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    // Reset cached resources when theme or dependencies change
     _cachedDecoration = null;
   }
 }
 
-/// Lazy-initialized value notifier to minimize unnecessary object creation
 class LazyValueNotifier<T> extends ValueNotifier<T> {
   LazyValueNotifier(T Function() initialValueProvider)
     : super(initialValueProvider());
