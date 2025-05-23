@@ -4,6 +4,8 @@
 
 library;
 
+// Animations
+export 'src/animations/animated_fade_scale.dart';
 // Connectivity
 export 'src/connectivity/internet_connection_checker.dart';
 export 'src/connectivity/internet_result.dart';
@@ -15,9 +17,6 @@ export 'src/extensions/icon.dart';
 export 'src/extensions/list.dart';
 export 'src/extensions/num.dart';
 export 'src/extensions/string.dart';
-// Image
-export 'src/image/app_circle_image.dart';
-export 'src/image/app_image.dart';
 // Pin Screen
 export 'src/pin_screen/pin_configurations.dart';
 export 'src/pin_screen/pin_entry.dart';
@@ -28,3 +27,10 @@ export 'src/preference/preference.dart';
 // Utility
 export 'src/utility/helper.dart';
 export 'src/utility/logger.dart';
+// Widgets
+export 'src/widgets/app_circle_image.dart';
+export 'src/widgets/app_image.dart';
+export 'src/widgets/custom_rating_bar.dart';
+export 'src/widgets/text_field/custom_text_field.dart';
+export 'src/widgets/text_field/text_field_configs.dart';
+export 'src/widgets/text_field/text_field_validation.dart';
