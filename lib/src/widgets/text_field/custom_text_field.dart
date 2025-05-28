@@ -73,10 +73,14 @@ class CustomTextField<T> extends StatefulWidget {
   // Password visibility configuration
   final PasswordVisibilityConfig passwordVisibilityConfig;
 
-  // Error styling
+  // Error styling (kept for backward compatibility)
   final TextStyle? errorStyle;
   final TextStyle? warningStyle;
+  final TextStyle? helperStyle;
   final TextStyle? infoStyle;
+  final EdgeInsetsGeometry? feedbackPadding;
+  final bool feedbackShowIcons;
+  final Duration feedbackAnimationDuration;
 
   // Enhanced accessibility features
   final String? accessibilityHint;
@@ -143,8 +147,12 @@ class CustomTextField<T> extends StatefulWidget {
     this.passwordVisibilityConfig = PasswordVisibilityConfig.defaultConfig,
     // Error styling
     this.errorStyle,
+    this.helperStyle,
     this.warningStyle,
     this.infoStyle,
+    this.feedbackPadding,
+    this.feedbackShowIcons = true,
+    this.feedbackAnimationDuration = const Duration(milliseconds: 200),
     // Enhanced accessibility
     this.accessibilityHint,
     this.announceValidationStatus = true,
@@ -152,250 +160,6 @@ class CustomTextField<T> extends StatefulWidget {
 
   @override
   State<CustomTextField<T>> createState() => _CustomTextFieldState<T>();
-
-  /// Creates a builder for more fluent API configuration
-  static CustomTextFieldBuilder<T> builder<T>() => CustomTextFieldBuilder<T>();
-}
-
-/// Builder pattern for CustomTextField to allow for more fluent API
-class CustomTextFieldBuilder<T> {
-  String? _labelText;
-  String? _hintText;
-  String? _initialValue;
-  bool _isPassword = false;
-  bool _isRequired = false;
-  final bool _enabled = true;
-  final bool _readOnly = false;
-  VoidCallback? _onTap;
-  Widget? _suffixIcon;
-  Widget? _prefixIcon;
-  VoidCallback? _onPrefixIconTap;
-  VoidCallback? _onSuffixIconTap;
-  double? _width;
-  double? _height;
-  final int _maxLines = 1;
-  int? _maxLength;
-  TextEditingController? _controller;
-  List<TextInputFormatter>? _inputFormatters;
-  TextInputType? _keyboardType;
-  Function(String)? _onChanged;
-  Function(String)? _onSubmitted;
-  String? Function(String?)? _validator;
-  Function(String?)? _onSaved;
-  InputDecoration? _decoration;
-  TextStyle? _textStyle;
-  TextStyle? _labelStyle;
-  TextStyle? _hintStyle;
-  BorderRadius? _borderRadius;
-  Color? _fillColor;
-  Color? _focusColor;
-  Color? _borderColor;
-  final double _borderWidth = 1.0;
-  double? _focusBorderWidth;
-  BorderRadius? _focusBorderRadius;
-  EdgeInsetsGeometry? _contentPadding;
-  EdgeInsetsGeometry? _margin;
-  String? _helperText;
-  int? _helperMaxLines;
-  List<DropdownMenuItem<T>>? _items;
-  T? _dropdownValue;
-  Function(T?)? _onDropdownChanged;
-  bool _showDropdownIcon = true;
-  final TextFieldAnimationConfig _animationConfig =
-      TextFieldAnimationConfig.defaultConfig;
-  String? _semanticsLabel;
-  String? _semanticsHint;
-  ValueChanged<ValidationResult>? _onValidationChanged;
-  final bool _autofocus = false;
-  final bool _autoValidateMode = false;
-  GlobalKey<FormFieldState>? _fieldKey;
-  final TextCapitalization _textCapitalization = TextCapitalization.none;
-  final TextAlign _textAlign = TextAlign.start;
-  TextAlignVertical? _textAlignVertical;
-  PasswordVisibilityConfig _passwordVisibilityConfig =
-      PasswordVisibilityConfig.defaultConfig;
-  TextStyle? _errorStyle;
-  TextStyle? _warningStyle;
-  TextStyle? _infoStyle;
-  String? _accessibilityHint;
-  bool _announceValidationStatus = true;
-
-  /// Sets the label text
-  CustomTextFieldBuilder<T> withLabel(String label) {
-    _labelText = label;
-    return this;
-  }
-
-  /// Sets the hint text
-  CustomTextFieldBuilder<T> withHint(String hint) {
-    _hintText = hint;
-    return this;
-  }
-
-  /// Configures this field as a password field
-  CustomTextFieldBuilder<T> asPassword({PasswordVisibilityConfig? config}) {
-    _isPassword = true;
-    if (config != null) {
-      _passwordVisibilityConfig = config;
-    }
-    return this;
-  }
-
-  /// Makes the field required
-  CustomTextFieldBuilder<T> required() {
-    _isRequired = true;
-    return this;
-  }
-
-  /// Sets the controller
-  CustomTextFieldBuilder<T> withController(TextEditingController controller) {
-    _controller = controller;
-    return this;
-  }
-
-  /// Sets the validator function
-  CustomTextFieldBuilder<T> withValidator(String? Function(String?) validator) {
-    _validator = validator;
-    return this;
-  }
-
-  /// Configures as a dropdown with items
-  CustomTextFieldBuilder<T> asDropdown({
-    required List<DropdownMenuItem<T>> items,
-    T? value,
-    required Function(T?) onChanged,
-    bool showIcon = true,
-  }) {
-    _items = items;
-    _dropdownValue = value;
-    _onDropdownChanged = onChanged;
-    _showDropdownIcon = showIcon;
-    return this;
-  }
-
-  /// Sets input formatting options
-  CustomTextFieldBuilder<T> withInputFormatters(
-    List<TextInputFormatter> formatters,
-  ) {
-    _inputFormatters = formatters;
-    return this;
-  }
-
-  /// Sets validation change callback
-  CustomTextFieldBuilder<T> withValidationCallback(
-    ValueChanged<ValidationResult> callback,
-  ) {
-    _onValidationChanged = callback;
-    return this;
-  }
-
-  /// Sets the keyboard type
-  CustomTextFieldBuilder<T> withKeyboardType(TextInputType type) {
-    _keyboardType = type;
-    return this;
-  }
-
-  /// Configure accessibility options
-  CustomTextFieldBuilder<T> withAccessibility({
-    String? hint,
-    String? label,
-    bool announceValidation = true,
-  }) {
-    _accessibilityHint = hint;
-    _semanticsLabel = label;
-    _announceValidationStatus = announceValidation;
-    return this;
-  }
-
-  /// Configures custom styling
-  CustomTextFieldBuilder<T> withStyling({
-    Color? fill,
-    Color? border,
-    Color? focus,
-    BorderRadius? radius,
-    TextStyle? text,
-    TextStyle? label,
-    TextStyle? hint,
-    TextStyle? error,
-    TextStyle? warning,
-    TextStyle? info,
-  }) {
-    _fillColor = fill;
-    _borderColor = border;
-    _focusColor = focus;
-    _borderRadius = radius;
-    _textStyle = text;
-    _labelStyle = label;
-    _hintStyle = hint;
-    _errorStyle = error;
-    _warningStyle = warning;
-    _infoStyle = info;
-    return this;
-  }
-
-  /// Builds the final CustomTextField
-  CustomTextField<T> build() {
-    return CustomTextField<T>(
-      labelText: _labelText,
-      hintText: _hintText,
-      initialValue: _initialValue,
-      isPassword: _isPassword,
-      isRequired: _isRequired,
-      enabled: _enabled,
-      readOnly: _readOnly,
-      onTap: _onTap,
-      suffixIcon: _suffixIcon,
-      prefixIcon: _prefixIcon,
-      onPrefixIconTap: _onPrefixIconTap,
-      onSuffixIconTap: _onSuffixIconTap,
-      width: _width,
-      height: _height,
-      maxLines: _maxLines,
-      maxLength: _maxLength,
-      controller: _controller,
-      inputFormatters: _inputFormatters,
-      keyboardType: _keyboardType,
-      onChanged: _onChanged,
-      onSubmitted: _onSubmitted,
-      validator: _validator,
-      onSaved: _onSaved,
-      decoration: _decoration,
-      textStyle: _textStyle,
-      labelStyle: _labelStyle,
-      hintStyle: _hintStyle,
-      borderRadius: _borderRadius,
-      fillColor: _fillColor,
-      focusColor: _focusColor,
-      borderColor: _borderColor,
-      borderWidth: _borderWidth,
-      focusBorderWidth: _focusBorderWidth,
-      focusBorderRadius: _focusBorderRadius,
-      contentPadding: _contentPadding,
-      margin: _margin,
-      helperText: _helperText,
-      helperMaxLines: _helperMaxLines,
-      items: _items,
-      dropdownValue: _dropdownValue,
-      onDropdownChanged: _onDropdownChanged,
-      showDropdownIcon: _showDropdownIcon,
-      animationConfig: _animationConfig,
-      semanticsLabel: _semanticsLabel,
-      semanticsHint: _semanticsHint,
-      onValidationChanged: _onValidationChanged,
-      autofocus: _autofocus,
-      autoValidateMode: _autoValidateMode,
-      fieldKey: _fieldKey,
-      textCapitalization: _textCapitalization,
-      textAlign: _textAlign,
-      textAlignVertical: _textAlignVertical,
-      passwordVisibilityConfig: _passwordVisibilityConfig,
-      errorStyle: _errorStyle,
-      warningStyle: _warningStyle,
-      infoStyle: _infoStyle,
-      accessibilityHint: _accessibilityHint,
-      announceValidationStatus: _announceValidationStatus,
-    );
-  }
 }
 
 /// State implementation for CustomTextField with optimized rebuilds
@@ -420,17 +184,28 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   @override
   void initState() {
     super.initState();
+    _initializeControllers();
+    _initializeNotifiers();
+    _initializeAnimations();
+    _setupEventListeners();
+    _handleAutofocus();
+  }
+
+  /// Initialize text controller with provided or default value
+  void _initializeControllers() {
     _controller =
         widget.controller ?? TextEditingController(text: widget.initialValue);
+  }
 
-    // Use lazy initializers to avoid unnecessary object creation
+  /// Initialize lazy value notifiers for efficient state management
+  void _initializeNotifiers() {
     _obscureTextNotifier = LazyValueNotifier(() => widget.isPassword);
     _isFocusedNotifier = LazyValueNotifier(() => false);
     _validationResultNotifier = LazyValueNotifier(() => null);
+  }
 
-    _focusNode.addListener(_onFocusChange);
-
-    // Initialize validation animation controller
+  /// Setup animation controllers for smooth transitions
+  void _initializeAnimations() {
     _validationAnimationController = AnimationController(
       duration: widget.animationConfig.errorTransitionDuration,
       vsync: this,
@@ -439,7 +214,15 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     _shakeAnimation = Tween<double>(begin: 0.0, end: 10.0)
         .chain(CurveTween(curve: Curves.elasticIn))
         .animate(_validationAnimationController);
+  }
 
+  /// Setup event listeners for focus and state changes
+  void _setupEventListeners() {
+    _focusNode.addListener(_handleFocusChange);
+  }
+
+  /// Handle autofocus if requested
+  void _handleAutofocus() {
     if (widget.autofocus) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _focusNode.requestFocus();
@@ -450,269 +233,284 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   @override
   void didUpdateWidget(CustomTextField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    _handleControllerUpdates(oldWidget);
+    _invalidateDecorationCache();
+  }
 
-    // Handle controller updates
+  /// Handle external controller changes
+  void _handleControllerUpdates(CustomTextField<T> oldWidget) {
     if (widget.controller != oldWidget.controller && widget.controller != null) {
       if (oldWidget.controller == null) {
         _controller.dispose();
       }
       _controller = widget.controller!;
     }
+  }
 
-    // Always recalculate decoration when widget updates
+  /// Invalidate decoration cache when widget updates
+  void _invalidateDecorationCache() {
     _cachedDecoration = null;
   }
 
-  void _onFocusChange() {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Invalidate cache when theme or text scaling changes
+    _cachedDecoration = null;
+  }
+
+  /// Handle focus state changes and mark field as dirty
+  void _handleFocusChange() {
     _isFocusedNotifier.value = _focusNode.hasFocus;
     if (_focusNode.hasFocus && !_isDirty) {
       _isDirty = true;
     }
   }
 
-  /// Validates the field and notifies listeners with optimized logic
-  void _validate() {
-    // Optimize validation for empty required fields
-    if (!widget.isRequired && (_controller.text.isEmpty)) {
-      _setValidationResult(ValidationResult.valid());
+  // ===========================
+  // VALIDATION LOGIC
+  // ===========================
+
+  /// Perform comprehensive field validation with optimized logic
+  void _performValidation() {
+    final currentText = _controller.text.trim();
+
+    // Early exit for non-required empty fields
+    if (_isNonRequiredEmpty(currentText)) {
+      _updateValidationResult(ValidationResult.valid());
       return;
     }
 
-    if (widget.isRequired && _controller.text.isEmpty) {
-      _setValidationResult(ValidationResult.error('This field is required'));
+    // Handle required field validation
+    if (_isRequiredEmpty(currentText)) {
+      final fieldName = widget.labelText ?? 'This field';
+      _updateValidationResult(ValidationResult.error('$fieldName is required'));
       return;
     }
 
-    // Run custom validator if provided
-    if (widget.validator != null) {
-      final validationMessage = widget.validator!(_controller.text);
+    // Execute custom validation with error handling
+    _executeCustomValidation(currentText);
+  }
+
+  /// Check if field is non-required and empty
+  bool _isNonRequiredEmpty(String text) {
+    return !widget.isRequired && text.isEmpty;
+  }
+
+  /// Check if required field is empty
+  bool _isRequiredEmpty(String text) {
+    return widget.isRequired && text.isEmpty;
+  }
+
+  /// Execute custom validator with graceful error handling
+  void _executeCustomValidation(String text) {
+    if (widget.validator == null) {
+      _updateValidationResult(ValidationResult.valid());
+      return;
+    }
+
+    try {
+      final validationMessage = widget.validator!(text);
       final result =
           validationMessage != null
               ? ValidationResult.error(validationMessage)
               : ValidationResult.valid();
-      _setValidationResult(result);
-    } else {
-      _setValidationResult(ValidationResult.valid());
+      _updateValidationResult(result);
+    } catch (e) {
+      // Graceful handling of validator exceptions
+      _updateValidationResult(ValidationResult.error('Validation error occurred'));
     }
   }
 
-  /// Sets validation result and handles animations
-  void _setValidationResult(ValidationResult result) {
+  /// Update validation result with change detection to prevent unnecessary rebuilds
+  void _updateValidationResult(ValidationResult result) {
     final previousResult = _validationResultNotifier.value;
-    _validationResultNotifier.value = result;
 
-    // Notify listeners of validation change
-    widget.onValidationChanged?.call(result);
+    // Only update if result actually changed
+    if (_hasValidationChanged(previousResult, result)) {
+      _validationResultNotifier.value = result;
+      widget.onValidationChanged?.call(result);
+      _handleValidationTransition(previousResult, result);
+    }
+  }
 
-    // Play animation if transitioning to error state
-    if (!result.isValid && (previousResult?.isValid ?? true)) {
+  /// Check if validation result has meaningfully changed
+  bool _hasValidationChanged(ValidationResult? previous, ValidationResult current) {
+    return previous?.isValid != current.isValid ||
+        previous?.errorMessage != current.errorMessage ||
+        previous?.severity != current.severity;
+  }
+
+  /// Handle validation state transitions with animations and accessibility
+  void _handleValidationTransition(
+    ValidationResult? previous,
+    ValidationResult current,
+  ) {
+    _triggerValidationAnimation(previous, current);
+    _announceValidationChange(current);
+  }
+
+  /// Trigger shake animation for new validation errors
+  void _triggerValidationAnimation(
+    ValidationResult? previous,
+    ValidationResult current,
+  ) {
+    if (!current.isValid && (previous?.isValid ?? true)) {
       _validationAnimationController.forward().then((_) {
         _validationAnimationController.reset();
       });
-
-      // Announce validation status for accessibility if enabled
-      if (widget.announceValidationStatus) {
-        SemanticsService.announce(
-          result.errorMessage ?? 'Validation error',
-          TextDirection.ltr,
-        );
-      }
     }
   }
 
-  @override
-  void dispose() {
-    // Clean up resources
-    if (widget.controller == null) {
-      _controller.dispose();
+  /// Announce validation changes for accessibility
+  void _announceValidationChange(ValidationResult current) {
+    if (widget.announceValidationStatus && !current.isValid) {
+      final announcement = _buildAccessibilityAnnouncement(current);
+      SemanticsService.announce(announcement, TextDirection.ltr);
     }
-
-    _obscureTextNotifier.dispose();
-    _isFocusedNotifier.dispose();
-    _validationResultNotifier.dispose();
-    _focusNode.dispose();
-    _validationAnimationController.dispose();
-
-    super.dispose();
   }
 
-  /// Builds decoration with memoization for performance
-  InputDecoration _buildDecoration(BuildContext context) {
+  /// Build contextual accessibility announcements
+  String _buildAccessibilityAnnouncement(ValidationResult result) {
+    final fieldName = widget.labelText ?? 'Input field';
+    final severityText = _getSeverityText(result.severity);
+    return '$severityText in $fieldName: ${result.errorMessage}';
+  }
+
+  /// Get user-friendly severity text
+  String _getSeverityText(ValidationSeverity? severity) {
+    switch (severity) {
+      case ValidationSeverity.error:
+        return 'Error';
+      case ValidationSeverity.warning:
+        return 'Warning';
+      case ValidationSeverity.info:
+        return 'Information';
+      default:
+        return 'Error';
+    }
+  }
+
+  // ===========================
+  // THEMING & STYLING
+  // ===========================
+
+  /// Build input decoration with intelligent caching for performance
+  InputDecoration _buildInputDecoration(BuildContext context) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
     final mediaQuery = MediaQuery.of(context);
-    final effectiveTextStyle = _getEffectiveTextStyle(context);
-    final effectiveLabelStyle = _getEffectiveLabelStyle(context);
-    final effectiveHintStyle = _getEffectiveHintStyle(context);
 
-    // Return cached decoration if theme and text scale haven't changed
-    if (_cachedDecoration != null &&
-        _lastTheme == theme &&
-        _lastTextScaler == mediaQuery.textScaler) {
+    // Return cached decoration if theme hasn't changed
+    if (_isDecorationCacheValid(theme, mediaQuery)) {
       return _cachedDecoration!;
     }
 
-    _lastTheme = theme;
-    _lastTextScaler = mediaQuery.textScaler;
-
-    _cachedDecoration =
-        widget.decoration ??
-        InputDecoration(
-          labelText: widget.labelText,
-          hintText: widget.hintText,
-          helperText: widget.helperText,
-          labelStyle:
-              widget.labelStyle?.copyWith(
-                fontSize: effectiveLabelStyle.fontSize,
-                height: 1.0,
-              ) ??
-              effectiveLabelStyle.copyWith(
-                color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
-              ),
-          hintStyle:
-              widget.hintStyle?.copyWith(
-                fontSize: effectiveHintStyle.fontSize,
-                height: 1.0,
-              ) ??
-              effectiveHintStyle.copyWith(
-                color: isDark ? AppColors.grey5 : AppColors.white5,
-              ),
-          helperMaxLines: widget.helperMaxLines,
-          filled: true,
-          fillColor:
-              widget.fillColor ??
-              (isDark ? AppColors.darkOutlinedBg : AppColors.lightOutlinedBg),
-          contentPadding:
-              widget.contentPadding ??
-              (widget.height != null
-                  ? _calculateDynamicPadding(
-                    widget.height!,
-                    effectiveTextStyle,
-                    mediaQuery.textScaler,
-                  )
-                  : EdgeInsets.symmetric(horizontal: 14, vertical: 14)),
-
-          border: OutlineInputBorder(
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color:
-                  widget.borderColor ??
-                  (isDark
-                      ? AppColors.darkEnabledBorder
-                      : AppColors.lightEnabledBorder),
-              width: widget.borderWidth,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color:
-                  widget.borderColor ??
-                  (isDark
-                      ? AppColors.darkEnabledBorder
-                      : AppColors.lightEnabledBorder),
-              width: widget.borderWidth,
-            ),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius:
-                widget.focusBorderRadius ??
-                widget.borderRadius ??
-                BorderRadius.circular(8),
-            borderSide: BorderSide(
-              color:
-                  widget.focusColor ??
-                  (isDark
-                      ? AppColors.darkFocusedBorder
-                      : AppColors.lightFocusedBorder),
-              width: widget.focusBorderWidth ?? 2,
-            ),
-          ),
-          prefixIcon:
-              widget.prefixIcon != null
-                  ? GestureDetector(
-                    onTap: widget.onPrefixIconTap,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 16, right: 8),
-                      child: widget.prefixIcon,
-                    ),
-                  )
-                  : null,
-          suffixIcon: _buildSuffixIcon(isDark, theme),
-          errorStyle: (widget.errorStyle ?? const TextStyle(height: 0.5)).copyWith(
-            fontSize: effectiveTextStyle.fontSize,
-            height: 1.0,
-          ),
-        );
+    // Build and cache new decoration
+    _cachedDecoration = _createInputDecoration(context, theme);
+    _updateCacheReferences(theme, mediaQuery);
 
     return _cachedDecoration!;
   }
 
-  /// Gets the effective text style considering text scaling
-  TextStyle _getEffectiveTextStyle(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+  /// Check if cached decoration is still valid
+  bool _isDecorationCacheValid(ThemeData theme, MediaQueryData mediaQuery) {
+    return _cachedDecoration != null &&
+        _lastTheme == theme &&
+        _lastTextScaler == mediaQuery.textScaler;
+  }
 
-    return (theme.textTheme.titleMedium?.merge(widget.textStyle) ??
-                theme.textTheme.bodyLarge)
-            ?.copyWith(
-              color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
-              fontSize:
-                  (widget.textStyle?.fontSize ??
-                      theme.textTheme.bodyLarge?.fontSize ??
-                      16),
-              height: 1.0,
-            ) ??
-        TextStyle(
-          fontSize: 16,
+  /// Update cache reference tracking
+  void _updateCacheReferences(ThemeData theme, MediaQueryData mediaQuery) {
+    _lastTheme = theme;
+    _lastTextScaler = mediaQuery.textScaler;
+  }
+
+  /// Create comprehensive input decoration
+  InputDecoration _createInputDecoration(BuildContext context, ThemeData theme) {
+    if (widget.decoration != null) {
+      return widget.decoration!;
+    }
+
+    final isDark = theme.brightness == Brightness.dark;
+    final mediaQuery = MediaQuery.of(context);
+
+    return InputDecoration(
+      labelText: widget.labelText,
+      hintText: widget.hintText,
+      labelStyle: _buildLabelStyle(context, isDark),
+      hintStyle: _buildHintStyle(context, isDark),
+      filled: true,
+      fillColor: _getFillColor(isDark),
+      contentPadding: _calculateContentPadding(context, mediaQuery),
+      border: _buildBorder(isDark),
+      enabledBorder: _buildBorder(isDark),
+      focusedBorder: _buildFocusedBorder(isDark),
+      prefixIcon: _buildPrefixIcon(),
+      suffixIcon: _buildSuffixIcon(isDark, theme),
+      errorStyle: const TextStyle(height: 0, fontSize: 0), // Hide built-in error
+    );
+  }
+
+  /// Build label text style with theme integration
+  TextStyle _buildLabelStyle(BuildContext context, bool isDark) {
+    final theme = Theme.of(context);
+    final baseStyle = theme.textTheme.titleMedium ?? const TextStyle();
+
+    return baseStyle
+        .merge(widget.labelStyle)
+        .copyWith(
+          color:
+              widget.labelStyle?.color ??
+              (isDark ? AppColors.darkInputText : AppColors.lightInputText),
+          fontSize: widget.labelStyle?.fontSize ?? baseStyle.fontSize ?? 16,
           height: 1.0,
-          color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
         );
   }
 
-  TextStyle _getEffectiveLabelStyle(BuildContext context) {
+  /// Build hint text style with theme integration
+  TextStyle _buildHintStyle(BuildContext context, bool isDark) {
     final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
+    final baseStyle = theme.textTheme.titleMedium ?? const TextStyle();
 
-    return (theme.textTheme.titleMedium?.merge(widget.labelStyle) ??
-                theme.textTheme.bodyLarge)
-            ?.copyWith(
-              color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
-              fontSize:
-                  (widget.labelStyle?.fontSize ??
-                      theme.textTheme.bodyLarge?.fontSize ??
-                      16),
-              height: 1.0,
-            ) ??
-        TextStyle(
-          fontSize: 16,
+    return baseStyle
+        .merge(widget.hintStyle)
+        .copyWith(
+          color:
+              widget.hintStyle?.color ??
+              (isDark ? AppColors.grey5 : AppColors.white5),
+          fontSize: widget.hintStyle?.fontSize ?? baseStyle.fontSize ?? 16,
           height: 1.0,
-          color: isDark ? AppColors.darkInputText : AppColors.lightInputText,
         );
   }
 
-  TextStyle _getEffectiveHintStyle(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-
-    return (theme.textTheme.titleMedium?.merge(widget.hintStyle) ??
-                theme.textTheme.bodyLarge)
-            ?.copyWith(
-              color: isDark ? AppColors.grey5 : AppColors.white5,
-              fontSize:
-                  (widget.hintStyle?.fontSize ??
-                      theme.textTheme.bodyLarge?.fontSize ??
-                      16),
-              height: 1.0,
-            ) ??
-        TextStyle(
-          fontSize: 16,
-          height: 1.0,
-          color: isDark ? AppColors.grey5 : AppColors.white5,
-        );
+  /// Get appropriate fill color based on theme
+  Color _getFillColor(bool isDark) {
+    return widget.fillColor ??
+        (isDark ? AppColors.darkOutlinedBg : AppColors.lightOutlinedBg);
   }
 
-  /// Calculates dynamic padding based on text scale
+  /// Calculate content padding with dynamic height support
+  EdgeInsetsGeometry _calculateContentPadding(
+    BuildContext context,
+    MediaQueryData mediaQuery,
+  ) {
+    if (widget.contentPadding != null) {
+      return widget.contentPadding!;
+    }
+
+    if (widget.height != null) {
+      final textStyle = _getEffectiveTextStyle(context);
+      return _calculateDynamicPadding(
+        widget.height!,
+        textStyle,
+        mediaQuery.textScaler,
+      );
+    }
+
+    return const EdgeInsets.symmetric(horizontal: 14, vertical: 14);
+  }
+
+  /// Calculate dynamic padding based on text scale and container height
   EdgeInsets _calculateDynamicPadding(
     double totalHeight,
     TextStyle textStyle,
@@ -728,35 +526,89 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     );
   }
 
-  /// Build suffix icon with optimized conditional logic
+  /// Build standard border styling
+  OutlineInputBorder _buildBorder(bool isDark) {
+    return OutlineInputBorder(
+      borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color:
+            widget.borderColor ??
+            (isDark ? AppColors.darkEnabledBorder : AppColors.lightEnabledBorder),
+        width: widget.borderWidth,
+      ),
+    );
+  }
+
+  /// Build focused border styling
+  OutlineInputBorder _buildFocusedBorder(bool isDark) {
+    return OutlineInputBorder(
+      borderRadius:
+          widget.focusBorderRadius ??
+          widget.borderRadius ??
+          BorderRadius.circular(8),
+      borderSide: BorderSide(
+        color:
+            widget.focusColor ??
+            (isDark ? AppColors.darkFocusedBorder : AppColors.lightFocusedBorder),
+        width: widget.focusBorderWidth ?? 2,
+      ),
+    );
+  }
+
+  /// Build prefix icon with tap handling
+  Widget? _buildPrefixIcon() {
+    if (widget.prefixIcon == null) return null;
+
+    return GestureDetector(
+      onTap: widget.onPrefixIconTap,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 16, right: 8),
+        child: widget.prefixIcon,
+      ),
+    );
+  }
+
+  /// Build suffix icon with conditional password visibility toggle
   Widget? _buildSuffixIcon(bool isDark, ThemeData theme) {
     if (widget.suffixIcon != null) {
-      return GestureDetector(
-        onTap: widget.onSuffixIconTap,
-        child: Padding(
-          padding: const EdgeInsets.only(left: 8, right: 16),
-          child: widget.suffixIcon,
-        ),
-      );
-    } else if (widget.isPassword) {
-      return ValueListenableBuilder<bool>(
-        valueListenable: _obscureTextNotifier,
-        builder: (context, obscureText, _) {
-          return ValueListenableBuilder<bool>(
-            valueListenable: _isFocusedNotifier,
-            builder: (context, isFocused, _) {
-              return _buildPasswordVisibilityToggle(obscureText, isFocused, theme);
-            },
-          );
-        },
-      );
+      return _buildCustomSuffixIcon();
+    }
+
+    if (widget.isPassword) {
+      return _buildPasswordVisibilityToggle(theme);
     }
 
     return null;
   }
 
-  /// Builds an optimized password visibility toggle with improved accessibility
-  Widget _buildPasswordVisibilityToggle(
+  /// Build custom suffix icon with tap handling
+  Widget _buildCustomSuffixIcon() {
+    return GestureDetector(
+      onTap: widget.onSuffixIconTap,
+      child: Padding(
+        padding: const EdgeInsets.only(left: 8, right: 16),
+        child: widget.suffixIcon,
+      ),
+    );
+  }
+
+  /// Build password visibility toggle with state management
+  Widget _buildPasswordVisibilityToggle(ThemeData theme) {
+    return ValueListenableBuilder<bool>(
+      valueListenable: _obscureTextNotifier,
+      builder: (context, obscureText, _) {
+        return ValueListenableBuilder<bool>(
+          valueListenable: _isFocusedNotifier,
+          builder: (context, isFocused, _) {
+            return _createPasswordToggleButton(obscureText, isFocused, theme);
+          },
+        );
+      },
+    );
+  }
+
+  /// Create accessible password toggle button
+  Widget _createPasswordToggleButton(
     bool obscureText,
     bool isFocused,
     ThemeData theme,
@@ -769,10 +621,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
               : widget.passwordVisibilityConfig.visibilityOffTooltip,
       child: InkWell(
         borderRadius: BorderRadius.circular(24),
-        onTap: () {
-          HapticFeedback.lightImpact();
-          _obscureTextNotifier.value = !_obscureTextNotifier.value;
-        },
+        onTap: _togglePasswordVisibility,
         child: Padding(
           padding: widget.passwordVisibilityConfig.iconPadding,
           child: _buildVisibilityIcon(obscureText, isFocused, theme),
@@ -781,45 +630,63 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     );
   }
 
+  /// Toggle password visibility with haptic feedback
+  void _togglePasswordVisibility() {
+    HapticFeedback.lightImpact();
+    _obscureTextNotifier.value = !_obscureTextNotifier.value;
+  }
+
+  /// Build appropriate visibility icon
   Widget _buildVisibilityIcon(bool isVisible, bool isFocused, ThemeData theme) {
-    // Use custom widgets if provided (highest priority)
-    if (isVisible &&
-        widget.passwordVisibilityConfig.customVisibilityOnIcon != null) {
+    // Use custom widgets if provided
+    final customIcon =
+        isVisible
+            ? widget.passwordVisibilityConfig.customVisibilityOnIcon
+            : widget.passwordVisibilityConfig.customVisibilityOffIcon;
+
+    if (customIcon != null) {
       return IconTheme(
         data: IconThemeData(
-          color:
-              widget.passwordVisibilityConfig.iconColor ??
-              (isFocused ? widget.focusColor : null),
+          color: _getIconColor(isFocused),
           size: widget.passwordVisibilityConfig.iconSize,
         ),
-        child: widget.passwordVisibilityConfig.customVisibilityOnIcon!,
-      );
-    }
-    if (!isVisible &&
-        widget.passwordVisibilityConfig.customVisibilityOffIcon != null) {
-      return IconTheme(
-        data: IconThemeData(
-          color:
-              widget.passwordVisibilityConfig.iconColor ??
-              (isFocused ? widget.focusColor : null),
-          size: widget.passwordVisibilityConfig.iconSize,
-        ),
-        child: widget.passwordVisibilityConfig.customVisibilityOffIcon!,
+        child: customIcon,
       );
     }
 
-    // Otherwise use asset images with fallback
+    // Use asset resolver for fallback icons
     return AssetResolver.resolveVisibilityIcon(
       isVisible: isVisible,
       userAssetPath:
           isVisible
               ? widget.passwordVisibilityConfig.customVisibilityOnIconPath
               : widget.passwordVisibilityConfig.customVisibilityOffIconPath,
-      color:
-          widget.passwordVisibilityConfig.iconColor ??
-          (isFocused ? widget.focusColor : null),
+      color: _getIconColor(isFocused),
       size: widget.passwordVisibilityConfig.iconSize,
     );
+  }
+
+  /// Get appropriate icon color based on focus state
+  Color? _getIconColor(bool isFocused) {
+    return widget.passwordVisibilityConfig.iconColor ??
+        (isFocused ? widget.focusColor : null);
+  }
+
+  /// Get effective text style considering theme and scaling
+  TextStyle _getEffectiveTextStyle(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final baseStyle = theme.textTheme.displayMedium ?? const TextStyle();
+
+    return baseStyle
+        .merge(widget.textStyle)
+        .copyWith(
+          color:
+              widget.textStyle?.color ??
+              (isDark ? AppColors.darkInputText : AppColors.lightInputText),
+          fontSize: widget.textStyle?.fontSize ?? baseStyle.fontSize ?? 16,
+          height: 1.0,
+        );
   }
 
   @override
@@ -837,45 +704,99 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       child: Container(
         width: widget.width,
         margin: widget.margin,
-        constraints: BoxConstraints(
+        /*constraints: BoxConstraints(
           minHeight: widget.height ?? 48,
           maxHeight: widget.height ?? 48,
-        ),
+        ),*/
         child: _buildAnimatedFieldContent(theme, isDark),
       ),
     );
   }
 
+  // It includes the feedback widget
   Widget _buildAnimatedFieldContent(ThemeData theme, bool isDark) {
-    return AnimatedBuilder(
-      animation: _shakeAnimation,
-      builder: (context, child) {
-        return Transform.translate(
-          offset: Offset(_shakeAnimation.value, 0),
-          child: child,
-        );
-      },
-      child: ValueListenableBuilder<ValidationResult?>(
-        valueListenable: _validationResultNotifier,
-        builder: (context, validationResult, _) {
-          return ValueListenableBuilder<bool>(
-            valueListenable: _isFocusedNotifier,
-            builder: (context, isFocused, _) {
-              return ValueListenableBuilder<bool>(
-                valueListenable: _obscureTextNotifier,
-                builder: (context, obscureText, _) {
-                  return _buildTextField(
-                    theme,
-                    isDark,
-                    isFocused,
-                    obscureText,
-                    validationResult,
-                  );
-                },
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // TextField with fixed height
+        Container(
+          constraints: BoxConstraints(
+            minHeight: widget.height ?? 48,
+            maxHeight: widget.height ?? 48,
+          ),
+          child: AnimatedBuilder(
+            animation: _shakeAnimation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: Offset(_shakeAnimation.value, 0),
+                child: child,
               );
             },
-          );
-        },
+            child: ValueListenableBuilder<ValidationResult?>(
+              valueListenable: _validationResultNotifier,
+              builder: (context, validationResult, _) {
+                return ValueListenableBuilder<bool>(
+                  valueListenable: _isFocusedNotifier,
+                  builder: (context, isFocused, _) {
+                    return ValueListenableBuilder<bool>(
+                      valueListenable: _obscureTextNotifier,
+                      builder: (context, obscureText, _) {
+                        return _buildTextField(
+                          theme,
+                          isDark,
+                          isFocused,
+                          obscureText,
+                          validationResult,
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        ),
+        // Feedback widget (adds to total height)
+        ValueListenableBuilder<ValidationResult?>(
+          valueListenable: _validationResultNotifier,
+          builder: (context, validationResult, _) {
+            return _buildCustomFeedbackWidget(validationResult);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCustomFeedbackWidget(ValidationResult? validationResult) {
+    // Determine what content to show with priority logic
+    final hasValidationFeedback =
+        validationResult != null &&
+        (!validationResult.isValid || validationResult.errorMessage != null);
+    final hasHelperText = widget.helperText?.isNotEmpty == true;
+
+    // Show nothing if no content to display
+    if (!hasValidationFeedback && !hasHelperText) {
+      return const SizedBox.shrink();
+    }
+
+    return AnimatedContainer(
+      duration: widget.animationConfig.errorTransitionDuration,
+      curve: Curves.easeInOut,
+      margin: const EdgeInsets.only(top: 6),
+      child: CustomFeedbackWidget(
+        validationResult: validationResult,
+        helperText: widget.helperText,
+        errorStyle: widget.errorStyle,
+        warningStyle: widget.warningStyle,
+        infoStyle: widget.infoStyle,
+        helperStyle: widget.helperStyle,
+        padding:
+            widget.feedbackPadding ??
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 2),
+        showIcons: widget.feedbackShowIcons,
+        animationDuration: widget.feedbackAnimationDuration,
+        maxLines: widget.helperMaxLines ?? 2,
       ),
     );
   }
@@ -920,12 +841,12 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       onChanged: (value) {
         widget.onChanged?.call(value);
         if (widget.autoValidateMode && _isDirty) {
-          _validate();
+          _performValidation();
         }
       },
       onFieldSubmitted: widget.onSubmitted,
       validator: (value) {
-        _validate();
+        _performValidation();
         return null;
       },
       onSaved: widget.onSaved,
@@ -944,7 +865,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
           widget.enabled
               ? (value) {
                 widget.onDropdownChanged?.call(value);
-                _validate();
+                _performValidation();
               }
               : null,
       decoration: decoration,
@@ -956,7 +877,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       onTap: widget.onTap,
       style: _getEffectiveTextStyle(context),
       validator: (value) {
-        _validate();
+        _performValidation();
         return null;
       },
       onSaved: widget.onSaved as void Function(T?)?,
@@ -965,33 +886,39 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
 
   /// Applies validation state to the decoration using cached resources when possible
   InputDecoration _getDecorationWithValidation(ValidationResult? validationResult) {
-    final baseDecoration = _buildDecoration(context);
+    final baseDecoration = _buildInputDecoration(context);
 
-    if (validationResult == null ||
-        validationResult.isValid && validationResult.errorMessage == null) {
+    // Return base decoration for valid states
+    if (validationResult?.isValid != false) {
       return baseDecoration;
     }
 
-    final TextStyle? feedbackStyle =
-        validationResult.isSeverity(ValidationSeverity.error)
-            ? widget.errorStyle
-            : validationResult.isSeverity(ValidationSeverity.warning)
-            ? widget.warningStyle
-            : widget.infoStyle;
-
-    final Color feedbackColor =
-        validationResult.isSeverity(ValidationSeverity.error)
-            ? AppColors.error
-            : validationResult.isSeverity(ValidationSeverity.warning)
-            ? AppColors.warning
-            : AppColors.info;
+    final theme = Theme.of(context);
+    final borderColor = _getValidationBorderColor(validationResult!, theme);
 
     return baseDecoration.copyWith(
-      errorText: validationResult.errorMessage,
-      errorStyle: feedbackStyle,
+      // Remove errorText as we handle it in custom widget
+      errorText: null,
+      errorStyle: const TextStyle(height: 0, fontSize: 0),
+
+      // Apply validation border styling
+      enabledBorder: OutlineInputBorder(
+        borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
+        borderSide: BorderSide(color: borderColor, width: widget.borderWidth),
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderRadius:
+            widget.focusBorderRadius ??
+            widget.borderRadius ??
+            BorderRadius.circular(8),
+        borderSide: BorderSide(
+          color: borderColor,
+          width: widget.focusBorderWidth ?? (widget.borderWidth * 1.5),
+        ),
+      ),
       errorBorder: OutlineInputBorder(
         borderRadius: widget.borderRadius ?? BorderRadius.circular(8),
-        borderSide: BorderSide(color: feedbackColor, width: widget.borderWidth),
+        borderSide: BorderSide(color: borderColor, width: widget.borderWidth),
       ),
       focusedErrorBorder: OutlineInputBorder(
         borderRadius:
@@ -999,21 +926,282 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
             widget.borderRadius ??
             BorderRadius.circular(8),
         borderSide: BorderSide(
-          color: feedbackColor,
-          width: widget.focusBorderWidth ?? widget.borderWidth * 1.5,
+          color: borderColor,
+          width: widget.focusBorderWidth ?? (widget.borderWidth * 1.5),
         ),
       ),
     );
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _cachedDecoration = null;
+  // Get appropriate border color based on validation severity
+  Color _getValidationBorderColor(ValidationResult result, ThemeData theme) {
+    switch (result.severity) {
+      case ValidationSeverity.error:
+        return theme.colorScheme.error;
+      case ValidationSeverity.warning:
+        return const Color(0xFFF57C00);
+      case ValidationSeverity.info:
+        return theme.colorScheme.primary;
+    }
   }
 }
 
 class LazyValueNotifier<T> extends ValueNotifier<T> {
   LazyValueNotifier(T Function() initialValueProvider)
     : super(initialValueProvider());
+}
+
+/// Professional feedback widget with sophisticated validation handling
+class CustomFeedbackWidget extends StatefulWidget {
+  final ValidationResult? validationResult;
+  final String? helperText;
+  final TextStyle? errorStyle;
+  final TextStyle? warningStyle;
+  final TextStyle? infoStyle;
+  final TextStyle? helperStyle;
+  final EdgeInsetsGeometry? padding;
+  final bool showIcons;
+  final Duration animationDuration;
+  final Curve animationCurve;
+  final BoxDecoration? decoration;
+  final int maxLines;
+
+  const CustomFeedbackWidget({
+    super.key,
+    this.validationResult,
+    this.helperText,
+    this.errorStyle,
+    this.warningStyle,
+    this.infoStyle,
+    this.helperStyle,
+    this.padding,
+    this.showIcons = true,
+    this.animationDuration = const Duration(milliseconds: 250),
+    this.animationCurve = Curves.easeInOut,
+    this.decoration,
+    this.maxLines = 2,
+  });
+
+  @override
+  State<CustomFeedbackWidget> createState() => _CustomFeedbackWidgetState();
+}
+
+class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Animation<double> _fadeAnimation;
+  late Animation<Offset> _slideAnimation;
+
+  String? _currentText;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      duration: widget.animationDuration,
+      vsync: this,
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: _animationController, curve: widget.animationCurve),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, -0.5),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(parent: _animationController, curve: widget.animationCurve),
+    );
+
+    _updateCurrentState();
+
+    if (_currentText != null) {
+      _animationController.forward();
+    }
+  }
+
+  @override
+  void didUpdateWidget(CustomFeedbackWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    final oldText = _getCurrentDisplayText(
+      oldWidget.validationResult,
+      oldWidget.helperText,
+    );
+    final newText = _getCurrentDisplayText(
+      widget.validationResult,
+      widget.helperText,
+    );
+
+    // Handle text changes with smooth transitions
+    if (oldText != newText) {
+      if (newText == null) {
+        // Fade out
+        _animationController.reverse();
+      } else if (oldText == null) {
+        // Fade in
+        _updateCurrentState();
+        _animationController.forward();
+      } else {
+        // Cross-fade between different messages
+        _animationController.reverse().then((_) {
+          if (mounted) {
+            _updateCurrentState();
+            _animationController.forward();
+          }
+        });
+      }
+    }
+  }
+
+  void _updateCurrentState() {
+    _currentText = _getCurrentDisplayText(
+      widget.validationResult,
+      widget.helperText,
+    );
+  }
+
+  String? _getCurrentDisplayText(ValidationResult? result, String? helperText) {
+    // Priority: Validation message > Helper text
+    if (result != null && !result.isValid && result.errorMessage != null) {
+      return result.errorMessage;
+    }
+    return helperText?.isNotEmpty == true ? helperText : null;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final displayText = _getCurrentDisplayText(
+      widget.validationResult,
+      widget.helperText,
+    );
+
+    if (displayText == null) {
+      return const SizedBox.shrink();
+    }
+
+    return AnimatedBuilder(
+      animation: _animationController,
+      builder: (context, child) {
+        return FadeTransition(
+          opacity: _fadeAnimation,
+          child: SlideTransition(
+            position: _slideAnimation,
+            child: _buildFeedbackContent(displayText),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildFeedbackContent(String text) {
+    final theme = Theme.of(context);
+    final textStyle = _getEffectiveTextStyle(theme);
+    final iconData = _getIconData();
+    final iconColor = _getIconColor(theme);
+
+    return Container(
+      padding:
+          widget.padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+      decoration: widget.decoration,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (widget.showIcons && iconData != null) ...[
+            Icon(iconData, size: 16, color: iconColor),
+            const SizedBox(width: 8),
+          ],
+          Expanded(
+            child: Text(
+              text,
+              style: textStyle,
+              maxLines: widget.maxLines,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  TextStyle _getEffectiveTextStyle(ThemeData theme) {
+    final baseStyle =
+        theme.textTheme.bodySmall?.copyWith(
+          fontSize: 12,
+          height: 1.33,
+          fontWeight: FontWeight.w400,
+        ) ??
+        const TextStyle(fontSize: 12, height: 1.33, fontWeight: FontWeight.w400);
+
+    // Apply custom styles based on validation state or helper text
+    if (widget.validationResult != null && !widget.validationResult!.isValid) {
+      final customStyle = _getValidationStyle();
+      return baseStyle
+          .merge(customStyle)
+          .copyWith(color: customStyle?.color ?? _getTextColor(theme));
+    }
+
+    // Helper text styling
+    return baseStyle
+        .merge(widget.helperStyle)
+        .copyWith(color: widget.helperStyle?.color ?? _getHelperTextColor(theme));
+  }
+
+  TextStyle? _getValidationStyle() {
+    if (widget.validationResult?.severity == ValidationSeverity.error) {
+      return widget.errorStyle;
+    } else if (widget.validationResult?.severity == ValidationSeverity.warning) {
+      return widget.warningStyle;
+    } else if (widget.validationResult?.severity == ValidationSeverity.info) {
+      return widget.infoStyle;
+    }
+    return null;
+  }
+
+  Color _getTextColor(ThemeData theme) {
+    switch (widget.validationResult?.severity) {
+      case ValidationSeverity.error:
+        return theme.colorScheme.error;
+      case ValidationSeverity.warning:
+        return const Color(0xFFF57C00);
+      case ValidationSeverity.info:
+        return theme.colorScheme.primary;
+      default:
+        return theme.colorScheme.error;
+    }
+  }
+
+  Color _getHelperTextColor(ThemeData theme) {
+    final isDark = theme.brightness == Brightness.dark;
+    return isDark
+        ? theme.colorScheme.onSurface.withValues(alpha: 0.7)
+        : theme.colorScheme.onSurface.withValues(alpha: 0.6);
+  }
+
+  Color _getIconColor(ThemeData theme) {
+    if (widget.validationResult != null && !widget.validationResult!.isValid) {
+      return _getTextColor(theme);
+    }
+    return _getHelperTextColor(theme);
+  }
+
+  IconData? _getIconData() {
+    switch (widget.validationResult?.severity) {
+      case ValidationSeverity.error:
+        return Icons.error_outline_rounded;
+      case ValidationSeverity.warning:
+        return Icons.warning_amber_outlined;
+      case ValidationSeverity.info:
+        return Icons.info_outline_rounded;
+      default:
+        return widget.validationResult != null ? null : Icons.help_outline;
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 }
