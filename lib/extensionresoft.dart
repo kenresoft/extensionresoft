@@ -6,6 +6,7 @@ library;
 
 // Animations
 export 'src/animations/animated_fade_scale.dart';
+export 'src/animations/fade_slide_transition.dart';
 // Connectivity
 export 'src/connectivity/internet_connection_checker.dart';
 export 'src/connectivity/internet_result.dart';
