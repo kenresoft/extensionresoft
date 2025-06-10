@@ -98,10 +98,9 @@ class _PinEntryState extends State<PinEntry> {
         for (int i = 0; i < _controllers.length; i++) {
           String currentText = _pin[i];
           if (widget.inputFieldConfiguration.obscureText) {
-            _controllers[i].text =
-                currentText.isNotEmpty
-                    ? widget.inputFieldConfiguration.obscuringCharacter
-                    : '';
+            _controllers[i].text = currentText.isNotEmpty
+                ? widget.inputFieldConfiguration.obscuringCharacter
+                : '';
           } else {
             _controllers[i].text = currentText;
           }
@@ -149,10 +148,9 @@ class _PinEntryState extends State<PinEntry> {
         (controller) => controller.text.isEmpty,
       );
       if (emptyIndex != -1) {
-        _controllers[emptyIndex].text =
-            widget.inputFieldConfiguration.obscureText
-                ? widget.inputFieldConfiguration.obscuringCharacter
-                : key;
+        _controllers[emptyIndex].text = widget.inputFieldConfiguration.obscureText
+            ? widget.inputFieldConfiguration.obscuringCharacter
+            : key;
         _pin[emptyIndex] = key;
         if (emptyIndex + 1 < _controllers.length) {
           FocusScope.of(context).requestFocus(_focusNodes[emptyIndex + 1]);
@@ -198,9 +196,9 @@ class _PinEntryState extends State<PinEntry> {
           if (widget.middleWidget != null)
             widget.centerMiddleWidget
                 ? Padding(
-                  padding: EdgeInsets.only(top: verticalPadding),
-                  child: widget.middleWidget!,
-                )
+                    padding: EdgeInsets.only(top: verticalPadding),
+                    child: widget.middleWidget!,
+                  )
                 : widget.middleWidget!,
           SizedBox(height: verticalPadding),
           PinKeyboard(

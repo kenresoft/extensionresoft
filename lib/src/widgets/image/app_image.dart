@@ -296,11 +296,9 @@ class AppImage extends StatelessWidget {
       );
 
       return DecorationImage(
-        image:
-            fallbackAsset.isNotEmpty
-                ? AssetImage(fallbackAsset, package: 'extensionresoft')
-                    as ImageProvider
-                : CachedNetworkImageProvider(defaultFallbackNetworkImage),
+        image: fallbackAsset.isNotEmpty
+            ? AssetImage(fallbackAsset, package: 'extensionresoft') as ImageProvider
+            : CachedNetworkImageProvider(defaultFallbackNetworkImage),
         fit: decorationFit ?? fit,
         alignment: alignment,
         colorFilter: colorFilter,

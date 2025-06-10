@@ -77,7 +77,8 @@ class CustomRatingBar extends StatefulWidget {
   State<CustomRatingBar> createState() => _CustomRatingBarState();
 }
 
-class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProviderStateMixin {
+class _CustomRatingBarState extends State<CustomRatingBar>
+    with SingleTickerProviderStateMixin {
   late double _rating;
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -96,10 +97,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
     _animation = Tween<double>(
       begin: 0.0,
       end: _rating,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.forward();
 
@@ -127,10 +125,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       _animation = Tween<double>(
         begin: _animation.value,
         end: _rating,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
       _controller.forward(from: 0.0);
     }
   }
@@ -153,12 +148,18 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
         final starSize = box.size;
 
         // Check if touch is within this star's bounds
-        final touchWithinStarX = globalPosition.dx >= starPosition.dx && globalPosition.dx <= starPosition.dx + starSize.width;
-        final touchWithinStarY = globalPosition.dy >= starPosition.dy && globalPosition.dy <= starPosition.dy + starSize.height;
+        final touchWithinStarX =
+            globalPosition.dx >= starPosition.dx &&
+            globalPosition.dx <= starPosition.dx + starSize.width;
+        final touchWithinStarY =
+            globalPosition.dy >= starPosition.dy &&
+            globalPosition.dy <= starPosition.dy + starSize.height;
 
         if (touchWithinStarX && touchWithinStarY) {
           // Calculate where within the star the touch occurred
-          final positionInStar = widget.direction == Axis.horizontal ? (globalPosition.dx - starPosition.dx) / starSize.width : (globalPosition.dy - starPosition.dy) / starSize.height;
+          final positionInStar = widget.direction == Axis.horizontal
+              ? (globalPosition.dx - starPosition.dx) / starSize.width
+              : (globalPosition.dy - starPosition.dy) / starSize.height;
 
           // Determine if it's a half or full rating
           if (widget.allowHalfRating) {
@@ -191,7 +192,10 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       if (box != null) {
         final starPosition = box.localToGlobal(Offset.zero);
         final starSize = box.size;
-        final starCenter = Offset(starPosition.dx + starSize.width / 2, starPosition.dy + starSize.height / 2);
+        final starCenter = Offset(
+          starPosition.dx + starSize.width / 2,
+          starPosition.dy + starSize.height / 2,
+        );
 
         // Calculate distance to star center
         final distance = (globalPosition - starCenter).distance;
@@ -202,9 +206,13 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
           // If we allow half ratings, check if we're in the left or right half
           // of the closest star
           if (widget.allowHalfRating) {
-            final positionRelativeToStar = widget.direction == Axis.horizontal ? globalPosition.dx - starPosition.dx : globalPosition.dy - starPosition.dy;
+            final positionRelativeToStar = widget.direction == Axis.horizontal
+                ? globalPosition.dx - starPosition.dx
+                : globalPosition.dy - starPosition.dy;
 
-            final halfPoint = widget.direction == Axis.horizontal ? starSize.width / 2 : starSize.height / 2;
+            final halfPoint = widget.direction == Axis.horizontal
+                ? starSize.width / 2
+                : starSize.height / 2;
 
             closestRating = positionRelativeToStar < halfPoint ? i + 0.5 : i + 1.0;
           } else {
@@ -227,10 +235,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
         _animation = Tween<double>(
           begin: _animation.value,
           end: _rating,
-        ).animate(CurvedAnimation(
-          parent: _controller,
-          curve: Curves.easeInOut,
-        ));
+        ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
         _controller.forward(from: 0.0);
       });
 
@@ -249,33 +254,49 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onHorizontalDragStart: widget.isInteractive && widget.direction == Axis.horizontal
+              onHorizontalDragStart:
+                  widget.isInteractive && widget.direction == Axis.horizontal
                   ? (details) {
-                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
+                      _updateRating(
+                        _calculateRatingFromTouch(details.globalPosition),
+                      );
                     }
                   : null,
-              onHorizontalDragUpdate: widget.isInteractive && widget.direction == Axis.horizontal
+              onHorizontalDragUpdate:
+                  widget.isInteractive && widget.direction == Axis.horizontal
                   ? (details) {
-                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
+                      _updateRating(
+                        _calculateRatingFromTouch(details.globalPosition),
+                      );
                     }
                   : null,
-              onVerticalDragStart: widget.isInteractive && widget.direction == Axis.vertical
+              onVerticalDragStart:
+                  widget.isInteractive && widget.direction == Axis.vertical
                   ? (details) {
-                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
+                      _updateRating(
+                        _calculateRatingFromTouch(details.globalPosition),
+                      );
                     }
                   : null,
-              onVerticalDragUpdate: widget.isInteractive && widget.direction == Axis.vertical
+              onVerticalDragUpdate:
+                  widget.isInteractive && widget.direction == Axis.vertical
                   ? (details) {
-                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
+                      _updateRating(
+                        _calculateRatingFromTouch(details.globalPosition),
+                      );
                     }
                   : null,
               onTapDown: widget.isInteractive
                   ? (details) {
-                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
+                      _updateRating(
+                        _calculateRatingFromTouch(details.globalPosition),
+                      );
                     }
                   : null,
               child: MouseRegion(
-                cursor: widget.isInteractive ? SystemMouseCursors.click : MouseCursor.defer,
+                cursor: widget.isInteractive
+                    ? SystemMouseCursors.click
+                    : MouseCursor.defer,
                 child: Flex(
                   direction: widget.direction,
                   mainAxisSize: MainAxisSize.min,
@@ -283,8 +304,12 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
                     return Container(
                       key: _starKeys[index],
                       margin: EdgeInsets.symmetric(
-                        horizontal: widget.direction == Axis.horizontal ? widget.spacing / 2 : 0,
-                        vertical: widget.direction == Axis.vertical ? widget.spacing / 2 : 0,
+                        horizontal: widget.direction == Axis.horizontal
+                            ? widget.spacing / 2
+                            : 0,
+                        vertical: widget.direction == Axis.vertical
+                            ? widget.spacing / 2
+                            : 0,
                       ),
                       child: _buildRatingItem(index + 1),
                     );
@@ -297,7 +322,9 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   _animation.value.toStringAsFixed(widget.allowHalfRating ? 1 : 0),
-                  style: widget.ratingTextStyle ?? Theme.of(context).textTheme.bodyLarge,
+                  style:
+                      widget.ratingTextStyle ??
+                      Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
           ],
@@ -314,12 +341,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       return SizedBox(
         width: widget.iconSize,
         height: widget.iconSize,
-        child: widget.itemBuilder!(
-          context,
-          position,
-          isActive,
-          fillLevel,
-        ),
+        child: widget.itemBuilder!(context, position, isActive, fillLevel),
       );
     }
 

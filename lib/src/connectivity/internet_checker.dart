@@ -104,10 +104,9 @@ class InternetChecker {
 
     return InternetResult(
       dnsSuccess: result.any((success) => success),
-      failureReason:
-          result.any((success) => !success)
-              ? 'DNS lookup failed for one or more hosts.'
-              : null,
+      failureReason: result.any((success) => !success)
+          ? 'DNS lookup failed for one or more hosts.'
+          : null,
     );
   }
 

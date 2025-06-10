@@ -76,14 +76,13 @@ extension CustomImageExtension on String {
       fit: fit,
       alignment: alignment,
       repeat: repeat,
-      errorBuilder:
-          (_, _, _) => AppImage(
-            this,
-            fit: fit,
-            height: height,
-            width: width,
-            backgroundColor: color,
-          ),
+      errorBuilder: (_, _, _) => AppImage(
+        this,
+        fit: fit,
+        height: height,
+        width: width,
+        backgroundColor: color,
+      ),
     );
   }
 

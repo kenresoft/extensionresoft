@@ -311,10 +311,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
 
     try {
       final validationMessage = widget.validator!(text);
-      final result =
-          validationMessage != null
-              ? ValidationResult.error(validationMessage)
-              : ValidationResult.valid();
+      final result = validationMessage != null
+          ? ValidationResult.error(validationMessage)
+          : ValidationResult.valid();
       _updateValidationResult(result);
     } catch (e) {
       // Graceful handling of validator exceptions
@@ -615,10 +614,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   ) {
     return Semantics(
       button: true,
-      label:
-          obscureText
-              ? widget.passwordVisibilityConfig.visibilityOnTooltip
-              : widget.passwordVisibilityConfig.visibilityOffTooltip,
+      label: obscureText
+          ? widget.passwordVisibilityConfig.visibilityOnTooltip
+          : widget.passwordVisibilityConfig.visibilityOffTooltip,
       child: InkWell(
         borderRadius: BorderRadius.circular(24),
         onTap: _togglePasswordVisibility,
@@ -639,10 +637,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   /// Build appropriate visibility icon
   Widget _buildVisibilityIcon(bool isVisible, bool isFocused, ThemeData theme) {
     // Use custom widgets if provided
-    final customIcon =
-        isVisible
-            ? widget.passwordVisibilityConfig.customVisibilityOnIcon
-            : widget.passwordVisibilityConfig.customVisibilityOffIcon;
+    final customIcon = isVisible
+        ? widget.passwordVisibilityConfig.customVisibilityOnIcon
+        : widget.passwordVisibilityConfig.customVisibilityOffIcon;
 
     if (customIcon != null) {
       return IconTheme(
@@ -657,10 +654,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     // Use asset resolver for fallback icons
     return AssetResolver.resolveVisibilityIcon(
       isVisible: isVisible,
-      userAssetPath:
-          isVisible
-              ? widget.passwordVisibilityConfig.customVisibilityOnIconPath
-              : widget.passwordVisibilityConfig.customVisibilityOffIconPath,
+      userAssetPath: isVisible
+          ? widget.passwordVisibilityConfig.customVisibilityOnIconPath
+          : widget.passwordVisibilityConfig.customVisibilityOffIconPath,
       color: _getIconColor(isFocused),
       size: widget.passwordVisibilityConfig.iconSize,
     );
@@ -861,18 +857,16 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       value: widget.dropdownValue,
       focusNode: _focusNode,
       items: widget.items,
-      onChanged:
-          widget.enabled
-              ? (value) {
-                widget.onDropdownChanged?.call(value);
-                _performValidation();
-              }
-              : null,
+      onChanged: widget.enabled
+          ? (value) {
+              widget.onDropdownChanged?.call(value);
+              _performValidation();
+            }
+          : null,
       decoration: decoration,
-      icon:
-          widget.showDropdownIcon
-              ? const Icon(Icons.arrow_drop_down)
-              : const SizedBox.shrink(),
+      icon: widget.showDropdownIcon
+          ? const Icon(Icons.arrow_drop_down)
+          : const SizedBox.shrink(),
       isExpanded: true,
       onTap: widget.onTap,
       style: _getEffectiveTextStyle(context),
@@ -1007,12 +1001,13 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
       CurvedAnimation(parent: _animationController, curve: widget.animationCurve),
     );
 
-    _slideAnimation = Tween<Offset>(
-      begin: const Offset(0, -0.5),
-      end: Offset.zero,
-    ).animate(
-      CurvedAnimation(parent: _animationController, curve: widget.animationCurve),
-    );
+    _slideAnimation = Tween<Offset>(begin: const Offset(0, -0.5), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _animationController,
+            curve: widget.animationCurve,
+          ),
+        );
 
     _updateCurrentState();
 

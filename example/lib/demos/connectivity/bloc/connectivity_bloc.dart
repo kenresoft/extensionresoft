@@ -13,11 +13,13 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
   StreamSubscription<InternetResult>? _subscription;
 
   ConnectivityBloc(this._repository)
-      : super(const ConnectivityState(
+    : super(
+        const ConnectivityState(
           isConnected: false,
           connectionType: 'Unknown',
           lastChecked: 'Never',
-        )) {
+        ),
+      ) {
     on<CheckConnectivity>(_onCheckConnectivity);
     on<StreamConnectivity>(_onStreamConnectivity);
     on<ConnectivityChanged>(_onConnectivityChanged);
@@ -48,12 +50,14 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
     Emitter<ConnectivityState> emit,
   ) {
     InternetResult result = event.result;
-    emit(ConnectivityState(
-      isConnected: result.hasInternetAccess,
-      connectionType: result.connectionType.toString().split('.').last,
-      lastChecked: _formatDateTime(DateTime.now()),
-      isLoading: false,
-    ));
+    emit(
+      ConnectivityState(
+        isConnected: result.hasInternetAccess,
+        connectionType: result.connectionType.toString().split('.').last,
+        lastChecked: _formatDateTime(DateTime.now()),
+        isLoading: false,
+      ),
+    );
   }
 
   String _formatDateTime(DateTime dateTime) {
