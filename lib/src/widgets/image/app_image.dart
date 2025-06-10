@@ -4,7 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../utility/logger.dart';
+import '../../utility/logger.dart';
 import 'app_circle_image.dart' show ImageSourceType;
 
 /// A versatile image widget supporting multiple source types with unified API.
