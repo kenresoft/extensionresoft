@@ -19,6 +19,9 @@ class AppCircleImage extends StatelessWidget {
   final BoxFit fit;
   final Color? backgroundColor;
 
+  /// Controls whether the image is clipped to a circle. Defaults to true.
+  final bool clip;
+
   const AppCircleImage(
     this.image, {
     super.key,
@@ -28,14 +31,19 @@ class AppCircleImage extends StatelessWidget {
     this.fallbackImage,
     this.fit = BoxFit.cover,
     this.backgroundColor = const Color(0xFFE0E0E0),
+    this.clip = true,
   });
 
   @override
   Widget build(BuildContext context) {
+    final imageWidget = _buildImage(context);
+    // final double size = radius * 2;
+
     return CircleAvatar(
       radius: radius,
       backgroundColor: backgroundColor,
-      child: ClipOval(child: _buildImage(context)),
+      child: clip ? ClipOval(child: imageWidget) : imageWidget,
+      // : SizedBox(width: size, height: size, child: imageWidget),
     );
   }
 
@@ -96,8 +104,8 @@ class AppCircleImage extends StatelessWidget {
       width: size,
       height: size,
       fit: fit,
-      errorBuilder:
-          (context, error, stackTrace) => _buildFallbackOrError(size, context),
+      errorBuilder: (context, error, stackTrace) =>
+          _buildFallbackOrError(size, context),
     );
   }
 
@@ -108,8 +116,8 @@ class AppCircleImage extends StatelessWidget {
       width: size,
       height: size,
       fit: fit,
-      errorBuilder:
-          (context, error, stackTrace) => _buildFallbackOrError(size, context),
+      errorBuilder: (context, error, stackTrace) =>
+          _buildFallbackOrError(size, context),
       cacheWidth: _calculateCacheWidth(size, context),
     );
   }
@@ -142,8 +150,8 @@ class AppCircleImage extends StatelessWidget {
         height: size,
         fit: fit,
         cacheWidth: _calculateCacheWidth(size, context),
-        errorBuilder:
-            (context, error, stackTrace) => errorWidget ?? _defaultErrorWidget(),
+        errorBuilder: (context, error, stackTrace) =>
+            errorWidget ?? _defaultErrorWidget(),
       );
     }
     return errorWidget ?? _defaultErrorWidget();

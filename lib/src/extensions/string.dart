@@ -4,11 +4,20 @@
 
 import 'package:flutter/material.dart';
 
-import '../image/app_circle_image.dart';
-import '../image/app_image.dart';
+import '../widgets/image/app_circle_image.dart';
+import '../widgets/image/app_image.dart';
 
 /// Extension on String to create Text widgets with customizable properties.
 extension TextExtension on String {
+  /// Capitalizes the first letter of the string.
+  ///
+  /// Returns the string with the first letter capitalized. If the string is empty,
+  /// it returns the empty string.
+  String get capitalize {
+    if (isEmpty) return this;
+    return '${this[0].toUpperCase()}${substring(1)}';
+  }
+
   /// Creates a Text widget with customizable properties.
   ///
   /// The `edit()` function creates a Text widget with the specified textStyle, textAlign, and selectionColor. <br /><br />
