@@ -1,7 +1,7 @@
 name: extensionresoft
 description: Boost your Flutter development with reusable widgets, utilities, and extensions
   for advanced image handling, secure PIN entry, internet connectivity checks, and more.
-version: 1.1.0
+version: 1.2.0
 homepage: https://github.com/kenresoft/extensionresoft
 repository: https://github.com/kenresoft/extensionresoft
 #issue_tracker: https://github.com/kenresoft/extensionresoft/issues

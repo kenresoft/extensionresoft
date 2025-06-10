@@ -1,5 +1,23 @@
 # Changelog
 
+## [1.2.0] - 2025-06-10 (Feature Release)
+
+### **Features:**
+- **CustomTextField**: Introduced a powerful and highly customizable `CustomTextField` widget with built-in validation, styling options, accessibility enhancements, and dropdown support. 
+- **Connectivity Bloc Demo**: Added a comprehensive demo showcasing real-time internet connectivity monitoring using the `Bloc` pattern, complete with events, states, and a repository. 
+- **ImageBackground Widget**: Launched a new `ImageBackground` widget to easily display images with overlay content.
+
+### **New Animation Widgets**:
+- **AnimatedFadeScale**: A widget for combining fade and scale animations seamlessly.
+- **FadeSlideTransition**: A transition widget for creating smooth fade and slide effects.
+- **UI Assets**: Added password visibility toggle icons directly to the package assets.
+
+### **Improvements**:
+- **Theming**: Added the `AppColors` class, providing a set of predefined color constants for consistent UI theming.
+- **String Extensions**: Included a capitalize extension on the `String` class for convenient text formatting.
+
+---
+
 ## [1.1.0] - 2025-04-20 (Feature Release)
 
 ### **Features:**
