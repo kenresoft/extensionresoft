@@ -4,8 +4,8 @@
 
 import 'package:flutter/material.dart';
 
-import '../widgets/app_circle_image.dart';
-import '../widgets/app_image.dart';
+import '../widgets/image/app_circle_image.dart';
+import '../widgets/image/app_image.dart';
 
 /// Extension on String to create Text widgets with customizable properties.
 extension TextExtension on String {
