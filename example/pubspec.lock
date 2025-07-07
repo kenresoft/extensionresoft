@@ -121,21 +121,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.10"
-  equatable:
-    dependency: transitive
-    description:
-      name: equatable
-      sha256: "567c64b3cb4cf82397aac55f4f0cbd3ca20d77c6c03bedbc4ceaddc08904aef7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.7"
   extensionresoft:
     dependency: "direct main"
     description:
       path: ".."
       relative: true
     source: path
-    version: "1.1.0"
+    version: "1.2.1"
   fake_async:
     dependency: transitive
     description:
@@ -259,10 +251,10 @@ packages:
     dependency: transitive
     description:
       name: logger
-      sha256: be4b23575aac7ebf01f225a241eb7f6b5641eeaf43c6a8613510fc2f8cf187d1
+      sha256: "2621da01aabaf223f8f961e751f2c943dbb374dc3559b982f200ccedadaa6999"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.0"
+    version: "2.6.0"
   matcher:
     dependency: transitive
     description:

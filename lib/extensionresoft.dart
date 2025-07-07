@@ -36,3 +36,4 @@ export 'src/widgets/image/image_background.dart';
 export 'src/widgets/text_field/custom_text_field.dart';
 export 'src/widgets/text_field/text_field_configs.dart';
 export 'src/widgets/text_field/text_field_validation.dart';
+export 'src/widgets/text_field/validation_controller.dart';
