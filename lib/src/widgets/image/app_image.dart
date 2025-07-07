@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,9 +24,9 @@ class AppImage extends StatelessWidget {
   final String? fallbackImage;
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
+  final Color? placeholderColor;
 
-  const AppImage(
-    this.image, {
+  const AppImage(this.image, {
     super.key,
     this.width,
     this.height,
@@ -32,6 +36,7 @@ class AppImage extends StatelessWidget {
     this.fallbackImage,
     this.borderRadius,
     this.backgroundColor,
+    this.placeholderColor,
   });
 
   @override
@@ -143,7 +148,7 @@ class AppImage extends StatelessWidget {
       height: height,
       fit: fit,
       memCacheWidth: _calculateCacheWidth(context),
-      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
+      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(context),
       errorWidget: (context, url, error) {
         // logger.e('Error loading network image: $url', error: error);
         return _buildFallbackImage(context);
@@ -174,7 +179,9 @@ class AppImage extends StatelessWidget {
     if (width == null || width!.isInfinite || width!.isNaN) return null;
 
     try {
-      final devicePixelRatio = kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio;
+      final devicePixelRatio = kIsWeb ? 1 : MediaQuery
+          .of(context)
+          .devicePixelRatio;
       final calculatedWidth = width! * devicePixelRatio;
 
       // Ensure the value is finite and within reasonable bounds
@@ -191,14 +198,20 @@ class AppImage extends StatelessWidget {
   }
 
   /// Default placeholder widget while loading images
-  Widget _defaultPlaceholder() {
+  Widget _defaultPlaceholder(BuildContext context) {
+    final color = placeholderColor ?? Theme
+        .of(context)
+        .colorScheme
+        .secondary
+        .withValues(alpha: 0.6);
+
     return Center(
       child: SizedBox(
         width: 24.0,
         height: 24.0,
         child: CircularProgressIndicator(
           strokeWidth: 2.0,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade400),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ),
     );
@@ -224,8 +237,8 @@ class AppImage extends StatelessWidget {
     String defaultFallbackNetworkImage = 'https://picsum.photos/150',
   }) {
     assert(
-      fallbackAsset.isNotEmpty || defaultFallbackNetworkImage.isNotEmpty,
-      'At least one fallback image (asset or network) must be provided.',
+    fallbackAsset.isNotEmpty || defaultFallbackNetworkImage.isNotEmpty,
+    'At least one fallback image (asset or network) must be provided.',
     );
 
     try {
@@ -234,7 +247,7 @@ class AppImage extends StatelessWidget {
 
       switch (sourceType) {
         case ImageSourceType.network:
-          // Handle network image
+        // Handle network image
           return DecorationImage(
             image: CachedNetworkImageProvider(image as String),
             fit: actualFit,
@@ -246,7 +259,7 @@ class AppImage extends StatelessWidget {
           );
 
         case ImageSourceType.file:
-          // Handle file image
+        // Handle file image
           return DecorationImage(
             image: FileImage(image as File),
             fit: actualFit,
@@ -258,7 +271,7 @@ class AppImage extends StatelessWidget {
           );
 
         case ImageSourceType.asset:
-          // Handle asset image
+        // Handle asset image
           return DecorationImage(
             image: AssetImage(image as String),
             fit: actualFit,
@@ -270,7 +283,7 @@ class AppImage extends StatelessWidget {
           );
 
         case ImageSourceType.none:
-          // Use provided fallback
+        // Use provided fallback
           if (fallbackAsset.isNotEmpty) {
             return DecorationImage(
               image: AssetImage(fallbackAsset, package: 'extensionresoft'),

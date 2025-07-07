@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -18,6 +22,7 @@ class AppCircleImage extends StatelessWidget {
   final String? fallbackImage;
   final BoxFit fit;
   final Color? backgroundColor;
+  final Color? placeholderColor;
 
   /// Controls whether the image is clipped to a circle. Defaults to true.
   final bool clip;
@@ -32,6 +37,7 @@ class AppCircleImage extends StatelessWidget {
     this.fit = BoxFit.cover,
     this.backgroundColor = const Color(0xFFE0E0E0),
     this.clip = true,
+    this.placeholderColor,
   });
 
   @override
@@ -130,7 +136,7 @@ class AppCircleImage extends StatelessWidget {
       height: size,
       fit: fit,
       memCacheWidth: _calculateCacheWidth(size, context),
-      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
+      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(context),
       errorWidget: (context, url, error) => _buildFallbackOrError(size, context),
     );
   }
@@ -151,30 +157,37 @@ class AppCircleImage extends StatelessWidget {
         fit: fit,
         cacheWidth: _calculateCacheWidth(size, context),
         errorBuilder: (context, error, stackTrace) =>
-            errorWidget ?? _defaultErrorWidget(),
+            errorWidget ?? _defaultErrorWidget(context),
       );
     }
-    return errorWidget ?? _defaultErrorWidget();
+    return errorWidget ?? _defaultErrorWidget(context);
   }
 
   /// Default widget displayed while the image is loading.
-  Widget _defaultPlaceholder() {
+  Widget _defaultPlaceholder(BuildContext context) {
+    final color =
+        placeholderColor ??
+        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
+
     return Center(
       child: SizedBox(
         width: radius,
         height: radius,
         child: CircularProgressIndicator(
           strokeWidth: 2.0,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade400),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ),
     );
   }
 
   /// Default widget displayed when an error occurs while loading the image.
-  Widget _defaultErrorWidget() {
+  Widget _defaultErrorWidget(BuildContext context) {
+    final color =
+        placeholderColor ??
+        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
     return Center(
-      child: Icon(Icons.person, size: radius, color: Colors.grey.shade500),
+      child: Icon(Icons.person, size: radius, color: color),
     );
   }
 }
