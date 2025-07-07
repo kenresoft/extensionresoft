@@ -110,8 +110,7 @@ class AppCircleImage extends StatelessWidget {
       width: size,
       height: size,
       fit: fit,
-      errorBuilder: (context, error, stackTrace) =>
-          _buildFallbackOrError(size, context),
+      errorBuilder: (context, error, stackTrace) => _buildFallbackOrError(size, context),
     );
   }
 
@@ -122,8 +121,7 @@ class AppCircleImage extends StatelessWidget {
       width: size,
       height: size,
       fit: fit,
-      errorBuilder: (context, error, stackTrace) =>
-          _buildFallbackOrError(size, context),
+      errorBuilder: (context, error, stackTrace) => _buildFallbackOrError(size, context),
       cacheWidth: _calculateCacheWidth(size, context),
     );
   }
@@ -143,8 +141,7 @@ class AppCircleImage extends StatelessWidget {
 
   /// Calculate appropriate cache width based on device pixel ratio
   int _calculateCacheWidth(double size, BuildContext context) {
-    return (size * (kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio.ceil()))
-        .toInt();
+    return (size * (kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio.ceil())).toInt();
   }
 
   /// Builds either a fallback image or error widget
@@ -156,8 +153,7 @@ class AppCircleImage extends StatelessWidget {
         height: size,
         fit: fit,
         cacheWidth: _calculateCacheWidth(size, context),
-        errorBuilder: (context, error, stackTrace) =>
-            errorWidget ?? _defaultErrorWidget(context),
+        errorBuilder: (context, error, stackTrace) => errorWidget ?? _defaultErrorWidget(context),
       );
     }
     return errorWidget ?? _defaultErrorWidget(context);
@@ -165,9 +161,7 @@ class AppCircleImage extends StatelessWidget {
 
   /// Default widget displayed while the image is loading.
   Widget _defaultPlaceholder(BuildContext context) {
-    final color =
-        placeholderColor ??
-        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
+    final color = placeholderColor ?? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
 
     return Center(
       child: SizedBox(
@@ -183,9 +177,7 @@ class AppCircleImage extends StatelessWidget {
 
   /// Default widget displayed when an error occurs while loading the image.
   Widget _defaultErrorWidget(BuildContext context) {
-    final color =
-        placeholderColor ??
-        Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
+    final color = placeholderColor ?? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
     return Center(
       child: Icon(Icons.person, size: radius, color: color),
     );

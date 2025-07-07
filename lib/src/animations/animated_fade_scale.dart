@@ -50,8 +50,7 @@ class AnimatedFadeScale extends StatefulWidget {
   State<AnimatedFadeScale> createState() => _AnimatedFadeScaleState();
 }
 
-class _AnimatedFadeScaleState extends State<AnimatedFadeScale>
-    with SingleTickerProviderStateMixin {
+class _AnimatedFadeScaleState extends State<AnimatedFadeScale> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacityAnimation;
   late Animation<double> _scaleAnimation;

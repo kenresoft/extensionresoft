@@ -19,9 +19,7 @@ class AssetResolver {
     required Color? color,
     required double size,
   }) {
-    final packageAssetPath = isVisible
-        ? _InternalAssets.visibilityOn
-        : _InternalAssets.visibilityOff;
+    final packageAssetPath = isVisible ? _InternalAssets.visibilityOn : _InternalAssets.visibilityOff;
 
     return _ImageWithFallback(
       userAssetPath: userAssetPath,

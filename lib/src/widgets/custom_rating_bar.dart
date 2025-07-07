@@ -77,8 +77,7 @@ class CustomRatingBar extends StatefulWidget {
   State<CustomRatingBar> createState() => _CustomRatingBarState();
 }
 
-class _CustomRatingBarState extends State<CustomRatingBar>
-    with SingleTickerProviderStateMixin {
+class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProviderStateMixin {
   late double _rating;
   late AnimationController _controller;
   late Animation<double> _animation;
@@ -89,10 +88,7 @@ class _CustomRatingBarState extends State<CustomRatingBar>
     super.initState();
     _rating = widget.initialRating.clamp(0.0, widget.maxRating.toDouble());
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.animationDuration);
 
     _animation = Tween<double>(
       begin: 0.0,
@@ -254,49 +250,33 @@ class _CustomRatingBarState extends State<CustomRatingBar>
           mainAxisSize: MainAxisSize.min,
           children: [
             GestureDetector(
-              onHorizontalDragStart:
-                  widget.isInteractive && widget.direction == Axis.horizontal
+              onHorizontalDragStart: widget.isInteractive && widget.direction == Axis.horizontal
                   ? (details) {
-                      _updateRating(
-                        _calculateRatingFromTouch(details.globalPosition),
-                      );
+                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
                     }
                   : null,
-              onHorizontalDragUpdate:
-                  widget.isInteractive && widget.direction == Axis.horizontal
+              onHorizontalDragUpdate: widget.isInteractive && widget.direction == Axis.horizontal
                   ? (details) {
-                      _updateRating(
-                        _calculateRatingFromTouch(details.globalPosition),
-                      );
+                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
                     }
                   : null,
-              onVerticalDragStart:
-                  widget.isInteractive && widget.direction == Axis.vertical
+              onVerticalDragStart: widget.isInteractive && widget.direction == Axis.vertical
                   ? (details) {
-                      _updateRating(
-                        _calculateRatingFromTouch(details.globalPosition),
-                      );
+                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
                     }
                   : null,
-              onVerticalDragUpdate:
-                  widget.isInteractive && widget.direction == Axis.vertical
+              onVerticalDragUpdate: widget.isInteractive && widget.direction == Axis.vertical
                   ? (details) {
-                      _updateRating(
-                        _calculateRatingFromTouch(details.globalPosition),
-                      );
+                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
                     }
                   : null,
               onTapDown: widget.isInteractive
                   ? (details) {
-                      _updateRating(
-                        _calculateRatingFromTouch(details.globalPosition),
-                      );
+                      _updateRating(_calculateRatingFromTouch(details.globalPosition));
                     }
                   : null,
               child: MouseRegion(
-                cursor: widget.isInteractive
-                    ? SystemMouseCursors.click
-                    : MouseCursor.defer,
+                cursor: widget.isInteractive ? SystemMouseCursors.click : MouseCursor.defer,
                 child: Flex(
                   direction: widget.direction,
                   mainAxisSize: MainAxisSize.min,
@@ -304,12 +284,8 @@ class _CustomRatingBarState extends State<CustomRatingBar>
                     return Container(
                       key: _starKeys[index],
                       margin: EdgeInsets.symmetric(
-                        horizontal: widget.direction == Axis.horizontal
-                            ? widget.spacing / 2
-                            : 0,
-                        vertical: widget.direction == Axis.vertical
-                            ? widget.spacing / 2
-                            : 0,
+                        horizontal: widget.direction == Axis.horizontal ? widget.spacing / 2 : 0,
+                        vertical: widget.direction == Axis.vertical ? widget.spacing / 2 : 0,
                       ),
                       child: _buildRatingItem(index + 1),
                     );
@@ -322,9 +298,7 @@ class _CustomRatingBarState extends State<CustomRatingBar>
                 padding: const EdgeInsets.only(top: 8.0),
                 child: Text(
                   _animation.value.toStringAsFixed(widget.allowHalfRating ? 1 : 0),
-                  style:
-                      widget.ratingTextStyle ??
-                      Theme.of(context).textTheme.bodyLarge,
+                  style: widget.ratingTextStyle ?? Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
           ],
@@ -351,18 +325,10 @@ class _CustomRatingBarState extends State<CustomRatingBar>
       child: Stack(
         fit: StackFit.passthrough,
         children: [
-          Icon(
-            widget.inactiveIcon,
-            size: widget.iconSize,
-            color: widget.inactiveColor,
-          ),
+          Icon(widget.inactiveIcon, size: widget.iconSize, color: widget.inactiveColor),
           ClipRect(
             clipper: _RatingClipper(fillLevel, widget.direction),
-            child: Icon(
-              widget.activeIcon,
-              size: widget.iconSize,
-              color: widget.activeColor,
-            ),
+            child: Icon(widget.activeIcon, size: widget.iconSize, color: widget.activeColor),
           ),
         ],
       ),

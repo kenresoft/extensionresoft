@@ -93,10 +93,8 @@ class ImageBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final effectiveWidth =
-        width ?? (circleRadius != null ? circleRadius! * 2 : defaultWidth);
-    final effectiveHeight =
-        height ?? (circleRadius != null ? circleRadius! * 2 : defaultHeight);
+    final effectiveWidth = width ?? (circleRadius != null ? circleRadius! * 2 : defaultWidth);
+    final effectiveHeight = height ?? (circleRadius != null ? circleRadius! * 2 : defaultHeight);
 
     Widget content = SizedBox(
       width: effectiveWidth,
@@ -112,10 +110,7 @@ class ImageBackground extends StatelessWidget {
           if (imageOverlayColor != null)
             Positioned.fill(
               child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: imageOverlayColor,
-                  borderRadius: borderRadius,
-                ),
+                decoration: BoxDecoration(color: imageOverlayColor, borderRadius: borderRadius),
               ),
             ),
 

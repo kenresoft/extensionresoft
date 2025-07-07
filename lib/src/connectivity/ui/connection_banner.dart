@@ -105,18 +105,14 @@ class ConnectionBanner extends StatefulWidget {
   State<ConnectionBanner> createState() => _ConnectionBannerState();
 }
 
-class _ConnectionBannerState extends State<ConnectionBanner>
-    with SingleTickerProviderStateMixin {
+class _ConnectionBannerState extends State<ConnectionBanner> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(
-      duration: widget.style.animationDuration,
-      vsync: this,
-    );
+    _controller = AnimationController(duration: widget.style.animationDuration, vsync: this);
     _slideAnimation = Tween<Offset>(
       begin: const Offset(0, -1),
       end: Offset.zero,
