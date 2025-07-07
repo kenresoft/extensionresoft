@@ -26,17 +26,11 @@ class ConnectionBannerStyle {
 
   // Predefined styles for convenience
   factory ConnectionBannerStyle.online() {
-    return const ConnectionBannerStyle(
-      backgroundColor: Colors.green,
-      icon: Icons.wifi,
-    );
+    return const ConnectionBannerStyle(backgroundColor: Colors.green, icon: Icons.wifi);
   }
 
   factory ConnectionBannerStyle.offline() {
-    return const ConnectionBannerStyle(
-      backgroundColor: Colors.red,
-      icon: Icons.wifi_off,
-    );
+    return const ConnectionBannerStyle(backgroundColor: Colors.red, icon: Icons.wifi_off);
   }
 
   factory ConnectionBannerStyle.custom({

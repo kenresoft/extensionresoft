@@ -76,11 +76,7 @@ void main() {
 
   group('CustomImageExtension', () {
     test('img function should return an Image widget with specified properties', () {
-      final imageWidget = 'assets/image.png'.img(
-        width: 100,
-        height: 100,
-        fit: BoxFit.cover,
-      );
+      final imageWidget = 'assets/image.png'.img(width: 100, height: 100, fit: BoxFit.cover);
       expect(imageWidget.width, equals(100.0));
       expect(imageWidget.height, equals(100.0));
     });
@@ -93,22 +89,15 @@ void main() {
     });
 
     test('conditionFunction should invoke correct function based on condition', () {
-      final result = conditionFunction(
-        true,
-        () => 'True Value',
-        () => 'False Value',
-      );
+      final result = conditionFunction(true, () => 'True Value', () => 'False Value');
       expect(result, equals('True Value'));
     });
   });
 
   group('Get Function', () {
-    test(
-      'get function should return correct value based on key and default value',
-      () {
-        final result = get('Existing Value', 'Default Value');
-        expect(result, equals('Existing Value'));
-      },
-    );
+    test('get function should return correct value based on key and default value', () {
+      final result = get('Existing Value', 'Default Value');
+      expect(result, equals('Existing Value'));
+    });
   });
 }

@@ -15,12 +15,10 @@ class InternetConnectionChecker {
   final InternetChecker _internetChecker = InternetChecker.instance;
 
   /// Stream that emits detailed [InternetResult] on connectivity changes.
-  Stream<InternetResult> get onConnectivityChanged =>
-      _internetChecker.connectivityStream.distinct();
+  Stream<InternetResult> get onConnectivityChanged => _internetChecker.connectivityStream.distinct();
 
   /// Stream that emits results based on changes in internet connectivity.
-  Stream<InternetResult> get onInternetChanged =>
-      _internetChecker.internetStream.distinct();
+  Stream<InternetResult> get onInternetChanged => _internetChecker.internetStream.distinct();
 
   /// Stream that emits combined results from both connectivity and internet checks.
   Stream<InternetResult> get onInternetConnectivityChanged =>

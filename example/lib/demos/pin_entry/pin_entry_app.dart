@@ -34,8 +34,10 @@ class PinEntryApp extends StatelessWidget {
                     SizedBox(height: 20),
                     Text(
                       "Verification",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ],
                 ),

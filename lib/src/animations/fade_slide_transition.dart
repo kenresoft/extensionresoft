@@ -23,11 +23,7 @@ class FadeSlideTransition extends StatefulWidget {
     this.onTransitionComplete,
   });
 
-  static FadeSlideTransition fast({
-    required Widget child,
-    Key? key,
-    Key? transitionKey,
-  }) {
+  static FadeSlideTransition fast({required Widget child, Key? key, Key? transitionKey}) {
     return FadeSlideTransition(
       key: key,
       transitionKey: transitionKey,
@@ -36,11 +32,7 @@ class FadeSlideTransition extends StatefulWidget {
     );
   }
 
-  static FadeSlideTransition slow({
-    required Widget child,
-    Key? key,
-    Key? transitionKey,
-  }) {
+  static FadeSlideTransition slow({required Widget child, Key? key, Key? transitionKey}) {
     return FadeSlideTransition(
       key: key,
       transitionKey: transitionKey,
@@ -53,8 +45,7 @@ class FadeSlideTransition extends StatefulWidget {
   State<FadeSlideTransition> createState() => _FadeSlideTransitionState();
 }
 
-class _FadeSlideTransitionState extends State<FadeSlideTransition>
-    with SingleTickerProviderStateMixin {
+class _FadeSlideTransitionState extends State<FadeSlideTransition> with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<Offset> _slideAnimation;
@@ -210,10 +201,7 @@ class _FadeSlideTransitionState extends State<FadeSlideTransition>
           builder: (context, _) {
             return FadeTransition(
               opacity: _fadeAnimation,
-              child: SlideTransition(
-                position: _slideAnimation,
-                child: displayedChild,
-              ),
+              child: SlideTransition(position: _slideAnimation, child: displayedChild),
             );
           },
         );

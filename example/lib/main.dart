@@ -48,10 +48,12 @@ class ExampleScreen extends StatelessWidget {
 
   // Section Header Builder
   static Widget _buildSectionTitle(String title) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Text(title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-      );
+    padding: const EdgeInsets.symmetric(vertical: 12),
+    child: Text(
+      title,
+      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+    ),
+  );
 
   // ───────────────────────────────────────────────
   // 🔐 PIN ENTRY DEMO
@@ -106,9 +108,9 @@ class ExampleScreen extends StatelessWidget {
             height: 100,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(12),
-              image: const AppImage('').toDecorationImage(
-                decorationFit: BoxFit.cover,
-              ),
+              image: const AppImage(
+                '',
+              ).toDecorationImage(decorationFit: BoxFit.cover),
             ),
           ),
         ),
@@ -116,8 +118,11 @@ class ExampleScreen extends StatelessWidget {
           'Image from Asset Path',
           Row(
             children: [
-              'assets/image.png'
-                  .img(width: 100, height: 100, fit: BoxFit.cover),
+              'assets/image.png'.img(
+                width: 100,
+                height: 100,
+                fit: BoxFit.cover,
+              ),
             ],
           ),
         ),
@@ -223,12 +228,17 @@ class ExampleScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Text(
-            '`condition()` can replace ternary `? :` and is widget-friendly.'),
+          '`condition()` can replace ternary `? :` and is widget-friendly.',
+        ),
         const SizedBox(height: 8),
         _buildExample(
-            'condition(true, "Yes", "No")', Text('Result: $staticCondition')),
-        _buildExample('conditionFunction(true, () => ..., () => ...)',
-            Text('Result: $dynamicCondition')),
+          'condition(true, "Yes", "No")',
+          Text('Result: $staticCondition'),
+        ),
+        _buildExample(
+          'conditionFunction(true, () => ..., () => ...)',
+          Text('Result: $dynamicCondition'),
+        ),
         _buildExample('Widget Conditional Result', widgetConditional),
       ],
     );
@@ -355,8 +365,10 @@ class _ConnectivityDemoWidgetState extends State<_ConnectivityDemoWidget> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Usage Example:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Usage Example:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             const SizedBox(height: 8),
             const Text(
               'final checker = InternetConnectionChecker();\n'

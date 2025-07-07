@@ -10,7 +10,8 @@ class ConnectivityBlocPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => ConnectivityBloc(ConnectivityRepository())..add(StreamConnectivity()),
+      create: (_) =>
+          ConnectivityBloc(ConnectivityRepository())..add(StreamConnectivity()),
       child: Scaffold(
         appBar: AppBar(title: const Text('BLoC Implementation')),
         body: const _ConnectivityView(),
@@ -28,13 +29,13 @@ class _ConnectivityView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: SingleChildScrollView(
-      child: Column(
-        children: [
-          _buildConnectionStatusCard(),
-          const SizedBox(height: 20),
-          const _CodeExample(),
-        ],
-      ),
+        child: Column(
+          children: [
+            _buildConnectionStatusCard(),
+            const SizedBox(height: 20),
+            const _CodeExample(),
+          ],
+        ),
       ),
     );
   }
@@ -67,8 +68,11 @@ class _ConnectivityView extends StatelessWidget {
                         children: [
                           Text(
                             state.isConnected ? 'Connected' : 'Disconnected',
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  color: state.isConnected ? Colors.green : Colors.red,
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  color: state.isConnected
+                                      ? Colors.green
+                                      : Colors.red,
                                 ),
                           ),
                           Text('Type: ${state.connectionType}'),
@@ -115,8 +119,7 @@ class _CodeExample extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.all(8.0),
-          child: Text(
-            '''
+          child: Text('''
 // BLoC Events
 abstract class ConnectivityEvent {}
 class CheckConnectivity extends ConnectivityEvent {}
@@ -147,9 +150,7 @@ class ConnectivityBloc extends Bloc<ConnectivityEvent, ConnectivityState> {
   
   // Handle events...
 }
-''',
-            style: TextStyle(fontFamily: 'monospace'),
-          ),
+''', style: TextStyle(fontFamily: 'monospace')),
         ),
       ],
     );

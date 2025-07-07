@@ -20,17 +20,11 @@ class ValidationResult {
   factory ValidationResult.error(String message) =>
       ValidationResult(isValid: false, errorMessage: message);
 
-  factory ValidationResult.warning(String message) => ValidationResult(
-    isValid: true,
-    errorMessage: message,
-    severity: ValidationSeverity.warning,
-  );
+  factory ValidationResult.warning(String message) =>
+      ValidationResult(isValid: true, errorMessage: message, severity: ValidationSeverity.warning);
 
-  factory ValidationResult.info(String message) => ValidationResult(
-    isValid: true,
-    errorMessage: message,
-    severity: ValidationSeverity.info,
-  );
+  factory ValidationResult.info(String message) =>
+      ValidationResult(isValid: true, errorMessage: message, severity: ValidationSeverity.info);
 
   /// Helper method to check if this is a specific severity level
   bool isSeverity(ValidationSeverity s) => severity == s;

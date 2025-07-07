@@ -51,8 +51,7 @@ class PinEntry extends StatefulWidget {
     // this.bottomWidget,
     this.centerMiddleWidget = false,
     this.keyboardConfiguration = const KeyboardConfiguration(),
-    this.inputFieldConfiguration =
-        const InputFieldConfiguration(), // Default input field configuration
+    this.inputFieldConfiguration = const InputFieldConfiguration(), // Default input field configuration
   });
 
   @override
@@ -69,10 +68,7 @@ class _PinEntryState extends State<PinEntry> {
   void initState() {
     super.initState();
     _pin = List.filled(widget.pinLength, '');
-    _controllers = List.generate(
-      widget.pinLength,
-      (index) => TextEditingController(),
-    );
+    _controllers = List.generate(widget.pinLength, (index) => TextEditingController());
     _focusNodes = List.generate(widget.pinLength, (index) => FocusNode());
   }
 
@@ -92,16 +88,14 @@ class _PinEntryState extends State<PinEntry> {
     super.didUpdateWidget(oldWidget);
 
     // Handle obscure text changes
-    if (widget.inputFieldConfiguration.obscureText !=
-        oldWidget.inputFieldConfiguration.obscureText) {
+    if (widget.inputFieldConfiguration.obscureText != oldWidget.inputFieldConfiguration.obscureText) {
       setState(() {
         for (int i = 0; i < _controllers.length; i++) {
           String currentText = _pin[i];
           if (widget.inputFieldConfiguration.obscureText) {
-            _controllers[i].text =
-                currentText.isNotEmpty
-                    ? widget.inputFieldConfiguration.obscuringCharacter
-                    : '';
+            _controllers[i].text = currentText.isNotEmpty
+                ? widget.inputFieldConfiguration.obscuringCharacter
+                : '';
           } else {
             _controllers[i].text = currentText;
           }
@@ -112,18 +106,14 @@ class _PinEntryState extends State<PinEntry> {
     // Handle pin length changes
     if (widget.pinLength != oldWidget.pinLength) {
       _pin = List.filled(widget.pinLength, '');
-      _controllers = List.generate(
-        widget.pinLength,
-        (index) => TextEditingController(),
-      );
+      _controllers = List.generate(widget.pinLength, (index) => TextEditingController());
       _focusNodes = List.generate(widget.pinLength, (index) => FocusNode());
     }
 
     // Check if other widget properties changed that might require a rebuild
     if (widget.inputFieldConfiguration.fieldFillColor !=
             oldWidget.inputFieldConfiguration.fieldFillColor ||
-        widget.inputFieldConfiguration.borderColor !=
-            oldWidget.inputFieldConfiguration.borderColor ||
+        widget.inputFieldConfiguration.borderColor != oldWidget.inputFieldConfiguration.borderColor ||
         widget.inputFieldConfiguration.focusedBorderColor !=
             oldWidget.inputFieldConfiguration.focusedBorderColor ||
         // widget.topWidget != oldWidget.topWidget ||
@@ -145,14 +135,11 @@ class _PinEntryState extends State<PinEntry> {
         }
       }
     } else {
-      int emptyIndex = _controllers.indexWhere(
-        (controller) => controller.text.isEmpty,
-      );
+      int emptyIndex = _controllers.indexWhere((controller) => controller.text.isEmpty);
       if (emptyIndex != -1) {
-        _controllers[emptyIndex].text =
-            widget.inputFieldConfiguration.obscureText
-                ? widget.inputFieldConfiguration.obscuringCharacter
-                : key;
+        _controllers[emptyIndex].text = widget.inputFieldConfiguration.obscureText
+            ? widget.inputFieldConfiguration.obscuringCharacter
+            : key;
         _pin[emptyIndex] = key;
         if (emptyIndex + 1 < _controllers.length) {
           FocusScope.of(context).requestFocus(_focusNodes[emptyIndex + 1]);
@@ -161,9 +148,7 @@ class _PinEntryState extends State<PinEntry> {
     }
 
     setState(() {
-      _isInputComplete = _controllers.every(
-        (controller) => controller.text.isNotEmpty,
-      );
+      _isInputComplete = _controllers.every((controller) => controller.text.isNotEmpty);
       if (_isInputComplete && widget.onInputComplete != null) {
         widget.onInputComplete!(_pin.join());
       }
@@ -198,9 +183,9 @@ class _PinEntryState extends State<PinEntry> {
           if (widget.middleWidget != null)
             widget.centerMiddleWidget
                 ? Padding(
-                  padding: EdgeInsets.only(top: verticalPadding),
-                  child: widget.middleWidget!,
-                )
+                    padding: EdgeInsets.only(top: verticalPadding),
+                    child: widget.middleWidget!,
+                  )
                 : widget.middleWidget!,
           SizedBox(height: verticalPadding),
           PinKeyboard(

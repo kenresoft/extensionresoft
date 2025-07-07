@@ -30,7 +30,9 @@ class ConnectivityDemoHome extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.push(
                 context,
-                MaterialPageRoute(builder: (_) => const ConnectivityVanillaPage()),
+                MaterialPageRoute(
+                  builder: (_) => const ConnectivityVanillaPage(),
+                ),
               ),
               child: const Text('Vanilla Implementation'),
             ),

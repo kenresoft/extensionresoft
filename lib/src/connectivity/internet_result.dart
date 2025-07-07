@@ -1,8 +1,6 @@
 // Copyright 2023 kenresoft. All rights reserved.
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
-
-import 'package:equatable/equatable.dart';
 import 'package:extensionresoft/src/connectivity/connection_type.dart';
 
 /// A data class that encapsulates the result of an internet connectivity check.
@@ -13,22 +11,13 @@ import 'package:extensionresoft/src/connectivity/connection_type.dart';
 /// - HTTP request validation
 ///
 /// Additionally, it provides a reason for failure if any stage fails.
-/// The class extends [Equatable], allowing for value-based comparison
-/// and better performance when checking for equality between instances.
 ///
 /// Properties:
 /// - [dnsSuccess]: Boolean indicating if DNS lookup was successful.
 /// - [socketSuccess]: Boolean indicating if socket connection to the test hosts succeeded.
 /// - [httpSuccess]: Boolean indicating if an HTTP request to validate data transfer succeeded.
 /// - [failureReason]: An optional string providing a detailed failure reason if the checks failed.
-///
-/// Getter:
-/// - [hasInternetAccess]: A computed property that returns `true` if all three checks (DNS, socket, and HTTP) succeeded.
-///
-/// Methods:
-/// - [props]: Overrides the properties from `Equatable` to facilitate object comparison based on the connectivity status.
-/// - [stringify]: Enables automatic string conversion, making it easier to log and debug instances of this class.
-class InternetResult extends Equatable {
+class InternetResult {
   /// Whether the DNS lookup was successful.
   final bool dnsSuccess;
 
@@ -72,19 +61,28 @@ class InternetResult extends Equatable {
   /// all report success. This getter simplifies checking overall internet connectivity.
   bool get hasInternetAccess => dnsSuccess && socketSuccess && httpSuccess;
 
-  /// Overrides the equality comparison properties from [Equatable].
-  ///
-  /// The comparison is primarily focused on the [hasInternetAccess] property, but
-  /// can also include other properties if needed.
   @override
-  List<Object?> get props => [hasInternetAccess];
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is InternetResult &&
+          runtimeType == other.runtimeType &&
+          dnsSuccess == other.dnsSuccess &&
+          socketSuccess == other.socketSuccess &&
+          httpSuccess == other.httpSuccess &&
+          failureReason == other.failureReason &&
+          connectionType == other.connectionType;
 
-  /// Enables automatic string representation of the class for easier debugging and logging.
-  ///
-  /// When logging instances of this class, `stringify` ensures that the output includes
-  /// the string version of the object, making the data more human-readable in logs.
   @override
-  bool? get stringify => true;
+  int get hashCode =>
+      dnsSuccess.hashCode ^
+      socketSuccess.hashCode ^
+      httpSuccess.hashCode ^
+      failureReason.hashCode ^
+      connectionType.hashCode;
+
+  @override
+  String toString() =>
+      'InternetResult(dnsSuccess: $dnsSuccess, socketSuccess: $socketSuccess, httpSuccess: $httpSuccess, failureReason: $failureReason, connectionType: $connectionType)';
 }
 
 /*  Future<InternetResult> getResult([List<ConnectivityResult>? connectivityResult]) async {

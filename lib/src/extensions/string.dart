@@ -32,12 +32,7 @@ extension TextExtension on String {
   /// final textWidget = 'Hello'.edit(textStyle: TextStyle(fontSize: 20), textAlign: TextAlign.center);
   /// ```
   Text edit({TextStyle? textStyle, TextAlign? textAlign, Color? selectionColor}) =>
-      Text(
-        this,
-        style: textStyle,
-        textAlign: textAlign,
-        selectionColor: selectionColor,
-      );
+      Text(this, style: textStyle, textAlign: textAlign, selectionColor: selectionColor);
 }
 
 /// Extension on String to create Image widgets with customizable properties.
@@ -76,14 +71,8 @@ extension CustomImageExtension on String {
       fit: fit,
       alignment: alignment,
       repeat: repeat,
-      errorBuilder:
-          (_, _, _) => AppImage(
-            this,
-            fit: fit,
-            height: height,
-            width: width,
-            backgroundColor: color,
-          ),
+      errorBuilder: (_, _, _) =>
+          AppImage(this, fit: fit, height: height, width: width, backgroundColor: color),
     );
   }
 
@@ -102,11 +91,7 @@ extension CustomImageExtension on String {
   /// ```dart
   /// final circleImageContainer = 'assets/avatar.png'.circleImage(fit: BoxFit.cover, opacity: 0.8);
   /// ```
-  Widget circleImage({
-    BoxFit fit = BoxFit.contain,
-    double radius = 30.0,
-    Color? color,
-  }) {
+  Widget circleImage({BoxFit fit = BoxFit.contain, double radius = 30.0, Color? color}) {
     return AppCircleImage(this, fit: fit, radius: radius, backgroundColor: color);
   }
 }
