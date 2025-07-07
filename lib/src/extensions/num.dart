@@ -43,8 +43,7 @@ extension SpaceExtension on num {
   /// ```dart
   /// final spacer = 16.spaceXY();
   /// ```
-  SizedBox spaceXY([Widget? child]) =>
-      SizedBox(height: toDouble(), width: toDouble(), child: child);
+  SizedBox spaceXY([Widget? child]) => SizedBox(height: toDouble(), width: toDouble(), child: child);
 
   /// A Getter function that returns a SizedBox with a width equal to the value of the number.
   ///

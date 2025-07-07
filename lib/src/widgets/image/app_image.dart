@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
@@ -20,6 +24,7 @@ class AppImage extends StatelessWidget {
   final String? fallbackImage;
   final BorderRadius? borderRadius;
   final Color? backgroundColor;
+  final Color? placeholderColor;
 
   const AppImage(
     this.image, {
@@ -32,6 +37,7 @@ class AppImage extends StatelessWidget {
     this.fallbackImage,
     this.borderRadius,
     this.backgroundColor,
+    this.placeholderColor,
   });
 
   @override
@@ -45,12 +51,7 @@ class AppImage extends StatelessWidget {
 
     // Wrap with Container for background color if specified
     if (backgroundColor != null) {
-      return Container(
-        color: backgroundColor,
-        width: width,
-        height: height,
-        child: imageWidget,
-      );
+      return Container(color: backgroundColor, width: width, height: height, child: imageWidget);
     }
 
     return imageWidget;
@@ -143,7 +144,7 @@ class AppImage extends StatelessWidget {
       height: height,
       fit: fit,
       memCacheWidth: _calculateCacheWidth(context),
-      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(),
+      placeholder: (context, url) => placeholder ?? _defaultPlaceholder(context),
       errorWidget: (context, url, error) {
         // logger.e('Error loading network image: $url', error: error);
         return _buildFallbackImage(context);
@@ -178,9 +179,7 @@ class AppImage extends StatelessWidget {
       final calculatedWidth = width! * devicePixelRatio;
 
       // Ensure the value is finite and within reasonable bounds
-      if (calculatedWidth.isFinite &&
-          calculatedWidth > 0 &&
-          calculatedWidth < 10000) {
+      if (calculatedWidth.isFinite && calculatedWidth > 0 && calculatedWidth < 10000) {
         return calculatedWidth.toInt();
       }
       return null;
@@ -191,14 +190,16 @@ class AppImage extends StatelessWidget {
   }
 
   /// Default placeholder widget while loading images
-  Widget _defaultPlaceholder() {
+  Widget _defaultPlaceholder(BuildContext context) {
+    final color = placeholderColor ?? Theme.of(context).colorScheme.secondary.withValues(alpha: 0.6);
+
     return Center(
       child: SizedBox(
         width: 24.0,
         height: 24.0,
         child: CircularProgressIndicator(
           strokeWidth: 2.0,
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade400),
+          valueColor: AlwaysStoppedAnimation<Color>(color),
         ),
       ),
     );
@@ -207,11 +208,7 @@ class AppImage extends StatelessWidget {
   /// Default error widget when image loading fails
   Widget _defaultErrorWidget() {
     return Center(
-      child: Icon(
-        Icons.broken_image,
-        color: Colors.grey.shade400,
-        size: (width ?? 50.0) * 0.5,
-      ),
+      child: Icon(Icons.broken_image, color: Colors.grey.shade400, size: (width ?? 50.0) * 0.5),
     );
   }
 
@@ -289,18 +286,12 @@ class AppImage extends StatelessWidget {
       }
     } catch (e, stackTrace) {
       // Comprehensive fallback for unexpected errors
-      logger.e(
-        'Unexpected error in toDecorationImage: $e',
-        error: e,
-        stackTrace: stackTrace,
-      );
+      logger.e('Unexpected error in toDecorationImage: $e', error: e, stackTrace: stackTrace);
 
       return DecorationImage(
-        image:
-            fallbackAsset.isNotEmpty
-                ? AssetImage(fallbackAsset, package: 'extensionresoft')
-                    as ImageProvider
-                : CachedNetworkImageProvider(defaultFallbackNetworkImage),
+        image: fallbackAsset.isNotEmpty
+            ? AssetImage(fallbackAsset, package: 'extensionresoft') as ImageProvider
+            : CachedNetworkImageProvider(defaultFallbackNetworkImage),
         fit: decorationFit ?? fit,
         alignment: alignment,
         colorFilter: colorFilter,

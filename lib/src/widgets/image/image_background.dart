@@ -1,3 +1,7 @@
+// Copyright 2023 kenresoft. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/material.dart';
 
 import 'app_circle_image.dart';
@@ -45,6 +49,12 @@ class ImageBackground extends StatelessWidget {
   /// When non-null, displays the image as a circle with given radius
   final double? circleRadius;
 
+  /// Default width for the background when not specified
+  static const double defaultWidth = 300.0;
+
+  /// Default height for the background when not specified
+  static const double defaultHeight = 200.0;
+
   /// Creates an image background with overlayed content
   const ImageBackground({
     super.key,
@@ -63,7 +73,7 @@ class ImageBackground extends StatelessWidget {
   }) : circleRadius = null;
 
   /// Creates a circular image background with overlayed content
-  /// TODO: Not fully functional yet.
+  /// TODO: We're still testing functionality for edge cases.
   const ImageBackground.circle({
     super.key,
     required this.imageSource,
@@ -83,9 +93,12 @@ class ImageBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final effectiveWidth = width ?? (circleRadius != null ? circleRadius! * 2 : defaultWidth);
+    final effectiveHeight = height ?? (circleRadius != null ? circleRadius! * 2 : defaultHeight);
+
     Widget content = SizedBox(
-      width: width,
-      height: height,
+      width: effectiveWidth,
+      height: effectiveHeight,
       child: Stack(
         alignment: childAlignment,
         fit: StackFit.expand,
@@ -97,10 +110,7 @@ class ImageBackground extends StatelessWidget {
           if (imageOverlayColor != null)
             Positioned.fill(
               child: DecoratedBox(
-                decoration: BoxDecoration(
-                  color: imageOverlayColor,
-                  borderRadius: borderRadius,
-                ),
+                decoration: BoxDecoration(color: imageOverlayColor, borderRadius: borderRadius),
               ),
             ),
 
@@ -115,13 +125,9 @@ class ImageBackground extends StatelessWidget {
       content = ClipRSuperellipse(borderRadius: borderRadius!, child: content);
     }
 
-    // Apply border radius clipping if specified (and not using circle)
-    if (borderRadius == null && circleRadius != null) {
-      content = SizedBox(
-        width: width,
-        height: height,
-        child: ClipOval(child: content),
-      );
+    // Apply circular clipping if circleRadius is specified
+    if (circleRadius != null) {
+      content = ClipOval(child: content);
     }
 
     return content;
@@ -143,8 +149,8 @@ class ImageBackground extends StatelessWidget {
 
     return AppImage(
       imageSource,
-      width: width,
-      height: height,
+      width: width ?? defaultWidth,
+      height: height ?? defaultHeight,
       fit: fit,
       placeholder: placeholder,
       errorWidget: errorWidget,

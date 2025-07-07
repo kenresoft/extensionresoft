@@ -49,20 +49,15 @@ class InternetChecker {
       return await _getInternetResult(await _connectivity.checkConnectivity());
     });
 
-    _streamB = _connectivity.onConnectivityChanged.asyncMap((
-      connectivityResult,
-    ) async {
+    _streamB = _connectivity.onConnectivityChanged.asyncMap((connectivityResult) async {
       return await _getInternetResult(connectivityResult);
     });
 
     _combinedStream = Rx.merge([_streamA, _streamB]);
   }
 
-  Future<InternetResult> _getInternetResult(
-    List<ConnectivityResult>? connectivityResult,
-  ) async {
-    if (connectivityResult != null &&
-        connectivityResult.last == ConnectivityResult.none) {
+  Future<InternetResult> _getInternetResult(List<ConnectivityResult>? connectivityResult) async {
+    if (connectivityResult != null && connectivityResult.last == ConnectivityResult.none) {
       return InternetResult.noInternetAccess();
     }
 
@@ -85,12 +80,7 @@ class InternetChecker {
   }
 
   Future<InternetResult> _performDNSCheck() async {
-    final List<String> testHosts = [
-      'google.com',
-      'cloudflare.com',
-      'facebook.com',
-      'amazon.com',
-    ];
+    final List<String> testHosts = ['google.com', 'cloudflare.com', 'facebook.com', 'amazon.com'];
     final result = await Future.wait(
       testHosts.map((host) async {
         try {
@@ -104,28 +94,18 @@ class InternetChecker {
 
     return InternetResult(
       dnsSuccess: result.any((success) => success),
-      failureReason:
-          result.any((success) => !success)
-              ? 'DNS lookup failed for one or more hosts.'
-              : null,
+      failureReason: result.any((success) => !success)
+          ? 'DNS lookup failed for one or more hosts.'
+          : null,
     );
   }
 
   Future<InternetResult> _performSocketCheck() async {
-    final List<String> testHosts = [
-      'google.com',
-      'cloudflare.com',
-      'facebook.com',
-      'amazon.com',
-    ];
+    final List<String> testHosts = ['google.com', 'cloudflare.com', 'facebook.com', 'amazon.com'];
     final results = await Future.wait(
       testHosts.map((host) async {
         try {
-          final socket = await Socket.connect(
-            host,
-            443,
-            timeout: const Duration(seconds: 3),
-          );
+          final socket = await Socket.connect(host, 443, timeout: const Duration(seconds: 3));
           socket.destroy();
           return true; // Socket connection successful
         } catch (e) {
@@ -146,18 +126,13 @@ class InternetChecker {
   Future<InternetResult> _performHttpRequest() async {
     final HttpClient httpClient = HttpClient();
     try {
-      final HttpClientRequest request = await httpClient.getUrl(
-        Uri.parse('https://www.google.com'),
-      );
+      final HttpClientRequest request = await httpClient.getUrl(Uri.parse('https://www.google.com'));
       final HttpClientResponse response = await request.close();
       if (response.statusCode == 200) {
         return InternetResult(httpSuccess: true);
       }
     } catch (e) {
-      return InternetResult(
-        httpSuccess: false,
-        failureReason: "HTTP request failed: $e",
-      );
+      return InternetResult(httpSuccess: false, failureReason: "HTTP request failed: $e");
     } finally {
       httpClient.close();
     }

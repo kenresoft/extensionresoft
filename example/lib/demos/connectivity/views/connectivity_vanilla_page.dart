@@ -7,11 +7,13 @@ class ConnectivityVanillaPage extends StatefulWidget {
   const ConnectivityVanillaPage({super.key});
 
   @override
-  State<ConnectivityVanillaPage> createState() => _ConnectivityVanillaPageState();
+  State<ConnectivityVanillaPage> createState() =>
+      _ConnectivityVanillaPageState();
 }
 
 class _ConnectivityVanillaPageState extends State<ConnectivityVanillaPage> {
-  final InternetConnectionChecker _connectionChecker = InternetConnectionChecker();
+  final InternetConnectionChecker _connectionChecker =
+      InternetConnectionChecker();
   bool _isConnected = false;
   String _connectionType = 'Unknown';
   String _lastChecked = 'Not checked yet';
@@ -38,7 +40,9 @@ class _ConnectivityVanillaPageState extends State<ConnectivityVanillaPage> {
   }
 
   void _setupConnectionListener() {
-    _subscription = _connectionChecker.onInternetConnectivityChanged.listen((result) {
+    _subscription = _connectionChecker.onInternetConnectivityChanged.listen((
+      result,
+    ) {
       if (mounted) {
         setState(() {
           _isConnected = result.hasInternetAccess;
@@ -101,8 +105,8 @@ class _ConnectivityVanillaPageState extends State<ConnectivityVanillaPage> {
                       Text(
                         _isConnected ? 'Connected' : 'Disconnected',
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: _isConnected ? Colors.green : Colors.red,
-                            ),
+                          color: _isConnected ? Colors.green : Colors.red,
+                        ),
                       ),
                       Text('Type: $_connectionType'),
                     ],
@@ -127,8 +131,7 @@ class _ConnectivityVanillaPageState extends State<ConnectivityVanillaPage> {
       children: [
         Padding(
           padding: EdgeInsets.all(8.0),
-          child: Text(
-            '''
+          child: Text('''
 // Initialize checker
 final InternetConnectionChecker _connectionChecker = InternetConnectionChecker();
 
@@ -141,9 +144,7 @@ _subscription = _connectionChecker.onInternetConnectivityChanged.listen((result)
 });
 
 // Don't forget to cancel subscription in dispose()
-''',
-            style: TextStyle(fontFamily: 'monospace'),
-          ),
+''', style: TextStyle(fontFamily: 'monospace')),
         ),
       ],
     );

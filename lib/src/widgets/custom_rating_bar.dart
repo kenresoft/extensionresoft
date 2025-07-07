@@ -88,18 +88,12 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
     super.initState();
     _rating = widget.initialRating.clamp(0.0, widget.maxRating.toDouble());
 
-    _controller = AnimationController(
-      vsync: this,
-      duration: widget.animationDuration,
-    );
+    _controller = AnimationController(vsync: this, duration: widget.animationDuration);
 
     _animation = Tween<double>(
       begin: 0.0,
       end: _rating,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
 
     _controller.forward();
 
@@ -127,10 +121,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       _animation = Tween<double>(
         begin: _animation.value,
         end: _rating,
-      ).animate(CurvedAnimation(
-        parent: _controller,
-        curve: Curves.easeInOut,
-      ));
+      ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
       _controller.forward(from: 0.0);
     }
   }
@@ -153,12 +144,18 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
         final starSize = box.size;
 
         // Check if touch is within this star's bounds
-        final touchWithinStarX = globalPosition.dx >= starPosition.dx && globalPosition.dx <= starPosition.dx + starSize.width;
-        final touchWithinStarY = globalPosition.dy >= starPosition.dy && globalPosition.dy <= starPosition.dy + starSize.height;
+        final touchWithinStarX =
+            globalPosition.dx >= starPosition.dx &&
+            globalPosition.dx <= starPosition.dx + starSize.width;
+        final touchWithinStarY =
+            globalPosition.dy >= starPosition.dy &&
+            globalPosition.dy <= starPosition.dy + starSize.height;
 
         if (touchWithinStarX && touchWithinStarY) {
           // Calculate where within the star the touch occurred
-          final positionInStar = widget.direction == Axis.horizontal ? (globalPosition.dx - starPosition.dx) / starSize.width : (globalPosition.dy - starPosition.dy) / starSize.height;
+          final positionInStar = widget.direction == Axis.horizontal
+              ? (globalPosition.dx - starPosition.dx) / starSize.width
+              : (globalPosition.dy - starPosition.dy) / starSize.height;
 
           // Determine if it's a half or full rating
           if (widget.allowHalfRating) {
@@ -191,7 +188,10 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       if (box != null) {
         final starPosition = box.localToGlobal(Offset.zero);
         final starSize = box.size;
-        final starCenter = Offset(starPosition.dx + starSize.width / 2, starPosition.dy + starSize.height / 2);
+        final starCenter = Offset(
+          starPosition.dx + starSize.width / 2,
+          starPosition.dy + starSize.height / 2,
+        );
 
         // Calculate distance to star center
         final distance = (globalPosition - starCenter).distance;
@@ -202,9 +202,13 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
           // If we allow half ratings, check if we're in the left or right half
           // of the closest star
           if (widget.allowHalfRating) {
-            final positionRelativeToStar = widget.direction == Axis.horizontal ? globalPosition.dx - starPosition.dx : globalPosition.dy - starPosition.dy;
+            final positionRelativeToStar = widget.direction == Axis.horizontal
+                ? globalPosition.dx - starPosition.dx
+                : globalPosition.dy - starPosition.dy;
 
-            final halfPoint = widget.direction == Axis.horizontal ? starSize.width / 2 : starSize.height / 2;
+            final halfPoint = widget.direction == Axis.horizontal
+                ? starSize.width / 2
+                : starSize.height / 2;
 
             closestRating = positionRelativeToStar < halfPoint ? i + 0.5 : i + 1.0;
           } else {
@@ -227,10 +231,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
         _animation = Tween<double>(
           begin: _animation.value,
           end: _rating,
-        ).animate(CurvedAnimation(
-          parent: _controller,
-          curve: Curves.easeInOut,
-        ));
+        ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
         _controller.forward(from: 0.0);
       });
 
@@ -314,12 +315,7 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       return SizedBox(
         width: widget.iconSize,
         height: widget.iconSize,
-        child: widget.itemBuilder!(
-          context,
-          position,
-          isActive,
-          fillLevel,
-        ),
+        child: widget.itemBuilder!(context, position, isActive, fillLevel),
       );
     }
 
@@ -329,18 +325,10 @@ class _CustomRatingBarState extends State<CustomRatingBar> with SingleTickerProv
       child: Stack(
         fit: StackFit.passthrough,
         children: [
-          Icon(
-            widget.inactiveIcon,
-            size: widget.iconSize,
-            color: widget.inactiveColor,
-          ),
+          Icon(widget.inactiveIcon, size: widget.iconSize, color: widget.inactiveColor),
           ClipRect(
             clipper: _RatingClipper(fillLevel, widget.direction),
-            child: Icon(
-              widget.activeIcon,
-              size: widget.iconSize,
-              color: widget.activeColor,
-            ),
+            child: Icon(widget.activeIcon, size: widget.iconSize, color: widget.activeColor),
           ),
         ],
       ),
