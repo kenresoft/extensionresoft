@@ -1,5 +1,37 @@
 # Changelog
 
+## [1.3.0] - 2025-07-07 (Feature Release)
+
+### **New Features:**
+- **ValidationController**: Introduced high-performance form validation solution with:
+    - Field registration/validation management
+    - Efficient change detection
+    - State/error message access
+    - Batch validation capabilities
+
+### **Improvements:**
+- **CustomTextField**:
+    - Integrated `ValidationController` support
+    - Added `focusNode` and `textInputAction` properties
+    - Optimized lifecycle management and state updates
+    - Refactored internal logic for clarity and efficiency
+
+- **Image Widgets**:
+    - Added `placeholderColor` property to `AppCircleImage` and `AppImage`
+    - Implemented default dimensions (`defaultWidth`/`defaultHeight`) for `ImageBackground`
+    - Enhanced circular clipping logic
+    - Improved default placeholder styling using theme colors
+
+### **Documentation:**
+- Updated README with usage examples and feature descriptions
+
+### **Dependencies:**
+- Upgraded `logger` dependency to `^2.6.0`
+- Removed `equatable` dependency
+- Marked `shared_preferences` and `logger` for future removal
+
+--- 
+
 ## [1.2.0] - 2025-06-10 (Feature Release)
 
 ### **Features:**
