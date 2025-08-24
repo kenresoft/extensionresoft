@@ -182,7 +182,11 @@ extension IndexMarginPairExtensions on int {
   /// Item 1: left = innerMargin, right = innerMargin
   /// Item 2: left = innerMargin, right = edgeMargin
   /// ```
-  ({double left, double right}) itemMargins(int itemCount, {double edgeMargin = 24, double innerMargin = 12}) {
+  ({double left, double right}) itemMargins(
+    int itemCount, {
+    double edgeMargin = 24,
+    double innerMargin = 12,
+  }) {
     assert(itemCount > 0, 'Item count must be greater than 0');
     final isFirst = this == 0;
     final isLast = this == itemCount - 1;

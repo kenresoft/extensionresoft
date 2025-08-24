@@ -550,7 +550,9 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       children: [
         // TextField with fixed height
         Container(
-          constraints: BoxConstraints(minHeight: widget.height ?? 48/*, maxHeight: widget.height ?? 48*/),
+          constraints: BoxConstraints(
+            minHeight: widget.height ?? 48 /*, maxHeight: widget.height ?? 48*/,
+          ),
           child: AnimatedBuilder(
             animation: _shakeAnimation,
             builder: (context, child) {
