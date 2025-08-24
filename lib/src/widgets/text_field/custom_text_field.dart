@@ -198,7 +198,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   @override
   void initState() {
     super.initState();
-    _initializeComponents();
+    _initializeControllers();
+    _initializeValidationController(); // Called after controllers
+    _initializeNotifiers();
+    _initializeAnimations();
     _setupEventListeners();
     _handleAutofocus();
   }
@@ -206,13 +209,6 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   // ===========================
   // INITIALIZATION
   // ===========================
-
-  void _initializeComponents() {
-    _initializeValidationController();
-    _initializeControllers();
-    _initializeNotifiers();
-    _initializeAnimations();
-  }
 
   void _initializeValidationController() {
     _isValidationControllerMode = widget.autoValidateMode;
@@ -225,6 +221,11 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       );
       _registeredFieldKey = fieldKey;
       widget.validationController!.addListener(_onValidationControllerChange);
+    }
+
+    final initialValue = _controller.text;
+    if (initialValue.isNotEmpty) {
+      updateValidationValue(initialValue);
     }
   }
 
