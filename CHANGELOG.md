@@ -1,5 +1,70 @@
 # Changelog
 
+## [1.4.0] - 2025-08-24 (Feature Release)
+
+### **New Features:**
+- **CustomRangeSlider**: Introduced a highly customizable dual-handle range slider widget with:
+    - Custom theming for track, thumb, and overlay colors
+    - Optional haptic feedback and customizable accessibility labels
+    - Discrete or continuous value selection with validation and clamping
+    - Animated thumb scaling on interaction with Material 3 inspired design
+    - Elevation shadow and border effects with rounded track shape
+
+- **ValidationKey**: Implemented new validation management system with:
+    - `ValueNotifier<String>` wrapper for managing validation field keys
+    - Debug labeling for easier troubleshooting
+    - Comprehensive lifecycle management with listener support
+    - Integration with `ValidationController` for enhanced field management
+
+### **New Utility Types:**
+- **Either<L, R>**: Added functional programming support with:
+    - Left/Right value representation for failure/success patterns
+    - Comprehensive transformation methods (map, bimap, flatMap, fold)
+    - Error handling utilities (tryCatch, tryCatchAsync)
+    - Combining operations (zip, zipWith) and recovery mechanisms
+    - Future integration with async operation extensions
+    - `EitherUtils` for sequence, traverse, and firstRight operations
+
+- **Option<T>**: Introduced optional value handling with:
+    - Some/None pattern implementation
+    - Core operations (fold, map, flatMap, getOrElse)
+    - Conversion utilities to Either types
+
+- **Unit**: Added unit type for representing absence of value in generic contexts
+
+### **Enhancements:**
+- **CustomTextField**:
+    - Reordered initialization methods for improved clarity and reliability
+    - Added `validationKey` property for `ValidationKey` association
+    - Updated text style to use `bodyLarge` instead of `displayMedium`
+    - Enhanced validation initialization with non-empty text handling
+    - Adjusted `minHeight` constraint for multiline support
+
+- **ValidationController**:
+    - Added `updateFieldValueAt` method for index-based field updates
+    - Implemented `fieldKeys` getter for retrieving all registered field keys
+    - Enhanced documentation with comprehensive method descriptions
+
+- **ImageBackground**:
+    - Made `child` parameter optional for increased flexibility
+    - Updated rendering logic to conditionally display child content
+
+### **New Extensions:**
+- **List Extensions**:
+    - Added `itemMargin` extension for calculating list item margins by position
+    - Implemented `itemMargins` extension returning named record with left/right margins
+
+### **Documentation:**
+- Enhanced code documentation across all new components
+- Added comprehensive usage examples for new components
+- Improved API documentation for validation system
+
+### **Dependencies:**
+- Upgraded `connectivity_plus` to `^6.1.5`.
+- Upgraded `logger` to `^2.6.1`.
+
+---
+
 ## [1.3.0] - 2025-07-07 (Feature Release)
 
 ### **New Features:**

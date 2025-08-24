@@ -24,6 +24,34 @@ Build sophisticated form fields with extensive customization:
 - **Theming Support**: Automatic light/dark mode adaptation
 - **Feedback Widget**: Customizable validation messages with icons and animations
 
+### 🎚️ Interactive UI Components
+Create modern, responsive user interfaces:
+
+- **CustomRangeSlider**: Highly customizable dual-handle range slider with:
+    - Custom theming for track, thumb, and overlay colors
+    - Optional haptic feedback and accessibility labels
+    - Discrete or continuous value selection with validation
+    - Animated thumb scaling with Material 3 inspired design
+    - Elevation shadow effects and rounded track shapes
+    - Value clamping and interactive feedback
+
+### 🧬 Functional Programming Support
+Write more expressive and type-safe code:
+
+- **Either<L, R>**: Comprehensive error handling with Left/Right pattern for failure/success scenarios
+    - Transformation methods (map, bimap, flatMap, fold)
+    - Error handling utilities (tryCatch, tryCatchAsync)
+    - Combining operations (zip, zipWith) and recovery mechanisms
+    - Future integration with async operation extensions
+    - EitherUtils for sequence, traverse, and firstRight operations
+
+- **Option<T>**: Elegant optional value handling with Some/None pattern
+    - Core operations (fold, map, flatMap, getOrElse)
+    - Conversion utilities to Either types
+    - Null-safe programming patterns
+
+- **Unit**: Type-safe representation of absence of value in generic contexts
+
 ### 🌐 Internet Connectivity Management
 
 Detect and respond to network changes reliably:
@@ -40,6 +68,7 @@ Create robust image components with minimal effort:
 - **Multi-source Support**: Handle network URLs, asset paths, and file objects through a unified API
 - **AppImage**: Rectangular images with custom border radius, intelligent error handling, and fallbacks
 - **AppCircleImage**: Circular avatar images with placeholder and error states
+- **ImageBackground**: Display images with optional overlay content for enhanced flexibility
 - **Performance Optimized**: Device pixel ratio-aware caching for memory efficiency
 - **Decoration Support**: Use as BoxDecoration background images easily
 
@@ -75,6 +104,7 @@ Write less code for common UI patterns:
 - **Custom Cards**: Create styled cards with simple radius-based extensions
 - **Text Styling**: Format text with fluent extensions for improved readability
 - **Image Path Extensions**: Convert asset paths to image widgets directly
+- **List Extensions**: Calculate item margins with position-based utilities returning named records
 
 ### 🧠 Logic & Functional Extensions
 
@@ -99,7 +129,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  extensionresoft: ^1.3.0
+  extensionresoft: ^1.4.0
 ```
 
 Then run:
@@ -183,6 +213,222 @@ import 'package:extensionresoft/extensionresoft.dart';
     if (validationController.validate()) {
       // All fields valid
     }
+```
+### Range Slider
+
+Build elegant dual-handle range selectors with Material 3 design:
+
+```dart
+    // Basic range slider with custom styling
+    CustomRangeSlider(
+      values: RangeValues(20, 80),
+      min: 0,
+      max: 100,
+      onChanged: (values) {
+        setState(() {
+          _currentRange = values;
+        });
+      },
+      trackHeight: 4.0,
+      thumbRadius: 16.0,
+      enableHaptics: true,
+    );
+
+    // Custom themed range slider
+    CustomRangeSlider(
+      values: RangeValues(30, 70),
+      min: 0,
+      max: 100,
+      customTheme: CustomRangeSliderTheme(
+        activeTrackColor: Colors.deepPurple,
+        inactiveTrackColor: Colors.grey[300],
+        thumbColor: Colors.white,
+        overlayColor: Colors.deepPurple.withOpacity(0.12),
+        thumbBorderColor: Colors.deepPurple,
+      ),
+      onChanged: (values) {
+        print('Range: ${values.start.round()} - ${values.end.round()}');
+      },
+    );
+
+    // Discrete range slider with divisions
+    CustomRangeSlider(
+      values: RangeValues(25, 75),
+      min: 0,
+      max: 100,
+      divisions: 20, // Creates 20 discrete steps
+      trackHeight: 6.0,
+      thumbRadius: 20.0,
+      onChanged: (values) {
+        _updatePriceFilter(values.start, values.end);
+      },
+      onChangeEnd: (values) {
+        // Called when user finishes dragging
+        _savePricePreferences(values);
+      },
+    );
+
+    // Price range selector with custom formatting
+    CustomRangeSlider(
+      values: RangeValues(_minPrice, _maxPrice),
+      min: 0,
+      max: 1000,
+      divisions: 100,
+      customTheme: CustomRangeSliderTheme(
+        activeTrackColor: Colors.green[600],
+        thumbColor: Colors.white,
+        thumbBorderColor: Colors.green[600],
+        overlayColor: Colors.green.withOpacity(0.1),
+      ),
+      onChanged: (values) {
+        setState(() {
+          _minPrice = values.start;
+          _maxPrice = values.end;
+        });
+      },
+      semanticFormatter: (value) => '\$${value.round()}',
+      enableHaptics: true,
+    );
+
+    // Safe constructor with automatic value clamping
+    CustomRangeSlider.safe(
+      values: RangeValues(-10, 150), // Values outside bounds
+      min: 0,
+      max: 100,
+      // Automatically clamps to RangeValues(0, 100)
+      customTheme: CustomRangeSliderTheme(
+        activeTrackColor: Colors.blue[700],
+        inactiveTrackColor: Colors.blue[100],
+        thumbColor: Colors.white,
+        thumbBorderColor: Colors.blue[700],
+      ),
+      onChanged: (values) {
+        // Handle validated range changes
+      },
+    );
+
+    // Age range selector with custom feedback
+    RangeValues _ageRange = RangeValues(18, 65);
+    
+    Column(
+      children: [
+        Text(
+          'Age Range: ${_ageRange.start.round()} - ${_ageRange.end.round()} years',
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        16.spY, // Using ExtensionResoft spacing
+        CustomRangeSlider(
+          values: _ageRange,
+          min: 16,
+          max: 100,
+          divisions: 84, // One division per year
+          trackHeight: 5.0,
+          thumbRadius: 18.0,
+          customTheme: CustomRangeSliderTheme(
+            activeTrackColor: Colors.orange[600],
+            inactiveTrackColor: Colors.grey[300],
+            thumbColor: Colors.white,
+            overlayColor: Colors.orange.withOpacity(0.15),
+            thumbBorderColor: Colors.orange[600],
+          ),
+          onChanged: (values) {
+            setState(() => _ageRange = values);
+          },
+          semanticFormatter: (value) => '${value.round()} years old',
+        ),
+      ],
+    );
+
+    // Performance monitoring range (0-100%)
+    CustomRangeSlider(
+      values: RangeValues(_lowThreshold, _highThreshold),
+      min: 0.0,
+      max: 100.0,
+      divisions: 100,
+      trackHeight: 3.0,
+      thumbRadius: 14.0,
+      customTheme: CustomRangeSliderTheme(
+        activeTrackColor: _getPerformanceColor(),
+        thumbColor: Colors.white,
+        thumbBorderColor: _getPerformanceColor(),
+        overlayColor: _getPerformanceColor().withOpacity(0.1),
+      ),
+      onChanged: (values) {
+        setState(() {
+          _lowThreshold = values.start;
+          _highThreshold = values.end;
+        });
+        _updatePerformanceThresholds(values);
+      },
+      semanticFormatter: (value) => '${value.round()}% performance',
+      enableHaptics: false, // Disable for frequent updates
+    );
+
+    // Time range selector (hours)
+    CustomRangeSlider(
+      values: RangeValues(_startHour.toDouble(), _endHour.toDouble()),
+      min: 0,
+      max: 23,
+      divisions: 23,
+      trackHeight: 4.0,
+      thumbRadius: 16.0,
+      customTheme: CustomRangeSliderTheme(
+        activeTrackColor: Colors.indigo[600],
+        inactiveTrackColor: Colors.indigo[100],
+        thumbColor: Colors.white,
+        thumbBorderColor: Colors.indigo[600],
+      ),
+      onChanged: (values) {
+        setState(() {
+          _startHour = values.start.round();
+          _endHour = values.end.round();
+        });
+      },
+      semanticFormatter: (value) {
+        final hour = value.round();
+        return '${hour.toString().padLeft(2, '0')}:00';
+      },
+    );
+```
+### Functional Programming Support
+
+Handle errors and optional values with type-safe functional patterns:
+
+```dart
+    // Either for error handling
+    Either<String, int> parseNumber(String input) {
+      try {
+        return Either.right(int.parse(input));
+      } catch (e) {
+        return Either.left('Invalid number: $input');
+      }
+    }
+    
+    // Chain operations with flatMap
+    final result = parseNumber('42')
+        .flatMap((n) => n > 0 ? Either.right(n * 2) : Either.left('Negative'))
+        .fold((error) => 'Error: $error', (value) => 'Result: $value');
+    
+    // Async error handling
+    final apiResult = await Either.tryCatchAsync<String, UserData>(
+      (error, stackTrace) => 'API Error: ${error.toString()}',
+      () => fetchUserData(userId),
+    );
+    
+    // Option for nullable values
+    Option<User> findUser(String id) {
+      final user = users.firstWhereOrNull((u) => u.id == id);
+      return user != null ? Option.some(user) : Option.none();
+    }
+    
+    // Transform optional values
+    final greeting = findUser('123')
+        .map((user) => 'Hello, ${user.name}!')
+        .getOrElse(() => 'User not found');
+    
+    // Convert between types
+    final userEither = findUser('123')
+        .toEither(() => 'User not found');
 ```
 
 ### Internet Connectivity
