@@ -14,7 +14,7 @@ class ImageBackground extends StatelessWidget {
   final dynamic imageSource;
 
   /// The widget to display over the background image
-  final Widget child;
+  final Widget? child;
 
   /// The width of the background
   final double? width;
@@ -59,7 +59,7 @@ class ImageBackground extends StatelessWidget {
   const ImageBackground({
     super.key,
     required this.imageSource,
-    required this.child,
+    this.child,
     this.width,
     this.height,
     this.fit = BoxFit.cover,
@@ -115,7 +115,7 @@ class ImageBackground extends StatelessWidget {
             ),
 
           // Child content
-          child,
+          ?child,
         ],
       ),
     );
