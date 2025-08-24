@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../../utility/app_colors.dart';
+import '../../utility/theme_colors.dart';
 import 'text_field_assets.dart';
 import 'text_field_configs.dart';
 import 'text_field_validation.dart';
+import 'validation_key.dart';
 
 /// Enhanced CustomTextField with improved performance, accessibility, and customization
 class CustomTextField<T> extends StatefulWidget {
@@ -91,6 +92,7 @@ class CustomTextField<T> extends StatefulWidget {
 
   // [Validation]
   final ValidationController? validationController;
+  final ValidationKey? validationKey;
 
   /// Creates a CustomTextField with enhanced capabilities.
   const CustomTextField({
@@ -166,6 +168,7 @@ class CustomTextField<T> extends StatefulWidget {
     this.announceValidationStatus = true,
     // Validation
     this.validationController,
+    this.validationKey,
   });
 
   @override
@@ -221,6 +224,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       );
       _registeredFieldKey = fieldKey;
       widget.validationController!.addListener(_onValidationControllerChange);
+
+      if (widget.validationKey != null && fieldKey != null) {
+        widget.validationKey!.value = fieldKey!;
+      }
     }
 
     final initialValue = _controller.text;
@@ -543,7 +550,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       children: [
         // TextField with fixed height
         Container(
-          constraints: BoxConstraints(minHeight: widget.height ?? 48, maxHeight: widget.height ?? 48),
+          constraints: BoxConstraints(minHeight: widget.height ?? 48/*, maxHeight: widget.height ?? 48*/),
           child: AnimatedBuilder(
             animation: _shakeAnimation,
             builder: (context, child) {
@@ -967,7 +974,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   TextStyle _getEffectiveTextStyle(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final baseStyle = theme.textTheme.displayMedium ?? const TextStyle();
+    final baseStyle = theme.textTheme.bodyLarge ?? const TextStyle();
 
     return baseStyle
         .merge(widget.textStyle)
