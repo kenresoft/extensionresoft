@@ -133,3 +133,60 @@ extension ListExtension2 on List<int> {
     return mp;
   }
 }
+
+extension IndexMarginExtensions on int {
+  /// Calculates appropriate margin for an item in a list based on its position.
+  ///
+  /// For horizontal lists:
+  /// - First item (index 0) returns edgeMargin (applied to left)
+  /// - Last item (index itemCount-1) returns edgeMargin (applied to right)
+  /// - All other items return innerMargin
+  ///
+  /// Example:
+  /// ```dart
+  /// final leftMargin = index.itemMargin(items.length);
+  /// final rightMargin = (index + 1).itemMargin(items.length);
+  /// ```
+  ///
+  /// Illustration for a 3-item list:
+  /// ```dart
+  /// Item 0: edgeMargin (left)
+  /// Item 1: innerMargin (both sides)
+  /// Item 2: edgeMargin (right)
+  /// ```
+  double itemMargin(int itemCount, {double edgeMargin = 24, double innerMargin = 12}) {
+    assert(itemCount > 0, 'Item count must be greater than 0');
+    return (this == 0 || this == itemCount) ? edgeMargin : innerMargin;
+  }
+}
+
+extension IndexMarginPairExtensions on int {
+  /// Calculates both left and right margins for list items in a single call,
+  /// returning them as a named record/tuple.
+  ///
+  /// This is optimized for horizontal lists where you need both margins calculated
+  /// consistently. The edge margins are applied to:
+  /// - Left side of the first item
+  /// - Right side of the last item
+  /// While inner margins are used for all other sides.
+  ///
+  /// Example:
+  /// ```dart
+  /// final margins = index.itemMargins(items.length);
+  /// final availableWidth = constraints.maxWidth - margins.left - margins.right;
+  /// ```
+  ///
+  /// Illustration for a 3-item list:
+  /// ```dart
+  /// Item 0: left = edgeMargin, right = innerMargin
+  /// Item 1: left = innerMargin, right = innerMargin
+  /// Item 2: left = innerMargin, right = edgeMargin
+  /// ```
+  ({double left, double right}) itemMargins(int itemCount, {double edgeMargin = 24, double innerMargin = 12}) {
+    assert(itemCount > 0, 'Item count must be greater than 0');
+    final isFirst = this == 0;
+    final isLast = this == itemCount - 1;
+
+    return (left: isFirst ? edgeMargin : innerMargin, right: isLast ? edgeMargin : innerMargin);
+  }
+}
