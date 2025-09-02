@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.4.1] - 2025-09-05 (Refactor & Fix Release)
+
+### **Refactoring & Formatting:**
+- Refactored and formatted code for improved readability and consistency.
+
+### **Fixes & Enhancements:**
+- **`AppImage`**: Enhanced the error icon in `_defaultErrorWidget` to scale proportionally with the image container's height.
+
+---
+
 ## [1.4.0] - 2025-08-24 (Feature Release)
 
 ### **New Features:**
