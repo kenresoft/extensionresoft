@@ -207,8 +207,9 @@ class AppImage extends StatelessWidget {
 
   /// Default error widget when image loading fails
   Widget _defaultErrorWidget() {
+    final double iconSize = (height != null && height! > 0 && height!.isFinite ? height! : 50.0) * 0.5;
     return Center(
-      child: Icon(Icons.broken_image, color: Colors.grey.shade400, size: (width ?? 50.0) * 0.5),
+      child: Icon(Icons.broken_image, color: Colors.grey.shade400, size: iconSize),
     );
   }
 
