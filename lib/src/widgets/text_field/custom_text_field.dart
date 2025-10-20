@@ -551,7 +551,8 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
         // TextField with fixed height
         Container(
           constraints: BoxConstraints(
-            minHeight: widget.height ?? 48 /*, maxHeight: widget.height ?? 48*/,
+            maxHeight: widget.maxLines == 1 ? (widget.height ?? 48) : double.infinity,
+            // minHeight: widget.height ?? 48 /*, maxHeight: widget.height ?? 48*/,
           ),
           child: AnimatedBuilder(
             animation: _shakeAnimation,
@@ -622,6 +623,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.center,
       style: _getEffectiveTextStyle(context),
       maxLines: widget.isPassword ? 1 : widget.maxLines,
+      minLines: 1,
       maxLength: widget.maxLength,
       decoration: decoration,
       onTap: widget.onTap,
@@ -642,7 +644,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   Widget _buildDropdownField(InputDecoration decoration) {
     return DropdownButtonFormField<T>(
       key: widget.fieldKey,
-      value: widget.dropdownValue,
+      value: widget.dropdownValue, // TODO: use initialValue (from Flutter v.3.33)
       focusNode: _focusNode,
       items: widget.items,
       onChanged: widget.enabled
@@ -852,7 +854,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   EdgeInsets _calculateDynamicPadding(double totalHeight, TextStyle textStyle, TextScaler textScaler) {
     final fontSize = textStyle.fontSize ?? 16;
     final scaledFontSize = textScaler.scale(fontSize);
-    final verticalPadding = (totalHeight - scaledFontSize) / 2;
+    final verticalPadding = (totalHeight - scaledFontSize) / 1.8;
 
     return EdgeInsets.symmetric(horizontal: 14, vertical: verticalPadding.clamp(8, double.infinity));
   }

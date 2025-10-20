@@ -17,10 +17,10 @@ dependencies:
     sdk: flutter
 
   shared_preferences: ^2.5.3 # To be removed in future release
-  connectivity_plus: ^6.1.5
+  connectivity_plus: ^7.0.0
   rxdart: ^0.28.0
   cached_network_image: ^3.4.1
-  logger: ^2.6.1 # To be removed in future release
+  logger: ^2.6.2 # To be removed in future release
 
 dev_dependencies:
   flutter_test:

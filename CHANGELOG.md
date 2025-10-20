@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.2] - 2025-09-12 (Fix Release)
+
+### **Fixes & Enhancements:**
+- Fixed `CustomTextField` height constraints and padding for multiline support.
+  - Adjusted `maxHeight` constraint to be `double.infinity` when `maxLines` is not 1, allowing the text field to expand vertically.
+  - Set `minLines` to 1 in the underlying `TextField` to ensure a consistent starting height.
+  - Modified the vertical padding calculation to better accommodate multiline text.
+  - Upgraded `connectivity_plus` to `^7.0.0`.
+  - Upgraded `logger` to `^2.6.2`.
+
+---
 ## [1.4.1] - 2025-09-05 (Refactor & Fix Release)
 
 ### **Refactoring & Formatting:**
