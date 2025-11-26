@@ -56,6 +56,9 @@ class CustomTextField<T> extends StatefulWidget {
   final String? helperText;
   final int? helperMaxLines;
 
+  // [Autofill Properties]
+  final Iterable<String>? autofillHints;
+
   // [Dropdown Properties]
   final List<DropdownMenuItem<T>>? items;
   final T? dropdownValue;
@@ -137,6 +140,10 @@ class CustomTextField<T> extends StatefulWidget {
     this.margin,
     this.helperText,
     this.helperMaxLines,
+
+    // Autofill Properties
+    this.autofillHints,
+
     // Dropdown Properties
     this.items,
     this.dropdownValue,
@@ -629,6 +636,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       onTap: widget.onTap,
       onChanged: _handleTextChange,
       onFieldSubmitted: widget.onSubmitted,
+      autofillHints: widget.autofillHints,
       validator: _isValidationControllerMode
           ? null
           : (value) {

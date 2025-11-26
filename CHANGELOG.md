@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.3] - 2025-11-26 (Fix Release)
+
+### **Fixes & Enhancements:**
+- Updated `CustomTextField` to support autofill and bumped version to 1.4.3.
+
+---
+
 ## [1.4.2] - 2025-09-12 (Fix Release)
 
 ### **Fixes & Enhancements:**
@@ -11,6 +18,7 @@
   - Upgraded `logger` to `^2.6.2`.
 
 ---
+
 ## [1.4.1] - 2025-09-05 (Refactor & Fix Release)
 
 ### **Refactoring & Formatting:**
