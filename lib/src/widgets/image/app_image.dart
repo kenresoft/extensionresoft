@@ -8,7 +8,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../utility/logger.dart';
 import 'app_circle_image.dart' show ImageSourceType;
 
 /// A versatile image widget supporting multiple source types with unified API.
@@ -108,6 +107,7 @@ class AppImage extends StatelessWidget {
 
   /// Builds a file-based image with error handling
   Widget _buildFileImage(BuildContext context) {
+    if (kIsWeb) return _buildFallbackImage(context);
     return Image.file(
       image as File,
       width: width,
@@ -115,7 +115,6 @@ class AppImage extends StatelessWidget {
       fit: fit,
       cacheWidth: _calculateCacheWidth(context),
       errorBuilder: (context, error, stackTrace) {
-        // logger.e('Error loading file image', error: error, stackTrace: stackTrace);
         return _buildFallbackImage(context);
       },
     );
@@ -130,7 +129,6 @@ class AppImage extends StatelessWidget {
       fit: fit,
       cacheWidth: _calculateCacheWidth(context),
       errorBuilder: (context, error, stackTrace) {
-        // logger.e('Error loading asset image: ${image as String}', error: error, stackTrace: stackTrace);
         return _buildFallbackImage(context);
       },
     );
@@ -146,7 +144,6 @@ class AppImage extends StatelessWidget {
       memCacheWidth: _calculateCacheWidth(context),
       placeholder: (context, url) => placeholder ?? _defaultPlaceholder(context),
       errorWidget: (context, url, error) {
-        // logger.e('Error loading network image: $url', error: error);
         return _buildFallbackImage(context);
       },
     );
@@ -162,7 +159,6 @@ class AppImage extends StatelessWidget {
         fit: fit,
         cacheWidth: _calculateCacheWidth(context),
         errorBuilder: (context, error, stackTrace) {
-          // logger.e('Error loading fallback image: $fallbackImage', error: error, stackTrace: stackTrace);
           return errorWidget ?? _defaultErrorWidget();
         },
       );
@@ -184,7 +180,7 @@ class AppImage extends StatelessWidget {
       }
       return null;
     } catch (e) {
-      logger.e('Error calculating cache width', error: e);
+      debugPrint('Error calculating cache width: $e');
       return null;
     }
   }
@@ -239,20 +235,27 @@ class AppImage extends StatelessWidget {
             alignment: alignment,
             colorFilter: colorFilter,
             onError: (exception, stackTrace) {
-              // logger.e('DecorationImage error loading network image: $exception', stackTrace: stackTrace);
             },
           );
 
         case ImageSourceType.file:
           // Handle file image
+          if (kIsWeb) {
+            return DecorationImage(
+              image: fallbackAsset.isNotEmpty
+                  ? AssetImage(fallbackAsset, package: 'extensionresoft')
+                  : CachedNetworkImageProvider(defaultFallbackNetworkImage) as ImageProvider,
+              fit: actualFit,
+              alignment: alignment,
+              colorFilter: colorFilter,
+            );
+          }
           return DecorationImage(
             image: FileImage(image as File),
             fit: actualFit,
             alignment: alignment,
             colorFilter: colorFilter,
-            onError: (exception, stackTrace) {
-              // logger.e('DecorationImage error loading file image: $exception', stackTrace: stackTrace);
-            },
+            onError: (exception, stackTrace) {},
           );
 
         case ImageSourceType.asset:
@@ -263,7 +266,6 @@ class AppImage extends StatelessWidget {
             alignment: alignment,
             colorFilter: colorFilter,
             onError: (exception, stackTrace) {
-              // logger.e('DecorationImage error loading asset image: $exception', stackTrace: stackTrace);
             },
           );
 
@@ -287,7 +289,7 @@ class AppImage extends StatelessWidget {
       }
     } catch (e, stackTrace) {
       // Comprehensive fallback for unexpected errors
-      logger.e('Unexpected error in toDecorationImage: $e', error: e, stackTrace: stackTrace);
+      debugPrint('Unexpected error in toDecorationImage: $e\n$stackTrace');
 
       return DecorationImage(
         image: fallbackAsset.isNotEmpty

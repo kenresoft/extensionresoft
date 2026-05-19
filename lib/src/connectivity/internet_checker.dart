@@ -57,7 +57,9 @@ class InternetChecker {
   }
 
   Future<InternetResult> _getInternetResult(List<ConnectivityResult>? connectivityResult) async {
-    if (connectivityResult != null && connectivityResult.last == ConnectivityResult.none) {
+    if (connectivityResult == null ||
+        connectivityResult.isEmpty ||
+        connectivityResult.contains(ConnectivityResult.none)) {
       return InternetResult.noInternetAccess();
     }
 
@@ -75,7 +77,7 @@ class InternetChecker {
           .map((result) => result.failureReason)
           .where((reason) => reason != null)
           .join('; '),
-      connectionType: connectivityResult?.last.toConnectionType(),
+      connectionType: connectivityResult.lastOrNull?.toConnectionType(),
     );
   }
 

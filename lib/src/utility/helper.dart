@@ -47,15 +47,6 @@ T conditionFunction<T>(bool condition, T Function() trueCase, T Function() false
 /// @param value The default value to use if the key does not exist. <br /><br />
 /// @return The value associated with the key. <br /><br />
 
-T get<T>(T key, [T? value]) {
-  // If the value is null, return the key.
-  if (value == null) {
-    return key;
-  }
-
-  // Set the key to the value.
-  key = value;
-
-  // Return the value.
-  return value;
+T get<T>(T? key, T value) {
+  return key ?? value;
 }
