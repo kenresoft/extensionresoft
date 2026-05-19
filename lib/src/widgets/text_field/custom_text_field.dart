@@ -496,7 +496,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   void _announceValidationChange(ValidationResult current) {
     if (widget.announceValidationStatus && !current.isValid) {
       final announcement = _buildAccessibilityAnnouncement(current);
-      SemanticsService.announce(announcement, TextDirection.ltr);
+      SemanticsService.sendAnnouncement(View.of(context), announcement, TextDirection.ltr);
     }
   }
 
@@ -652,7 +652,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   Widget _buildDropdownField(InputDecoration decoration) {
     return DropdownButtonFormField<T>(
       key: widget.fieldKey,
-      value: widget.dropdownValue, // TODO: use initialValue (from Flutter v.3.33)
+      initialValue: widget.dropdownValue,
       focusNode: _focusNode,
       items: widget.items,
       onChanged: widget.enabled
