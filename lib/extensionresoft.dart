@@ -23,12 +23,10 @@ export 'src/pin_screen/pin_configurations.dart';
 export 'src/pin_screen/pin_entry.dart';
 // export 'src/pin_screen/pin_screen_style.dart';
 
-// Preference
-export 'src/preference/preference.dart';
 // Utility
 export 'src/utility/either.dart';
 export 'src/utility/helper.dart';
-export 'src/utility/logger.dart';
+
 // Widgets
 export 'src/widgets/custom_range_slider.dart';
 export 'src/widgets/custom_rating_bar.dart';

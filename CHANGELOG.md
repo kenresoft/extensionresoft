@@ -1,5 +1,26 @@
 # Changelog
 
+## [1.5.0] - 2026-05-19 (Feature Release)
+
+### **Breaking Changes:**
+- Removed `shared_preferences` dependency and the `SharedPreferencesService` class.
+- Removed `logger` dependency and the `logger` utility.
+
+### **Enhancements:**
+- Added `CustomRatingBar` widget for advanced star rating systems.
+- Replaced internal `logger` usage with `debugPrint` in `AppImage`.
+- Enhanced `InternetConnectionChecker` with support for `vpn`, `satellite`, and `other` connectivity types.
+- Improved stability of `InternetChecker` with safer connectivity result list handling.
+- Modernized color manipulation using `withValues` instead of `withOpacity`.
+- Fixed `CustomTextField` issues:
+    - Resolved text clipping/blurring at the bottom and top of the field by optimizing internal padding and line-height estimates.
+    - Fixed `ErrorStyle` not applying to the validation icon.
+    - Improved lifecycle management of `FocusNode` updates.
+- Updated `README.md` and example app with comprehensive usage examples for all features including Animations and Functional Programming types.
+- Overall enhancements and performance optimizations.
+
+---
+
 ## [1.4.3] - 2025-11-26 (Fix Release)
 
 ### **Fixes & Enhancements:**

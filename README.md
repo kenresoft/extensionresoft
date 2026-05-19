@@ -15,8 +15,9 @@ A comprehensive toolkit of extensions, widgets, and utilities to accelerate Flut
 ### 📝 Enhanced Text/Form Field Input
 Build sophisticated form fields with extensive customization:
 
-- **CustomTextField**: A highly customizable text input field with validation, dropdown support, and accessibility features
-- **Validation System**: Built-in validation with error, warning, and info severity levels
+- **CustomTextField**: A highly customizable text input field with validation, dropdown support, and accessibility features.
+- **Fixed Height Support**: Unique `height` parameter that automatically calculates internal padding to ensure consistency with other widgets (like buttons) without manual calculation.
+- **Validation System**: Built-in validation with error, warning, and info severity levels.
 - **Password Visibility**: Configurable password visibility toggle with custom icons
 - **Dropdown Support**: Seamless integration with dropdown menus
 - **Accessibility**: Comprehensive semantics and validation announcements
@@ -34,6 +35,13 @@ Create modern, responsive user interfaces:
     - Animated thumb scaling with Material 3 inspired design
     - Elevation shadow effects and rounded track shapes
     - Value clamping and interactive feedback
+
+- **CustomRatingBar**: Advanced star rating system with:
+    - Support for half-ratings and custom icons
+    - Interactive drag and tap gestures
+    - Smooth animations for rating changes
+    - Highly customizable appearance (colors, size, spacing)
+    - Optional rating text display and custom item builders
 
 ### 🧬 Functional Programming Support
 Write more expressive and type-safe code:
@@ -114,13 +122,6 @@ Enhance code clarity and maintenance:
 - **Path Extensions**: Apply transformations to values with clean syntax
 - **Value Management**: Robust value retrieval with fallback handling
 
-### 📦 Storage Utilities
-
-Manage persistent data efficiently:
-
-- **SharedPreferencesService**: Type-safe storage for app settings and user preferences
-- **Support for Multiple Types**: Store and retrieve booleans, strings, integers, and doubles
-
 ## Getting Started
 
 ### Installation
@@ -129,7 +130,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  extensionresoft: ^1.4.3
+  extensionresoft: ^1.5.0
 ```
 
 Then run:
@@ -196,6 +197,13 @@ import 'package:extensionresoft/extensionresoft.dart';
     // Field with validation controller integration
     final validationController = ValidationController();
 
+    // Standard height (48) matches many standard buttons
+    CustomTextField(
+      labelText: 'Username',
+      height: 50, // Ensures consistent height and handles internal padding
+      prefixIcon: Icon(Icons.person),
+    );
+
     // Can also be used for multiple fields wrapped in a `Form`.
     CustomTextField(
       labelText: 'Order Number',
@@ -243,7 +251,7 @@ Build elegant dual-handle range selectors with Material 3 design:
         activeTrackColor: Colors.deepPurple,
         inactiveTrackColor: Colors.grey[300],
         thumbColor: Colors.white,
-        overlayColor: Colors.deepPurple.withOpacity(0.12),
+        overlayColor: Colors.deepPurple.withValues(alpha: 0.12),
         thumbBorderColor: Colors.deepPurple,
       ),
       onChanged: (values) {
@@ -278,7 +286,7 @@ Build elegant dual-handle range selectors with Material 3 design:
         activeTrackColor: Colors.green[600],
         thumbColor: Colors.white,
         thumbBorderColor: Colors.green[600],
-        overlayColor: Colors.green.withOpacity(0.1),
+        overlayColor: Colors.green.withValues(alpha: 0.1),
       ),
       onChanged: (values) {
         setState(() {
@@ -328,7 +336,7 @@ Build elegant dual-handle range selectors with Material 3 design:
             activeTrackColor: Colors.orange[600],
             inactiveTrackColor: Colors.grey[300],
             thumbColor: Colors.white,
-            overlayColor: Colors.orange.withOpacity(0.15),
+            overlayColor: Colors.orange.withValues(alpha: 0.15),
             thumbBorderColor: Colors.orange[600],
           ),
           onChanged: (values) {
@@ -351,7 +359,7 @@ Build elegant dual-handle range selectors with Material 3 design:
         activeTrackColor: _getPerformanceColor(),
         thumbColor: Colors.white,
         thumbBorderColor: _getPerformanceColor(),
-        overlayColor: _getPerformanceColor().withOpacity(0.1),
+        overlayColor: _getPerformanceColor().withValues(alpha: 0.1),
       ),
       onChanged: (values) {
         setState(() {
@@ -388,6 +396,39 @@ Build elegant dual-handle range selectors with Material 3 design:
         final hour = value.round();
         return '${hour.toString().padLeft(2, '0')}:00';
       },
+    );
+```
+
+### Rating Bar
+
+Create interactive and animated rating systems:
+
+```dart
+    // Standard star rating
+    CustomRatingBar(
+      initialRating: 3.5,
+      onRatingChanged: (rating) => print('Rating: $rating'),
+    );
+
+    // Highly customized rating bar
+    CustomRatingBar(
+      maxRating: 10,
+      iconSize: 32,
+      activeColor: Colors.deepOrange,
+      inactiveColor: Colors.grey[300],
+      allowHalfRating: true,
+      showRatingText: true,
+      activeIcon: Icons.favorite,
+      inactiveIcon: Icons.favorite_border,
+      onRatingChanged: (rating) => _updateUserPreference(rating),
+    );
+
+    // Read-only display
+    CustomRatingBar(
+      initialRating: 4.8,
+      isInteractive: false,
+      allowHalfRating: true,
+      activeColor: Colors.amber,
     );
 ```
 ### Functional Programming Support
@@ -650,21 +691,6 @@ Handle errors and optional values with type-safe functional patterns:
     
     // Safe value retrieval with fallback
     final displayName = get(user.name, 'Guest User');
-```
-
-### Shared Preferences
-
-```dart
-    // Initialize service
-    await SharedPreferencesService.init();
-    
-    // Store values
-    await SharedPreferencesService.setBool('isDarkMode', true);
-    await SharedPreferencesService.setString('username', 'flutter_dev');
-    
-    // Retrieve values
-    final isDarkMode = SharedPreferencesService.getBool('isDarkMode');
-    final username = SharedPreferencesService.getString('username', 'guest');
 ```
 
 ## Advanced Usage
