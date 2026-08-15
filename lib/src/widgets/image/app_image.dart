@@ -8,7 +8,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
-import '../../utility/logger.dart';
 import 'app_circle_image.dart' show ImageSourceType;
 
 /// A versatile image widget supporting multiple source types with unified API.
@@ -83,11 +82,16 @@ class AppImage extends StatelessWidget {
       return ImageSourceType.file;
     }
 
-    if (image is! String || (image as String).isEmpty) {
+    if (image is! String) {
       return ImageSourceType.none;
     }
 
-    if (_isNetworkImage(image as String)) {
+    final String imagePath = (image as String).trim();
+    if (imagePath.isEmpty) {
+      return ImageSourceType.none;
+    }
+
+    if (_isNetworkImage(imagePath)) {
       return ImageSourceType.network;
     }
 
@@ -108,6 +112,7 @@ class AppImage extends StatelessWidget {
 
   /// Builds a file-based image with error handling
   Widget _buildFileImage(BuildContext context) {
+    if (kIsWeb) return _buildFallbackImage(context);
     return Image.file(
       image as File,
       width: width,
@@ -115,7 +120,6 @@ class AppImage extends StatelessWidget {
       fit: fit,
       cacheWidth: _calculateCacheWidth(context),
       errorBuilder: (context, error, stackTrace) {
-        // logger.e('Error loading file image', error: error, stackTrace: stackTrace);
         return _buildFallbackImage(context);
       },
     );
@@ -130,7 +134,6 @@ class AppImage extends StatelessWidget {
       fit: fit,
       cacheWidth: _calculateCacheWidth(context),
       errorBuilder: (context, error, stackTrace) {
-        // logger.e('Error loading asset image: ${image as String}', error: error, stackTrace: stackTrace);
         return _buildFallbackImage(context);
       },
     );
@@ -138,15 +141,30 @@ class AppImage extends StatelessWidget {
 
   /// Builds a cached network image with optimized settings
   Widget _buildCachedNetworkImage(BuildContext context) {
+    final imageUrl = (image as String).trim();
+
+    if (kIsWeb) {
+      return Image.network(
+        imageUrl,
+        width: width,
+        height: height,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) => _buildFallbackImage(context),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return placeholder ?? _defaultPlaceholder(context);
+        },
+      );
+    }
+
     return CachedNetworkImage(
-      imageUrl: image as String,
+      imageUrl: imageUrl,
       width: width,
       height: height,
       fit: fit,
       memCacheWidth: _calculateCacheWidth(context),
       placeholder: (context, url) => placeholder ?? _defaultPlaceholder(context),
       errorWidget: (context, url, error) {
-        // logger.e('Error loading network image: $url', error: error);
         return _buildFallbackImage(context);
       },
     );
@@ -162,7 +180,6 @@ class AppImage extends StatelessWidget {
         fit: fit,
         cacheWidth: _calculateCacheWidth(context),
         errorBuilder: (context, error, stackTrace) {
-          // logger.e('Error loading fallback image: $fallbackImage', error: error, stackTrace: stackTrace);
           return errorWidget ?? _defaultErrorWidget();
         },
       );
@@ -172,10 +189,10 @@ class AppImage extends StatelessWidget {
 
   /// Calculate appropriate cache width based on device pixel ratio
   int? _calculateCacheWidth(BuildContext context) {
-    if (width == null || width!.isInfinite || width!.isNaN) return null;
+    if (kIsWeb || width == null || width!.isInfinite || width!.isNaN) return null;
 
     try {
-      final devicePixelRatio = kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio;
+      final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
       final calculatedWidth = width! * devicePixelRatio;
 
       // Ensure the value is finite and within reasonable bounds
@@ -184,7 +201,7 @@ class AppImage extends StatelessWidget {
       }
       return null;
     } catch (e) {
-      logger.e('Error calculating cache width', error: e);
+      debugPrint('Error calculating cache width: $e');
       return null;
     }
   }
@@ -207,8 +224,9 @@ class AppImage extends StatelessWidget {
 
   /// Default error widget when image loading fails
   Widget _defaultErrorWidget() {
+    final double iconSize = (height != null && height! > 0 && height!.isFinite ? height! : 50.0) * 0.5;
     return Center(
-      child: Icon(Icons.broken_image, color: Colors.grey.shade400, size: (width ?? 50.0) * 0.5),
+      child: Icon(Icons.broken_image, color: Colors.grey.shade400, size: iconSize),
     );
   }
 
@@ -232,26 +250,34 @@ class AppImage extends StatelessWidget {
       switch (sourceType) {
         case ImageSourceType.network:
           // Handle network image
+          final imageUrl = (image as String).trim();
           return DecorationImage(
-            image: CachedNetworkImageProvider(image as String),
+            image: kIsWeb ? NetworkImage(imageUrl) as ImageProvider : CachedNetworkImageProvider(imageUrl),
             fit: actualFit,
             alignment: alignment,
             colorFilter: colorFilter,
             onError: (exception, stackTrace) {
-              // logger.e('DecorationImage error loading network image: $exception', stackTrace: stackTrace);
             },
           );
 
         case ImageSourceType.file:
           // Handle file image
+          if (kIsWeb) {
+            return DecorationImage(
+              image: fallbackAsset.isNotEmpty
+                  ? AssetImage(fallbackAsset, package: 'extensionresoft')
+                  : NetworkImage(defaultFallbackNetworkImage) as ImageProvider,
+              fit: actualFit,
+              alignment: alignment,
+              colorFilter: colorFilter,
+            );
+          }
           return DecorationImage(
             image: FileImage(image as File),
             fit: actualFit,
             alignment: alignment,
             colorFilter: colorFilter,
-            onError: (exception, stackTrace) {
-              // logger.e('DecorationImage error loading file image: $exception', stackTrace: stackTrace);
-            },
+            onError: (exception, stackTrace) {},
           );
 
         case ImageSourceType.asset:
@@ -262,7 +288,6 @@ class AppImage extends StatelessWidget {
             alignment: alignment,
             colorFilter: colorFilter,
             onError: (exception, stackTrace) {
-              // logger.e('DecorationImage error loading asset image: $exception', stackTrace: stackTrace);
             },
           );
 
@@ -277,7 +302,9 @@ class AppImage extends StatelessWidget {
             );
           } else {
             return DecorationImage(
-              image: CachedNetworkImageProvider(defaultFallbackNetworkImage),
+              image: kIsWeb
+                  ? NetworkImage(defaultFallbackNetworkImage) as ImageProvider
+                  : CachedNetworkImageProvider(defaultFallbackNetworkImage),
               fit: actualFit,
               alignment: alignment,
               colorFilter: colorFilter,
@@ -286,12 +313,14 @@ class AppImage extends StatelessWidget {
       }
     } catch (e, stackTrace) {
       // Comprehensive fallback for unexpected errors
-      logger.e('Unexpected error in toDecorationImage: $e', error: e, stackTrace: stackTrace);
+      debugPrint('Unexpected error in toDecorationImage: $e\n$stackTrace');
 
       return DecorationImage(
         image: fallbackAsset.isNotEmpty
             ? AssetImage(fallbackAsset, package: 'extensionresoft') as ImageProvider
-            : CachedNetworkImageProvider(defaultFallbackNetworkImage),
+            : (kIsWeb
+                ? NetworkImage(defaultFallbackNetworkImage) as ImageProvider
+                : CachedNetworkImageProvider(defaultFallbackNetworkImage)),
         fit: decorationFit ?? fit,
         alignment: alignment,
         colorFilter: colorFilter,

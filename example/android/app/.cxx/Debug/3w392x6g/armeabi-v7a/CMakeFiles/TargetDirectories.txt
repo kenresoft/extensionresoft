@@ -1,2 +1,0 @@
-C:/Users/amadi/AndroidStudioProjects/Flutter/packages/extensionresoft/example/android/app/.cxx/Debug/3w392x6g/armeabi-v7a/CMakeFiles/edit_cache.dir
-C:/Users/amadi/AndroidStudioProjects/Flutter/packages/extensionresoft/example/android/app/.cxx/Debug/3w392x6g/armeabi-v7a/CMakeFiles/rebuild_cache.dir
