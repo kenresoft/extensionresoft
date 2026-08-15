@@ -130,7 +130,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  extensionresoft: ^1.5.0
+  extensionresoft: ^1.5.1
 ```
 
 Then run:

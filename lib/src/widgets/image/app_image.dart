@@ -82,11 +82,16 @@ class AppImage extends StatelessWidget {
       return ImageSourceType.file;
     }
 
-    if (image is! String || (image as String).isEmpty) {
+    if (image is! String) {
       return ImageSourceType.none;
     }
 
-    if (_isNetworkImage(image as String)) {
+    final String imagePath = (image as String).trim();
+    if (imagePath.isEmpty) {
+      return ImageSourceType.none;
+    }
+
+    if (_isNetworkImage(imagePath)) {
       return ImageSourceType.network;
     }
 
@@ -136,8 +141,24 @@ class AppImage extends StatelessWidget {
 
   /// Builds a cached network image with optimized settings
   Widget _buildCachedNetworkImage(BuildContext context) {
+    final imageUrl = (image as String).trim();
+
+    if (kIsWeb) {
+      return Image.network(
+        imageUrl,
+        width: width,
+        height: height,
+        fit: fit,
+        errorBuilder: (context, error, stackTrace) => _buildFallbackImage(context),
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return placeholder ?? _defaultPlaceholder(context);
+        },
+      );
+    }
+
     return CachedNetworkImage(
-      imageUrl: image as String,
+      imageUrl: imageUrl,
       width: width,
       height: height,
       fit: fit,
@@ -168,10 +189,10 @@ class AppImage extends StatelessWidget {
 
   /// Calculate appropriate cache width based on device pixel ratio
   int? _calculateCacheWidth(BuildContext context) {
-    if (width == null || width!.isInfinite || width!.isNaN) return null;
+    if (kIsWeb || width == null || width!.isInfinite || width!.isNaN) return null;
 
     try {
-      final devicePixelRatio = kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio;
+      final devicePixelRatio = MediaQuery.of(context).devicePixelRatio;
       final calculatedWidth = width! * devicePixelRatio;
 
       // Ensure the value is finite and within reasonable bounds
@@ -229,8 +250,9 @@ class AppImage extends StatelessWidget {
       switch (sourceType) {
         case ImageSourceType.network:
           // Handle network image
+          final imageUrl = (image as String).trim();
           return DecorationImage(
-            image: CachedNetworkImageProvider(image as String),
+            image: kIsWeb ? NetworkImage(imageUrl) as ImageProvider : CachedNetworkImageProvider(imageUrl),
             fit: actualFit,
             alignment: alignment,
             colorFilter: colorFilter,
@@ -244,7 +266,7 @@ class AppImage extends StatelessWidget {
             return DecorationImage(
               image: fallbackAsset.isNotEmpty
                   ? AssetImage(fallbackAsset, package: 'extensionresoft')
-                  : CachedNetworkImageProvider(defaultFallbackNetworkImage) as ImageProvider,
+                  : NetworkImage(defaultFallbackNetworkImage) as ImageProvider,
               fit: actualFit,
               alignment: alignment,
               colorFilter: colorFilter,
@@ -280,7 +302,9 @@ class AppImage extends StatelessWidget {
             );
           } else {
             return DecorationImage(
-              image: CachedNetworkImageProvider(defaultFallbackNetworkImage),
+              image: kIsWeb
+                  ? NetworkImage(defaultFallbackNetworkImage) as ImageProvider
+                  : CachedNetworkImageProvider(defaultFallbackNetworkImage),
               fit: actualFit,
               alignment: alignment,
               colorFilter: colorFilter,
@@ -294,7 +318,9 @@ class AppImage extends StatelessWidget {
       return DecorationImage(
         image: fallbackAsset.isNotEmpty
             ? AssetImage(fallbackAsset, package: 'extensionresoft') as ImageProvider
-            : CachedNetworkImageProvider(defaultFallbackNetworkImage),
+            : (kIsWeb
+                ? NetworkImage(defaultFallbackNetworkImage) as ImageProvider
+                : CachedNetworkImageProvider(defaultFallbackNetworkImage)),
         fit: decorationFit ?? fit,
         alignment: alignment,
         colorFilter: colorFilter,

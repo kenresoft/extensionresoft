@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.5.1] - 2026-08-15 (Bug Fix Release)
+
+### **Fixes:**
+- Fixed `CustomTextField` silently accepting invalid input: when used without a `validationController`, its internal `TextFormField`/`DropdownButtonFormField` validator always returned `null` regardless of what `validator` computed, so a wrapping `Form.validate()` could never fail because of the field — invalid values (e.g. a malformed phone number) would pass validation and could be submitted. The validator now reports the real result to the `Form`.
+- Fixed `AppImage` network images failing to load on Flutter Web: `CachedNetworkImage`/`CachedNetworkImageProvider` now fall back to `Image.network`/`NetworkImage` on web, where the disk-caching plugin isn't supported. Also treats whitespace-only image strings as absent instead of attempting to load them.
+
+### **Chores:**
+- Bumped `connectivity_plus` from `^7.1.1` to `^7.3.1`.
+
 ## [1.5.0] - 2026-05-19 (Feature Release)
 
 ### **Breaking Changes:**

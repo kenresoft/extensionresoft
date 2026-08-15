@@ -653,12 +653,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       onChanged: _handleTextChange,
       onFieldSubmitted: widget.onSubmitted,
       autofillHints: widget.autofillHints,
-      validator: _isValidationControllerMode
-          ? null
-          : (value) {
-              _performValidation();
-              return null;
-            },
+      validator: _isValidationControllerMode ? null : _validateAndReportToForm,
       onSaved: widget.onSaved,
       autovalidateMode: AutovalidateMode.disabled, // We handle validation manually
     );
@@ -687,15 +682,21 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       isExpanded: true,
       onTap: widget.onTap,
       style: _getEffectiveTextStyle(context),
-      validator: _isValidationControllerMode
-          ? null
-          : (value) {
-              _performValidation();
-              return null;
-            },
+      validator: _isValidationControllerMode ? null : (_) => _validateAndReportToForm(null),
       onSaved: widget.onSaved as void Function(T?)?,
       autovalidateMode: AutovalidateMode.disabled,
     );
+  }
+
+  /// Runs the field's real validation and, unlike the old placeholder
+  /// closure this replaced, actually surfaces the result to [Form.validate]
+  /// instead of unconditionally returning null — otherwise a [Form]
+  /// wrapping this field can never fail validation because of it, no
+  /// matter what [widget.validator] says.
+  String? _validateAndReportToForm(String? value) {
+    _performValidation();
+    final result = _validationResultNotifier.value;
+    return (result != null && !result.isValid) ? result.errorMessage : null;
   }
 
   Widget _buildCustomFeedbackWidget(ValidationResult? validationResult) {
