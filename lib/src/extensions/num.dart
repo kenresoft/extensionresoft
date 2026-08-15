@@ -149,9 +149,7 @@ extension PathExtension on num {
   /// ```dart
   /// final result = 16.p((n) => n * 2);
   /// ```
-  double p<T>(double Function(double n) key) {
-    //if (this == null) return key;
-    key(toDouble());
-    return toDouble();
+  T p<T>(T Function(num n) key) {
+    return key(this);
   }
 }

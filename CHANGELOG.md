@@ -1,5 +1,129 @@
 # Changelog
 
+## [1.5.1] - 2026-08-15 (Bug Fix Release)
+
+### **Fixes:**
+- Fixed `CustomTextField` silently accepting invalid input: when used without a `validationController`, its internal `TextFormField`/`DropdownButtonFormField` validator always returned `null` regardless of what `validator` computed, so a wrapping `Form.validate()` could never fail because of the field — invalid values (e.g. a malformed phone number) would pass validation and could be submitted. The validator now reports the real result to the `Form`.
+- Fixed `AppImage` network images failing to load on Flutter Web: `CachedNetworkImage`/`CachedNetworkImageProvider` now fall back to `Image.network`/`NetworkImage` on web, where the disk-caching plugin isn't supported. Also treats whitespace-only image strings as absent instead of attempting to load them.
+
+### **Chores:**
+- Bumped `connectivity_plus` from `^7.1.1` to `^7.3.1`.
+
+## [1.5.0] - 2026-05-19 (Feature Release)
+
+### **Breaking Changes:**
+- Removed `shared_preferences` dependency and the `SharedPreferencesService` class.
+- Removed `logger` dependency and the `logger` utility.
+
+### **Enhancements:**
+- Added `CustomRatingBar` widget for advanced star rating systems.
+- Replaced internal `logger` usage with `debugPrint` in `AppImage`.
+- Enhanced `InternetConnectionChecker` with support for `vpn`, `satellite`, and `other` connectivity types.
+- Improved stability of `InternetChecker` with safer connectivity result list handling.
+- Modernized color manipulation using `withValues` instead of `withOpacity`.
+- Fixed `CustomTextField` issues:
+    - Resolved text clipping/blurring at the bottom and top of the field by optimizing internal padding and line-height estimates.
+    - Fixed `ErrorStyle` not applying to the validation icon.
+    - Improved lifecycle management of `FocusNode` updates.
+- Updated `README.md` and example app with comprehensive usage examples for all features including Animations and Functional Programming types.
+- Overall enhancements and performance optimizations.
+
+---
+
+## [1.4.3] - 2025-11-26 (Fix Release)
+
+### **Fixes & Enhancements:**
+- Updated `CustomTextField` to support autofill and bumped version to 1.4.3.
+
+---
+
+## [1.4.2] - 2025-09-12 (Fix Release)
+
+### **Fixes & Enhancements:**
+- Fixed `CustomTextField` height constraints and padding for multiline support.
+  - Adjusted `maxHeight` constraint to be `double.infinity` when `maxLines` is not 1, allowing the text field to expand vertically.
+  - Set `minLines` to 1 in the underlying `TextField` to ensure a consistent starting height.
+  - Modified the vertical padding calculation to better accommodate multiline text.
+  - Upgraded `connectivity_plus` to `^7.0.0`.
+  - Upgraded `logger` to `^2.6.2`.
+
+---
+
+## [1.4.1] - 2025-09-05 (Refactor & Fix Release)
+
+### **Refactoring & Formatting:**
+- Refactored and formatted code for improved readability and consistency.
+
+### **Fixes & Enhancements:**
+- **`AppImage`**: Enhanced the error icon in `_defaultErrorWidget` to scale proportionally with the image container's height.
+
+---
+
+## [1.4.0] - 2025-08-24 (Feature Release)
+
+### **New Features:**
+- **CustomRangeSlider**: Introduced a highly customizable dual-handle range slider widget with:
+    - Custom theming for track, thumb, and overlay colors
+    - Optional haptic feedback and customizable accessibility labels
+    - Discrete or continuous value selection with validation and clamping
+    - Animated thumb scaling on interaction with Material 3 inspired design
+    - Elevation shadow and border effects with rounded track shape
+
+- **ValidationKey**: Implemented new validation management system with:
+    - `ValueNotifier<String>` wrapper for managing validation field keys
+    - Debug labeling for easier troubleshooting
+    - Comprehensive lifecycle management with listener support
+    - Integration with `ValidationController` for enhanced field management
+
+### **New Utility Types:**
+- **Either<L, R>**: Added functional programming support with:
+    - Left/Right value representation for failure/success patterns
+    - Comprehensive transformation methods (map, bimap, flatMap, fold)
+    - Error handling utilities (tryCatch, tryCatchAsync)
+    - Combining operations (zip, zipWith) and recovery mechanisms
+    - Future integration with async operation extensions
+    - `EitherUtils` for sequence, traverse, and firstRight operations
+
+- **Option<T>**: Introduced optional value handling with:
+    - Some/None pattern implementation
+    - Core operations (fold, map, flatMap, getOrElse)
+    - Conversion utilities to Either types
+
+- **Unit**: Added unit type for representing absence of value in generic contexts
+
+### **Enhancements:**
+- **CustomTextField**:
+    - Reordered initialization methods for improved clarity and reliability
+    - Added `validationKey` property for `ValidationKey` association
+    - Updated text style to use `bodyLarge` instead of `displayMedium`
+    - Enhanced validation initialization with non-empty text handling
+    - Adjusted `minHeight` constraint for multiline support
+
+- **ValidationController**:
+    - Added `updateFieldValueAt` method for index-based field updates
+    - Implemented `fieldKeys` getter for retrieving all registered field keys
+    - Enhanced documentation with comprehensive method descriptions
+
+- **ImageBackground**:
+    - Made `child` parameter optional for increased flexibility
+    - Updated rendering logic to conditionally display child content
+
+### **New Extensions:**
+- **List Extensions**:
+    - Added `itemMargin` extension for calculating list item margins by position
+    - Implemented `itemMargins` extension returning named record with left/right margins
+
+### **Documentation:**
+- Enhanced code documentation across all new components
+- Added comprehensive usage examples for new components
+- Improved API documentation for validation system
+
+### **Dependencies:**
+- Upgraded `connectivity_plus` to `^6.1.5`.
+- Upgraded `logger` to `^2.6.1`.
+
+---
+
 ## [1.3.0] - 2025-07-07 (Feature Release)
 
 ### **New Features:**

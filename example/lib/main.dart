@@ -10,24 +10,46 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Extensionresoft Demo',
-      theme: ThemeData(useMaterial3: true),
+      theme: ThemeData(
+        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+      ),
       home: const ExampleScreen(),
     );
   }
 }
 
-class ExampleScreen extends StatelessWidget {
+class ExampleScreen extends StatefulWidget {
   const ExampleScreen({super.key});
+
+  @override
+  State<ExampleScreen> createState() => _ExampleScreenState();
+}
+
+class _ExampleScreenState extends State<ExampleScreen> {
+  RangeValues _currentRange = const RangeValues(20, 80);
+  double _rating = 3.5;
+  final _validationController = ValidationController();
+  UniqueKey _transitionKey = UniqueKey();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('ExtensionResoft Examples')),
+      appBar: AppBar(
+        title: const Text('ExtensionResoft Examples'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            _buildSectionTitle('📝 Enhanced Text Fields'),
+            _buildTextFieldSection(),
+            _buildSectionTitle('🎚️ Interactive UI Components'),
+            _buildInteractiveSection(),
+            _buildSectionTitle('🎭 Animation Utilities'),
+            _buildAnimationSection(),
             _buildSectionTitle('🔐 PIN Authentication'),
             _buildPinAuthenticationSection(),
             _buildSectionTitle('🖼️ Image Utilities'),
@@ -36,10 +58,8 @@ class ExampleScreen extends StatelessWidget {
             _buildConnectivityExamplesSection(),
             _buildSectionTitle('🧰 UI Utility Extensions'),
             _buildUiExtensionsSection(),
-            _buildSectionTitle('🧠 Logic and Functional Utilities'),
-            _buildFunctionalExamplesSection(),
-            _buildSectionTitle('🔁 Conditional Logic (Widget-friendly)'),
-            _buildConditionalExamplesSection(),
+            _buildSectionTitle('🧠 Functional & Logic'),
+            _buildFunctionalSection(),
           ],
         ),
       ),
@@ -47,29 +67,179 @@ class ExampleScreen extends StatelessWidget {
   }
 
   // Section Header Builder
-  static Widget _buildSectionTitle(String title) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    child: Text(
-      title,
-      style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-    ),
-  );
+  Widget _buildSectionTitle(String title) => Padding(
+        padding: const EdgeInsets.only(top: 24, bottom: 12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              title,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            const Divider(),
+          ],
+        ),
+      );
+
+  // ───────────────────────────────────────────────
+  // 📝 TEXT FIELD DEMO
+  // ───────────────────────────────────────────────
+  Widget _buildTextFieldSection() {
+    return Column(
+      children: [
+        _buildExample(
+          'Consistent Height (Height: 50)',
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: CustomTextField(
+                  height: 50,
+                  labelText: 'Matching Height',
+                  hintText: 'Aligns with the button',
+                  prefixIcon: const Icon(Icons.height),
+                ),
+              ),
+              12.spaceX(),
+              ElevatedButton(
+                onPressed: () {},
+                style: ElevatedButton.styleFrom(
+                  minimumSize: const Size(0, 50),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                ),
+                child: const Text('Button'),
+              ),
+            ],
+          ),
+        ),
+        CustomTextField(
+          labelText: 'Username',
+          hintText: 'Enter your username',
+          prefixIcon: const Icon(Icons.person),
+          validationController: _validationController,
+          validator: (value) {
+            if (value == null || value.isEmpty) return 'Username is required';
+            if (value.length < 3) return 'Too short';
+            return null;
+          },
+        ),
+        16.spY,
+        CustomTextField(
+          labelText: 'Password',
+          isPassword: true,
+          prefixIcon: const Icon(Icons.lock),
+          passwordVisibilityConfig: const PasswordVisibilityConfig(
+            visibilityOnTooltip: 'Hide',
+            visibilityOffTooltip: 'Show',
+          ),
+        ),
+        16.spY,
+        CustomTextField<String>(
+          labelText: 'Select Category',
+          items: const [
+            DropdownMenuItem(value: 'tech', child: Text('Technology')),
+            DropdownMenuItem(value: 'health', child: Text('Health')),
+            DropdownMenuItem(value: 'finance', child: Text('Finance')),
+          ],
+          onDropdownChanged: (value) => debugPrint('Selected: $value'),
+        ),
+        16.spY,
+        ElevatedButton(
+          onPressed: () {
+            if (_validationController.validate()) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Validation Passed!')),
+              );
+            }
+          },
+          child: const Text('Validate Form'),
+        ),
+      ],
+    );
+  }
+
+  // ───────────────────────────────────────────────
+  // 🎚️ INTERACTIVE COMPONENTS
+  // ───────────────────────────────────────────────
+  Widget _buildInteractiveSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildExample(
+          'Custom Range Slider (${_currentRange.start.round()} - ${_currentRange.end.round()})',
+          CustomRangeSlider(
+            values: _currentRange,
+            min: 0,
+            max: 100,
+            divisions: 20,
+            onChanged: (values) => setState(() => _currentRange = values),
+            customTheme: CustomRangeSliderTheme(
+              activeTrackColor: Colors.deepPurple,
+              thumbColor: Colors.white,
+              thumbBorderColor: Colors.deepPurple,
+            ),
+          ),
+        ),
+        _buildExample(
+          'Custom Rating Bar ($_rating)',
+          CustomRatingBar(
+            initialRating: _rating,
+            allowHalfRating: true,
+            showRatingText: true,
+            onRatingChanged: (rating) => setState(() => _rating = rating),
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ───────────────────────────────────────────────
+  // 🎭 ANIMATION UTILITIES
+  // ───────────────────────────────────────────────
+  Widget _buildAnimationSection() {
+    return Column(
+      children: [
+        FadeSlideTransition(
+          transitionKey: _transitionKey,
+          child: Card(
+            color: Colors.deepPurple.shade50,
+            child: const Padding(
+              padding: EdgeInsets.all(16),
+              child: Text(
+                'Animated Content Block',
+                style: TextStyle(color: Colors.deepPurple),
+              ),
+            ),
+          ),
+        ),
+        12.spY,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () => setState(() => _transitionKey = UniqueKey()),
+              child: const Text('Trigger Transition'),
+            ),
+            12.spaceX(),
+            const AnimatedFadeScale(
+              child: CircleAvatar(child: Icon(Icons.star)),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
 
   // ───────────────────────────────────────────────
   // 🔐 PIN ENTRY DEMO
   // ───────────────────────────────────────────────
-  static Widget _buildPinAuthenticationSection() {
-    return const PinEntry(
-      pinLength: 6,
-      onInputComplete: _handlePinEntered,
+  Widget _buildPinAuthenticationSection() {
+    return PinEntry(
+      pinLength: 4,
+      onInputComplete: (pin) => debugPrint('PIN: $pin'),
       inputFieldConfiguration: InputFieldConfiguration(
-        obscureText: true,
-        fieldFillColor: Colors.grey,
-        focusedBorderColor: Colors.blueAccent,
-      ),
-      keyboardConfiguration: KeyboardConfiguration(
-        keyBackgroundColor: Colors.white,
-        keyTextStyle: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+        fieldFillColor: Colors.grey.shade200,
+        focusedBorderColor: Colors.deepPurple,
       ),
     );
   }
@@ -77,58 +247,29 @@ class ExampleScreen extends StatelessWidget {
   // ───────────────────────────────────────────────
   // 🖼️ IMAGE EXTENSIONS
   // ───────────────────────────────────────────────
-  static Widget _buildImageExamplesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildImageExamplesSection() {
+    return Wrap(
+      spacing: 16,
+      runSpacing: 16,
       children: [
-        _buildExample(
-          'Network Image with Fallback',
-          const AppImage(
-            'https://example.com/profile.jpg',
-            width: 150,
-            height: 150,
-            fit: BoxFit.cover,
-            errorWidget: FlutterLogo(),
-            borderRadius: BorderRadius.all(Radius.circular(8)),
-          ),
+        const AppImage(
+          'https://picsum.photos/200',
+          width: 100,
+          height: 100,
+          borderRadius: BorderRadius.all(Radius.circular(12)),
+          fit: BoxFit.cover,
         ),
-        _buildExample(
-          'Circular Avatar Image',
-          const AppCircleImage(
-            'assets/profile_photo.jpg',
-            radius: 40,
-            placeholder: CircularProgressIndicator(strokeWidth: 2),
-            errorWidget: Icon(Icons.person, size: 40),
-          ),
+        const AppCircleImage(
+          'https://picsum.photos/100',
+          radius: 50,
         ),
-        _buildExample(
-          'Background Image Decoration',
-          Container(
-            width: 200,
-            height: 100,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              image: const AppImage(
-                '',
-              ).toDecorationImage(decorationFit: BoxFit.cover),
-            ),
+        Container(
+          width: 100,
+          height: 100,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(50),
+            image: const AppImage('https://picsum.photos/150').toDecorationImage(),
           ),
-        ),
-        _buildExample(
-          'Image from Asset Path',
-          Row(
-            children: [
-              'assets/image.png'.img(
-                width: 100,
-                height: 100,
-                fit: BoxFit.cover,
-              ),
-            ],
-          ),
-        ),
-        _buildExample(
-          'Circle Image with Opacity',
-          'assets/avatar.png'.circleImage(fit: BoxFit.cover),
         ),
       ],
     );
@@ -137,109 +278,60 @@ class ExampleScreen extends StatelessWidget {
   // ───────────────────────────────────────────────
   // 🌐 CONNECTIVITY MONITORING
   // ───────────────────────────────────────────────
-  static Widget _buildConnectivityExamplesSection() {
-    return _ConnectivityDemoWidget();
+  Widget _buildConnectivityExamplesSection() {
+    return const _ConnectivityDemoWidget();
   }
 
   // ───────────────────────────────────────────────
   // 🧰 UI EXTENSIONS
   // ───────────────────────────────────────────────
-  static Widget _buildUiExtensionsSection() {
+  Widget _buildUiExtensionsSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildExample(
-          'Spacing Utility',
+          'Spacing & Cards',
           Row(
             children: [
-              16.spaceX(),
-              const Text('Item A'),
-              24.spaceX(),
-              const Text('Item B'),
+              const Text('A'),
+              12.spaceX(),
+              8.radius(
+                color: Colors.amber.shade100,
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Text('Card'),
+                ),
+              ),
+              12.spX,
+              const Text('B'),
             ],
           ),
         ),
-        _buildExample(
-          'Custom Card (rounded corners, elevation, color, stroke)',
-          12.radius(
-            child: const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text('Rounded Card Example'),
-            ),
-            elevation: 2,
-            color: Colors.blue[50],
-            strokeColor: Colors.black12,
-            shadowColor: Colors.grey,
-          ),
-        ),
-        _buildExample(
-          'Styled Text using edit()',
-          'Hello Flutter'.edit(
-            textStyle: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.teal,
-            ),
-            textAlign: TextAlign.center,
-          ),
+        'Fluent Text Styling'.edit(
+          textStyle: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blue),
         ),
       ],
     );
   }
 
   // ───────────────────────────────────────────────
-  // 🧠 FUNCTIONAL EXTENSIONS
+  // 🧠 FUNCTIONAL & LOGIC
   // ───────────────────────────────────────────────
-  static Widget _buildFunctionalExamplesSection() {
-    final doubled = 16.p((n) => n * 2);
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildExample(
-          'Apply Function to Value (Path Extension)',
-          Text('16.p((n) => n * 2) = $doubled'),
-        ),
-        _buildExample(
-          'Get Value or Default',
-          Text(get('Existing Value', 'Fallback Value')),
-        ),
-      ],
-    );
-  }
-
-  // ───────────────────────────────────────────────
-  // 🔁 CONDITIONAL UTILITIES
-  // ───────────────────────────────────────────────
-  static Widget _buildConditionalExamplesSection() {
-    final staticCondition = condition(true, 'Yes', 'No');
-    final dynamicCondition = conditionFunction(
-      true,
-      () => 'Evaluated True Case',
-      () => 'Evaluated False Case',
-    );
-    final widgetConditional = condition(
-      true,
-      const Icon(Icons.check, color: Colors.green),
-      const Icon(Icons.close, color: Colors.red),
+  Widget _buildFunctionalSection() {
+    // Either Example
+    final Either<String, int> result = Either.tryCatch(
+      (e, s) => 'Error',
+      () => int.parse('123'),
     );
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          '`condition()` can replace ternary `? :` and is widget-friendly.',
-        ),
-        const SizedBox(height: 8),
-        _buildExample(
-          'condition(true, "Yes", "No")',
-          Text('Result: $staticCondition'),
-        ),
-        _buildExample(
-          'conditionFunction(true, () => ..., () => ...)',
-          Text('Result: $dynamicCondition'),
-        ),
-        _buildExample('Widget Conditional Result', widgetConditional),
+        Text('Either result: ${result.fold((l) => l, (r) => r.toString())}'),
+        8.spY,
+        Text('Condition: ${condition(true, "Yes", "No")}'),
+        8.spY,
+        Text('Path Extension (10.p): ${10.p((n) => n * 5)}'),
       ],
     );
   }
@@ -247,7 +339,7 @@ class ExampleScreen extends StatelessWidget {
   // ───────────────────────────────────────────────
   // 🔧 Reusable Builders
   // ───────────────────────────────────────────────
-  static Widget _buildExample(String title, Widget widget) {
+  Widget _buildExample(String title, Widget widget) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -260,137 +352,41 @@ class ExampleScreen extends StatelessWidget {
       ),
     );
   }
-
-  static void _handlePinEntered(String pin) {
-    debugPrint('PIN entered: $pin');
-    // Handle authentication logic here
-  }
 }
 
 // ───────────────────────────────────────────────
 // CONNECTIVITY DEMO WIDGET
 // ───────────────────────────────────────────────
 class _ConnectivityDemoWidget extends StatefulWidget {
+  const _ConnectivityDemoWidget();
+
   @override
-  State<_ConnectivityDemoWidget> createState() =>
-      _ConnectivityDemoWidgetState();
+  State<_ConnectivityDemoWidget> createState() => _ConnectivityDemoWidgetState();
 }
 
 class _ConnectivityDemoWidgetState extends State<_ConnectivityDemoWidget> {
-  final InternetConnectionChecker _connectionChecker =
-      InternetConnectionChecker();
+  final _checker = InternetConnectionChecker();
   bool _isConnected = false;
-  String _connectionType = 'Unknown';
-  String _lastChecked = 'Not checked yet';
 
   @override
   void initState() {
     super.initState();
-    _checkConnection();
-    _setupConnectionListener();
-  }
-
-  Future<void> _checkConnection() async {
-    final isConnected = await _connectionChecker.isInternetConnected;
-    setState(() {
-      _isConnected = isConnected;
-      _lastChecked = DateTime.now().toString().substring(0, 19);
-    });
-  }
-
-  void _setupConnectionListener() {
-    _connectionChecker.onInternetConnectivityChanged.listen((result) {
-      setState(() {
-        _isConnected = result.hasInternetAccess;
-        _connectionType = result.connectionType.toString().split('.').last;
-        _lastChecked = DateTime.now().toString().substring(0, 19);
-      });
+    _checker.onIsInternetConnected.listen((connected) {
+      if (mounted) setState(() => _isConnected = connected);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Icon(
-              _isConnected ? Icons.wifi : Icons.wifi_off,
-              color: _isConnected ? Colors.green : Colors.red,
-              size: 24,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _isConnected
-                        ? 'Internet Available'
-                        : 'No Internet Connection',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: _isConnected ? Colors.green : Colors.red,
-                    ),
-                  ),
-                  Text(
-                    'Connection Type: $_connectionType',
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                  Text(
-                    'Last Updated: $_lastChecked',
-                    style: const TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                ],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: _checkConnection,
-              child: const Text('Check Now'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        _buildCodeExample(),
-      ],
-    );
-  }
-
-  Widget _buildCodeExample() {
-    return 12.radius(
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        color: Colors.grey[100],
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Usage Example:',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'final checker = InternetConnectionChecker();\n'
-              'checker.onIsInternetConnected.listen((isConnected) {\n'
-              '  // Update UI based on connectivity\n'
-              '});',
-              style: TextStyle(fontFamily: 'monospace'),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Future<void> performAction() async {\n'
-              '  if (await checker.isInternetConnected) {\n'
-              '    // Perform online-dependent action\n'
-              '  } else {\n'
-              '    // Show offline message\n'
-              '  }\n'
-              '}',
-              style: TextStyle(fontFamily: 'monospace'),
-            ),
-          ],
-        ),
+    return ListTile(
+      leading: Icon(
+        _isConnected ? Icons.cloud_done : Icons.cloud_off,
+        color: _isConnected ? Colors.green : Colors.red,
       ),
+      title: Text(_isConnected ? 'Online' : 'Offline'),
+      subtitle: const Text('Real-time connectivity monitoring'),
+      tileColor: Colors.grey.shade100,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
     );
   }
 }

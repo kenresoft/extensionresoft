@@ -38,16 +38,19 @@ void main() {
   });
 
   group('CustomCardExtension', () {
-    test('radius should return a Card widget with specified properties', () {
-      final Card roundedCard =
-          16.radius(
-                child: const Text('Test'),
-                elevation: 4,
-                color: Colors.blue,
-                strokeColor: Colors.black,
-                shadowColor: Colors.grey,
-              )
-              as Card;
+    test('radius should return a widget containing a Card with specified properties', () {
+      final widget = 16.radius(
+        child: const Text('Test'),
+        elevation: 4,
+        color: Colors.blue,
+        strokeColor: Colors.black,
+        shadowColor: Colors.grey,
+      );
+
+      expect(widget, isA<SizedBox>());
+      final SizedBox container = widget as SizedBox;
+      expect(container.child, isA<Card>());
+      final Card roundedCard = container.child as Card;
 
       expect(roundedCard.elevation, equals(4));
       expect(roundedCard.color, equals(Colors.blue));

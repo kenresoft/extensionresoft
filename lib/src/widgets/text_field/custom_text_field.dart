@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 
-import '../../utility/app_colors.dart';
+import '../../utility/theme_colors.dart';
 import 'text_field_assets.dart';
 import 'text_field_configs.dart';
 import 'text_field_validation.dart';
+import 'validation_key.dart';
 
 /// Enhanced CustomTextField with improved performance, accessibility, and customization
 class CustomTextField<T> extends StatefulWidget {
@@ -55,6 +56,9 @@ class CustomTextField<T> extends StatefulWidget {
   final String? helperText;
   final int? helperMaxLines;
 
+  // [Autofill Properties]
+  final Iterable<String>? autofillHints;
+
   // [Dropdown Properties]
   final List<DropdownMenuItem<T>>? items;
   final T? dropdownValue;
@@ -91,6 +95,7 @@ class CustomTextField<T> extends StatefulWidget {
 
   // [Validation]
   final ValidationController? validationController;
+  final ValidationKey? validationKey;
 
   /// Creates a CustomTextField with enhanced capabilities.
   const CustomTextField({
@@ -135,6 +140,10 @@ class CustomTextField<T> extends StatefulWidget {
     this.margin,
     this.helperText,
     this.helperMaxLines,
+
+    // Autofill Properties
+    this.autofillHints,
+
     // Dropdown Properties
     this.items,
     this.dropdownValue,
@@ -166,6 +175,7 @@ class CustomTextField<T> extends StatefulWidget {
     this.announceValidationStatus = true,
     // Validation
     this.validationController,
+    this.validationKey,
   });
 
   @override
@@ -198,7 +208,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   @override
   void initState() {
     super.initState();
-    _initializeComponents();
+    _initializeControllers();
+    _initializeValidationController(); // Called after controllers
+    _initializeNotifiers();
+    _initializeAnimations();
     _setupEventListeners();
     _handleAutofocus();
   }
@@ -206,13 +219,6 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   // ===========================
   // INITIALIZATION
   // ===========================
-
-  void _initializeComponents() {
-    _initializeValidationController();
-    _initializeControllers();
-    _initializeNotifiers();
-    _initializeAnimations();
-  }
 
   void _initializeValidationController() {
     _isValidationControllerMode = widget.autoValidateMode;
@@ -225,6 +231,15 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       );
       _registeredFieldKey = fieldKey;
       widget.validationController!.addListener(_onValidationControllerChange);
+
+      if (widget.validationKey != null && fieldKey != null) {
+        widget.validationKey!.value = fieldKey!;
+      }
+    }
+
+    final initialValue = _controller.text;
+    if (initialValue.isNotEmpty) {
+      updateValidationValue(initialValue);
     }
   }
 
@@ -273,8 +288,12 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   @override
   void didUpdateWidget(CustomTextField<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
+    if (widget.isPassword != oldWidget.isPassword) {
+      _obscureTextNotifier.value = widget.isPassword;
+    }
     _handleValidationControllerChange(oldWidget);
     _handleControllerUpdates(oldWidget);
+    _handleFocusNodeUpdates(oldWidget);
     _invalidateDecorationCache();
   }
 
@@ -298,6 +317,18 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
         _controller.dispose();
       }
       _controller = widget.controller ?? TextEditingController(text: widget.initialValue);
+    }
+  }
+
+  /// Handle external focus node changes
+  void _handleFocusNodeUpdates(CustomTextField<T> oldWidget) {
+    if (widget.focusNode != oldWidget.focusNode) {
+      _focusNode.removeListener(_handleFocusChange);
+      if (oldWidget.focusNode == null) {
+        _focusNode.dispose();
+      }
+      _focusNode = widget.focusNode ?? FocusNode();
+      _focusNode.addListener(_handleFocusChange);
     }
   }
 
@@ -337,6 +368,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       widget.validationController?.removeListener(_onValidationControllerChange);
       disposeValidation();
     }
+
+    _obscureTextNotifier.dispose();
+    _isFocusedNotifier.dispose();
+    _validationResultNotifier.dispose();
   }
 
   // ===========================
@@ -394,8 +429,8 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
 
   /// Perform comprehensive field validation with optimized logic
   /// Enhanced validation logic that integrates with ValidationController
-  void _performValidation() {
-    final currentText = _controller.text.trim();
+  void _performValidation([String? overrideValue]) {
+    final currentText = overrideValue ?? _controller.text.trim();
 
     if (_isValidationControllerMode && _registeredFieldKey != null) {
       // Use ValidationController for validation
@@ -481,7 +516,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   void _announceValidationChange(ValidationResult current) {
     if (widget.announceValidationStatus && !current.isValid) {
       final announcement = _buildAccessibilityAnnouncement(current);
-      SemanticsService.announce(announcement, TextDirection.ltr);
+      SemanticsService.sendAnnouncement(View.of(context), announcement, TextDirection.ltr);
     }
   }
 
@@ -494,16 +529,12 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
 
   /// Get user-friendly severity text
   String _getSeverityText(ValidationSeverity? severity) {
-    switch (severity) {
-      case ValidationSeverity.error:
-        return 'Error';
-      case ValidationSeverity.warning:
-        return 'Warning';
-      case ValidationSeverity.info:
-        return 'Information';
-      default:
-        return 'Error';
-    }
+    return switch (severity) {
+      ValidationSeverity.error => 'Error',
+      ValidationSeverity.warning => 'Warning',
+      ValidationSeverity.info => 'Information',
+      _ => 'Error'
+    };
   }
 
   // ===========================
@@ -542,7 +573,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       children: [
         // TextField with fixed height
         Container(
-          constraints: BoxConstraints(minHeight: widget.height ?? 48, maxHeight: widget.height ?? 48),
+          constraints: BoxConstraints(
+            minHeight: widget.maxLines == 1 ? (widget.height ?? 48) : 0,
+            maxHeight: widget.maxLines == 1 ? (widget.height ?? 48) : double.infinity,
+          ),
           child: AnimatedBuilder(
             animation: _shakeAnimation,
             builder: (context, child) {
@@ -612,17 +646,14 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       textAlignVertical: widget.textAlignVertical ?? TextAlignVertical.center,
       style: _getEffectiveTextStyle(context),
       maxLines: widget.isPassword ? 1 : widget.maxLines,
+      minLines: 1,
       maxLength: widget.maxLength,
       decoration: decoration,
       onTap: widget.onTap,
       onChanged: _handleTextChange,
       onFieldSubmitted: widget.onSubmitted,
-      validator: _isValidationControllerMode
-          ? null
-          : (value) {
-              _performValidation();
-              return null;
-            },
+      autofillHints: widget.autofillHints,
+      validator: _isValidationControllerMode ? null : _validateAndReportToForm,
       onSaved: widget.onSaved,
       autovalidateMode: AutovalidateMode.disabled, // We handle validation manually
     );
@@ -632,17 +663,18 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   Widget _buildDropdownField(InputDecoration decoration) {
     return DropdownButtonFormField<T>(
       key: widget.fieldKey,
-      value: widget.dropdownValue,
+      initialValue: widget.dropdownValue,
       focusNode: _focusNode,
       items: widget.items,
       onChanged: widget.enabled
           ? (value) {
               widget.onDropdownChanged?.call(value);
+              final stringValue = value?.toString();
               if (_isValidationControllerMode && _registeredFieldKey != null) {
-                widget.validationController?.updateFieldValue(_registeredFieldKey!, value?.toString());
+                widget.validationController?.updateFieldValue(_registeredFieldKey!, stringValue);
               }
 
-              _performValidation();
+              _performValidation(stringValue);
             }
           : null,
       decoration: decoration,
@@ -650,15 +682,21 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       isExpanded: true,
       onTap: widget.onTap,
       style: _getEffectiveTextStyle(context),
-      validator: _isValidationControllerMode
-          ? null
-          : (value) {
-              _performValidation();
-              return null;
-            },
+      validator: _isValidationControllerMode ? null : (_) => _validateAndReportToForm(null),
       onSaved: widget.onSaved as void Function(T?)?,
       autovalidateMode: AutovalidateMode.disabled,
     );
+  }
+
+  /// Runs the field's real validation and, unlike the old placeholder
+  /// closure this replaced, actually surfaces the result to [Form.validate]
+  /// instead of unconditionally returning null — otherwise a [Form]
+  /// wrapping this field can never fail validation because of it, no
+  /// matter what [widget.validator] says.
+  String? _validateAndReportToForm(String? value) {
+    _performValidation();
+    final result = _validationResultNotifier.value;
+    return (result != null && !result.isValid) ? result.errorMessage : null;
   }
 
   Widget _buildCustomFeedbackWidget(ValidationResult? validationResult) {
@@ -729,6 +767,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       hintStyle: _buildHintStyle(context, isDark),
       filled: true,
       fillColor: _getFillColor(isDark),
+      isDense: true,
       contentPadding: _calculateContentPadding(context, mediaQuery),
       border: _buildBorder(isDark),
       enabledBorder: _buildBorder(isDark),
@@ -784,14 +823,11 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
 
   // Get appropriate border color based on validation severity
   Color _getValidationBorderColor(ValidationResult result, ThemeData theme) {
-    switch (result.severity) {
-      case ValidationSeverity.error:
-        return theme.colorScheme.error;
-      case ValidationSeverity.warning:
-        return const Color(0xFFF57C00);
-      case ValidationSeverity.info:
-        return theme.colorScheme.primary;
-    }
+    return switch (result.severity) {
+      ValidationSeverity.error => theme.colorScheme.error,
+      ValidationSeverity.warning => const Color(0xFFF57C00),
+      ValidationSeverity.info => theme.colorScheme.primary
+    };
   }
 
   /// Build label text style with theme integration
@@ -806,7 +842,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
           color:
               widget.labelStyle?.color ?? (isDark ? AppColors.darkInputText : AppColors.lightInputText),
           fontSize: widget.labelStyle?.fontSize ?? baseStyle.fontSize ?? 16,
-          height: 1.0,
+          height: widget.labelStyle?.height,
         );
   }
 
@@ -820,7 +856,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
         .copyWith(
           color: widget.hintStyle?.color ?? (isDark ? AppColors.grey5 : AppColors.white5),
           fontSize: widget.hintStyle?.fontSize ?? baseStyle.fontSize ?? 16,
-          height: 1.0,
+          height: widget.hintStyle?.height,
         );
   }
 
@@ -842,9 +878,14 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   EdgeInsets _calculateDynamicPadding(double totalHeight, TextStyle textStyle, TextScaler textScaler) {
     final fontSize = textStyle.fontSize ?? 16;
     final scaledFontSize = textScaler.scale(fontSize);
-    final verticalPadding = (totalHeight - scaledFontSize) / 2;
 
-    return EdgeInsets.symmetric(horizontal: 14, vertical: verticalPadding.clamp(8, double.infinity));
+    // Account for line height to prevent clipping. 
+    // Most fonts have a line height of ~1.2-1.5x font size.
+    // We use a generous multiplier to reserve enough space for descenders (q, y, p, etc.)
+    final effectiveLineHeight = scaledFontSize * (textStyle.height ?? 1.5);
+    final verticalPadding = (totalHeight - effectiveLineHeight) / 2.0;
+
+    return EdgeInsets.symmetric(horizontal: 14, vertical: verticalPadding.clamp(0.0, double.infinity));
   }
 
   /// Build standard border styling
@@ -966,7 +1007,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
   TextStyle _getEffectiveTextStyle(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    final baseStyle = theme.textTheme.displayMedium ?? const TextStyle();
+    final baseStyle = theme.textTheme.bodyLarge ?? const TextStyle();
 
     return baseStyle
         .merge(widget.textStyle)
@@ -974,7 +1015,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
           color:
               widget.textStyle?.color ?? (isDark ? AppColors.darkInputText : AppColors.lightInputText),
           fontSize: widget.textStyle?.fontSize ?? baseStyle.fontSize ?? 16,
-          height: 1.0,
+          height: widget.textStyle?.height,
         );
   }
 }
@@ -1112,6 +1153,7 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
     final textStyle = _getEffectiveTextStyle(theme);
     final iconData = _getIconData();
     final iconColor = _getIconColor(theme);
+    final iconSize = textStyle.fontSize ?? 16;
 
     return Container(
       padding: widget.padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
@@ -1120,7 +1162,7 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (widget.showIcons && iconData != null) ...[
-            Icon(iconData, size: 16, color: iconColor),
+            Icon(iconData, size: iconSize, color: iconColor),
             const SizedBox(width: 8),
           ],
           Expanded(
@@ -1154,29 +1196,21 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
   }
 
   TextStyle? _getValidationStyle() {
-    switch (widget.validationResult?.severity) {
-      case ValidationSeverity.error:
-        return widget.errorStyle;
-      case ValidationSeverity.warning:
-        return widget.warningStyle;
-      case ValidationSeverity.info:
-        return widget.infoStyle;
-      default:
-        return null;
-    }
+    return switch (widget.validationResult?.severity) {
+      ValidationSeverity.error => widget.errorStyle,
+      ValidationSeverity.warning => widget.warningStyle,
+      ValidationSeverity.info => widget.infoStyle,
+      _ => null
+    };
   }
 
   Color _getTextColor(ThemeData theme) {
-    switch (widget.validationResult?.severity) {
-      case ValidationSeverity.error:
-        return theme.colorScheme.error;
-      case ValidationSeverity.warning:
-        return const Color(0xFFF57C00);
-      case ValidationSeverity.info:
-        return theme.colorScheme.primary;
-      default:
-        return theme.colorScheme.error;
-    }
+    return switch (widget.validationResult?.severity) {
+      ValidationSeverity.error => theme.colorScheme.error,
+      ValidationSeverity.warning => const Color(0xFFF57C00),
+      ValidationSeverity.info => theme.colorScheme.primary,
+      _ => theme.colorScheme.error
+    };
   }
 
   Color _getHelperTextColor(ThemeData theme) {
@@ -1188,22 +1222,19 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
 
   Color _getIconColor(ThemeData theme) {
     if (widget.validationResult != null && !widget.validationResult!.isValid) {
-      return _getTextColor(theme);
+      final customStyle = _getValidationStyle();
+      return customStyle?.color ?? _getTextColor(theme);
     }
-    return _getHelperTextColor(theme);
+    return widget.helperStyle?.color ?? _getHelperTextColor(theme);
   }
 
   IconData? _getIconData() {
-    switch (widget.validationResult?.severity) {
-      case ValidationSeverity.error:
-        return Icons.error_outline_rounded;
-      case ValidationSeverity.warning:
-        return Icons.warning_amber_outlined;
-      case ValidationSeverity.info:
-        return Icons.info_outline_rounded;
-      default:
-        return widget.validationResult != null ? null : Icons.help_outline;
-    }
+    return switch (widget.validationResult?.severity) {
+      ValidationSeverity.error => Icons.error_outline_rounded,
+      ValidationSeverity.warning => Icons.warning_amber_outlined,
+      ValidationSeverity.info => Icons.info_outline_rounded,
+      _ => widget.validationResult != null ? null : Icons.help_outline
+    };
   }
 
   @override

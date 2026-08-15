@@ -30,3 +30,11 @@ migrate_working_dir/
 build/
 .flutter-plugins-dependencies
 .flutter-plugins
+
+# Android related
+**/android/local.properties
+**/android/**/.cxx/
+
+# iOS/macOS related
+**/ios/Flutter/ephemeral/
+**/macos/Flutter/ephemeral/

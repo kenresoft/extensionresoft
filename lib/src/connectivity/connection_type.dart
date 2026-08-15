@@ -50,6 +50,9 @@ enum ConnectionType {
   ///   as [other] instead of [vpn].
   vpn,
 
+  /// Device is connected via a satellite link.
+  satellite,
+
   /// Device is connected to an unknown or unsupported network type.
   other,
 }
@@ -71,20 +74,16 @@ extension ConnectivityResultMapper on ConnectivityResult {
   /// Returns the appropriate [ConnectionType] based on the [ConnectivityResult] value.
   /// If the result is unknown or not mapped, it returns `ConnectionType.other`.
   ConnectionType toConnectionType() {
-    switch (this) {
-      case ConnectivityResult.bluetooth:
-        return ConnectionType.bluetooth;
-      case ConnectivityResult.wifi:
-        return ConnectionType.wifi;
-      case ConnectivityResult.ethernet:
-        return ConnectionType.ethernet;
-      case ConnectivityResult.mobile:
-        return ConnectionType.mobile;
-      case ConnectivityResult.none:
-        return ConnectionType.none;
-      default:
-        return ConnectionType.other; // Fallback for unknown/other connections
-    }
+    return switch (this) {
+      ConnectivityResult.bluetooth => ConnectionType.bluetooth,
+      ConnectivityResult.wifi => ConnectionType.wifi,
+      ConnectivityResult.ethernet => ConnectionType.ethernet,
+      ConnectivityResult.mobile => ConnectionType.mobile,
+      ConnectivityResult.none => ConnectionType.none,
+      ConnectivityResult.vpn => ConnectionType.vpn,
+      ConnectivityResult.satellite => ConnectionType.satellite,
+      _ => ConnectionType.other,
+    };
   }
 
   /// Provides a list of [ConnectionType] based on the current connectivity status.

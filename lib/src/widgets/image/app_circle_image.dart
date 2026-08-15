@@ -97,19 +97,21 @@ class AppCircleImage extends StatelessWidget {
       case ImageSourceType.asset:
         return _buildAssetImage(size, context);
       case ImageSourceType.file:
-        return _buildFileImage(size);
+        return _buildFileImage(size, context);
       case ImageSourceType.none:
         return _buildFallbackOrError(size, context);
     }
   }
 
   /// Builds a file image with error handling
-  Widget _buildFileImage(double size) {
+  Widget _buildFileImage(double size, BuildContext context) {
+    if (kIsWeb) return _buildFallbackOrError(size, context);
     return Image.file(
       image as File,
       width: size,
       height: size,
       fit: fit,
+      cacheWidth: _calculateCacheWidth(size, context),
       errorBuilder: (context, error, stackTrace) => _buildFallbackOrError(size, context),
     );
   }
@@ -140,8 +142,16 @@ class AppCircleImage extends StatelessWidget {
   }
 
   /// Calculate appropriate cache width based on device pixel ratio
-  int _calculateCacheWidth(double size, BuildContext context) {
-    return (size * (kIsWeb ? 1 : MediaQuery.of(context).devicePixelRatio.ceil())).toInt();
+  int? _calculateCacheWidth(double size, BuildContext context) {
+    if (size.isInfinite || size.isNaN || size <= 0) return null;
+    try {
+      final devicePixelRatio = kIsWeb ? 1.0 : MediaQuery.of(context).devicePixelRatio;
+      final calculatedWidth = size * devicePixelRatio;
+      if (calculatedWidth.isFinite && calculatedWidth > 0 && calculatedWidth < 10000) {
+        return calculatedWidth.toInt();
+      }
+    } catch (_) {}
+    return null;
   }
 
   /// Builds either a fallback image or error widget

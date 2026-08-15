@@ -22,7 +22,7 @@ class PinEntryApp extends StatelessWidget {
               const SizedBox(height: 20),
               PinEntry(
                 pinLength: 5,
-                onInputComplete: logger.d,
+                onInputComplete: (pin) => debugPrint(pin),
                 inputFieldConfiguration: const InputFieldConfiguration(
                   obscureText: true,
                   fieldFillColor: Colors.grey,

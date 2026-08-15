@@ -74,6 +74,17 @@ class ValidationController extends ChangeNotifier {
     }
   }
 
+  /// Updates a field's value by its position without triggering validation
+  void updateFieldValueAt(int index, String? value) {
+    if (_isDisposed || index < 0 || index >= _fields.length) return;
+
+    final fieldKey = _fields.keys.elementAt(index);
+    final fieldState = _fields[fieldKey]!;
+    if (fieldState.currentValue != value) {
+      _fields[fieldKey] = fieldState.copyWith(currentValue: value);
+    }
+  }
+
   /// Clears all validation states (marks all fields as valid)
   void clearValidation() {
     _assertNotDisposed();
@@ -104,24 +115,34 @@ class ValidationController extends ChangeNotifier {
   // GETTERS
   // ===========================
 
+  /// Retrieves the state of a specific field.
   ValidationFieldState? getFieldState(String fieldKey) => _fields[fieldKey];
 
+  /// Checks if a specific field is valid.
   bool isFieldValid(String fieldKey) => _fields[fieldKey]?.isValid ?? true;
 
+  /// Gets the error message for a specific field, if any.
   String? getFieldError(String fieldKey) => _fields[fieldKey]?.errorMessage;
 
+  /// Checks if all registered fields are currently valid.
   bool get isValid => _fields.values.every((field) => field.isValid);
 
+  /// Checks if any field has been modified (is dirty).
   bool get isDirty => _dirtyFields.isNotEmpty;
 
+  /// Returns a map of field keys to error messages for all invalid fields.
   Map<String, String> get errors => Map.fromEntries(
     _fields.entries
         .where((entry) => !entry.value.isValid)
         .map((entry) => MapEntry(entry.key, entry.value.errorMessage ?? '')),
   );
 
+  /// Returns a list of keys for all fields that are currently invalid.
   List<String> get invalidFields =>
       _fields.entries.where((entry) => !entry.value.isValid).map((entry) => entry.key).toList();
+
+  /// Returns a list of all registered field keys.
+  List<String> get fieldKeys => _fields.keys.toList();
 
   // ===========================
   // DISPOSAL
