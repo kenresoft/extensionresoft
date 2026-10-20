@@ -1,12 +1,11 @@
 name: extensionresoft
-description: Boost your Flutter development with reusable widgets, utilities, and extensions
-  for advanced image handling, secure PIN entry, internet connectivity checks, and more.
-version: 1.5.1
+description: "Reusable Flutter widgets, utilities and extensions: a validated text field with dropdown, secure PIN entry, range slider, rating bar, animations and more. Depends on Flutter only."
+version: 2.0.0
 homepage: https://github.com/kenresoft/extensionresoft
 repository: https://github.com/kenresoft/extensionresoft
 #issue_tracker: https://github.com/kenresoft/extensionresoft/issues
 #documentation: https://github.com/kenresoft/extensionresoft
-topics: [ extensions, image, connectivity, pin-entry, productivity ]
+topics: [ extensions, text-field, pin-entry, widgets, productivity ]
 
 environment:
   sdk: '>=3.8.1 <4.0.0'
@@ -16,9 +15,6 @@ dependencies:
   flutter:
     sdk: flutter
 
-  connectivity_plus: ^7.3.1
-  rxdart: ^0.28.0
-  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:

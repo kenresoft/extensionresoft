@@ -77,14 +77,6 @@ void main() {
     });
   });
 
-  group('CustomImageExtension', () {
-    test('img function should return an Image widget with specified properties', () {
-      final imageWidget = 'assets/image.png'.img(width: 100, height: 100, fit: BoxFit.cover);
-      expect(imageWidget.width, equals(100.0));
-      expect(imageWidget.height, equals(100.0));
-    });
-  });
-
   group('Conditional Function', () {
     test('condition function should return correct value based on condition', () {
       final result = condition(true, 'True Value', 'False Value');

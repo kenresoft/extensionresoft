@@ -7,11 +7,6 @@ library;
 // Animations
 export 'src/animations/animated_fade_scale.dart';
 export 'src/animations/fade_slide_transition.dart';
-// Connectivity
-export 'src/connectivity/internet_connection_checker.dart';
-export 'src/connectivity/internet_result.dart';
-export 'src/connectivity/ui/connection_banner.dart';
-export 'src/connectivity/ui/connection_banner_style.dart';
 // Extensions
 export 'src/extensions/context.dart';
 export 'src/extensions/icon.dart';
@@ -30,9 +25,6 @@ export 'src/utility/helper.dart';
 // Widgets
 export 'src/widgets/custom_range_slider.dart';
 export 'src/widgets/custom_rating_bar.dart';
-export 'src/widgets/image/app_circle_image.dart';
-export 'src/widgets/image/app_image.dart';
-export 'src/widgets/image/image_background.dart';
 export 'src/widgets/text_field/custom_text_field.dart';
 export 'src/widgets/text_field/text_field_configs.dart';
 export 'src/widgets/text_field/text_field_validation.dart';
