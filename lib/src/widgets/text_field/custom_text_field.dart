@@ -649,6 +649,10 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       minLines: 1,
       maxLength: widget.maxLength,
       decoration: decoration,
+      // The message is drawn once, by the feedback widget under the field. The
+      // form field would otherwise add a second, zero-size copy that screen
+      // readers can still find.
+      errorBuilder: (_, _) => const SizedBox.shrink(),
       onTap: widget.onTap,
       onChanged: _handleTextChange,
       onFieldSubmitted: widget.onSubmitted,
@@ -682,6 +686,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       isExpanded: true,
       onTap: widget.onTap,
       style: _getEffectiveTextStyle(context),
+      errorBuilder: (_, _) => const SizedBox.shrink(),
       validator: _isValidationControllerMode ? null : (_) => _validateAndReportToForm(null),
       onSaved: widget.onSaved as void Function(T?)?,
       autovalidateMode: AutovalidateMode.disabled,
