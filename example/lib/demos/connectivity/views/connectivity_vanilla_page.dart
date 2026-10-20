@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:extensionresoft/extensionresoft.dart';
+import 'package:internet_status/internet_status.dart';
 import 'package:flutter/material.dart';
 
 class ConnectivityVanillaPage extends StatefulWidget {

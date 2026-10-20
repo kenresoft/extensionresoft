@@ -1,4 +1,4 @@
-import 'package:extensionresoft/extensionresoft.dart';
+import 'package:internet_status/internet_status.dart';
 
 class ConnectivityRepository {
   final InternetConnectionChecker _connectionChecker;

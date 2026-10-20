@@ -16,6 +16,10 @@ dependencies:
   flutter_bloc: ^9.1.1
   extensionresoft:
     path: ../
+  internet_status:
+    path: ../../internet_status
+  any_source_image:
+    path: ../../any_source_image
 
 dev_dependencies:
   flutter_test:

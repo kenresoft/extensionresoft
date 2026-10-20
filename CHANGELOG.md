@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0] - Breaking release: Flutter-only
+
+`extensionresoft` now depends on Flutter alone. The parts that needed other packages moved into their own packages, so apps that only want the text field, PIN screen, slider and extensions no longer pull in `connectivity_plus`, `rxdart`, `cached_network_image` and their native plugins (including a second SQLite engine).
+
+### **Breaking changes:**
+- Moved to **`internet_status`**: `InternetConnectionChecker`, `InternetResult`, `ConnectionBanner` and `ConnectionBannerStyle`. Use `package:internet_status/internet_status.dart`.
+- Moved to **`any_source_image`**: `AppImage`, `AppCircleImage`, `ImageSourceType`, `ImageBackground`, and the `img()` and `circleImage()` helpers on `String` (`CustomImageExtension`). Use `package:any_source_image/any_source_image.dart`.
+- Removed dependencies: `connectivity_plus`, `rxdart`, `cached_network_image`.
+
+Nothing else changed: `CustomTextField`, `PinEntry`, `CustomRangeSlider`, `CustomRatingBar`, the animations, `Either`/`Option` and the other extensions are as in 1.5.1. Apps pinned to `^1.5.1` are not affected; to upgrade, add the two new packages if you use the moved classes and change those imports.
+
 ## [1.5.1] - 2026-08-15 (Bug Fix Release)
 
 ### **Fixes:**

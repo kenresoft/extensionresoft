@@ -60,25 +60,40 @@ Write more expressive and type-safe code:
 
 - **Unit**: Type-safe representation of absence of value in generic contexts
 
-### 🌐 Internet Connectivity Management
+### 📦 Moved out in 2.0.0
 
-Detect and respond to network changes reliably:
+Internet checks and network images need extra packages, so they are separate packages now and `extensionresoft` depends on Flutter only:
 
-- **Real-time Monitoring**: Observe detailed connectivity state changes through streams
-- **Granular Control**: Monitor specific connectivity aspects with dedicated streams
-- **Simplified API**: Check network status with straightforward methods
-- **Resilient Applications**: Build offline-ready features with minimal effort
+- [`internet_status`](https://pub.dev/packages/internet_status): real internet-access checks (DNS, socket, HTTP), a status stream and an offline banner (`InternetConnectionChecker`, `InternetResult`, `ConnectionBanner`, `ConnectionBannerStyle`).
+- [`any_source_image`](https://pub.dev/packages/any_source_image): one image widget for a network URL, an asset or a file (`AppImage`, `AppCircleImage`, `ImageSourceType`, `ImageBackground`, and the `'path'.img()` and `circleImage()` helpers).
 
-### 🖼️ Advanced Image Handling
+#### Upgrading from 1.x
 
-Create robust image components with minimal effort:
+Only code that used the classes above is affected. `CustomTextField`, `PinEntry`, `CustomRangeSlider`, `CustomRatingBar`, the animations, `Either`/`Option` and the other extensions are unchanged.
 
-- **Multi-source Support**: Handle network URLs, asset paths, and file objects through a unified API
-- **AppImage**: Rectangular images with custom border radius, intelligent error handling, and fallbacks
-- **AppCircleImage**: Circular avatar images with placeholder and error states
-- **ImageBackground**: Display images with optional overlay content for enhanced flexibility
-- **Performance Optimized**: Device pixel ratio-aware caching for memory efficiency
-- **Decoration Support**: Use as BoxDecoration background images easily
+1. Add the package or packages you need next to `extensionresoft`:
+
+   ```yaml
+   dependencies:
+     extensionresoft: ^2.0.0
+     internet_status: ^1.0.0     # if you used the connectivity classes
+     any_source_image: ^1.0.0    # if you used the image classes
+   ```
+
+2. Update the imports in files that use the moved classes:
+
+   ```dart
+   // before
+   import 'package:extensionresoft/extensionresoft.dart';
+
+   // after (keep the line above too if the file uses other extensionresoft features)
+   import 'package:internet_status/internet_status.dart';    // InternetConnectionChecker, InternetResult, ConnectionBanner
+   import 'package:any_source_image/any_source_image.dart';  // AppImage, AppCircleImage, ImageBackground, 'path'.img()
+   ```
+
+3. Run `flutter pub get`. The moved APIs are the same, so no other code changes are needed.
+
+`connectivity_plus`, `rxdart` and `cached_network_image` are no longer pulled in by `extensionresoft`. If your app imports them directly, add them to your own `pubspec.yaml`. Staying on `^1.5.1` keeps everything as it was.
 
 ### 🎭 Animation Utilities
 Create smooth, performant animations with minimal code:
@@ -111,7 +126,6 @@ Write less code for common UI patterns:
 - **Spacing Extensions**: Clean spacer syntax with both method and getter options
 - **Custom Cards**: Create styled cards with simple radius-based extensions
 - **Text Styling**: Format text with fluent extensions for improved readability
-- **Image Path Extensions**: Convert asset paths to image widgets directly
 - **List Extensions**: Calculate item margins with position-based utilities returning named records
 
 ### 🧠 Logic & Functional Extensions
@@ -130,7 +144,7 @@ Add the package to your `pubspec.yaml`:
 
 ```yaml
 dependencies:
-  extensionresoft: ^1.5.1
+  extensionresoft: ^2.0.0
 ```
 
 Then run:
@@ -472,74 +486,6 @@ Handle errors and optional values with type-safe functional patterns:
         .toEither(() => 'User not found');
 ```
 
-### Internet Connectivity
-
-```dart
-    // Create a checker instance
-    final connectionChecker = InternetConnectionChecker();
-    
-    // Check current connection status
-    final isConnected = await connectionChecker.isInternetConnected;
-    print('Internet connected: $isConnected');
-    
-    // Listen to detailed connectivity changes
-    connectionChecker.onInternetConnectivityChanged.listen((result) {
-      print('Connection Status: ${result.hasInternetAccess}');
-      print('Connection Type: ${result.connectionType}');
-      
-      // Update UI based on connectivity
-      if (result.hasInternetAccess) {
-        // Load online data
-      } else {
-        // Show offline mode UI
-      }
-    });
-    
-    // Simplified boolean stream for quick status checks
-    connectionChecker.onIsInternetConnected.listen((isConnected) {
-      print('Internet status changed: $isConnected');
-    });
-```
-
-### Image Handling
-
-```dart
-    // Network image with fallback and border radius
-    AppImage(
-      'https://example.com/profile.jpg',
-      width: 150,
-      height: 150,
-      fit: BoxFit.cover,
-      borderRadius: BorderRadius.circular(8),
-      backgroundColor: Colors.grey[200],
-      errorWidget: Icon(Icons.broken_image),
-      fallbackImage: 'assets/default_image.png',
-    )
-    
-    // Circle avatar from network or asset
-    AppCircleImage(
-      'assets/profile_photo.jpg', // or network URL or File object
-      radius: 40,
-      fit: BoxFit.cover,
-      placeholder: CircularProgressIndicator(strokeWidth: 2),
-      errorWidget: Icon(Icons.person),
-    )
-    
-    // As decoration image
-    Container(
-      decoration: BoxDecoration(
-        image: AppImage('https://example.com/bg.jpg')
-            .toDecorationImage(
-          decorationFit: BoxFit.cover,
-          fallbackImage: 'assets/default_bg.png',
-        ),
-      ),
-    )
-    
-    // Path-based image extensions
-    'assets/image.png'.img(width: 100, height: 100)
-    'assets/avatar.png'.circleImage(fit: BoxFit.cover)
-```
 ### Animation Utilities
 
 ```dart
