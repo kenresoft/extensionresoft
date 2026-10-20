@@ -113,11 +113,6 @@ void main() {
       final textField = tester.widget<CustomTextField>(find.byType(CustomTextField));
       expect(textField.height, equals(targetHeight));
 
-      final container = tester.firstWidget<Container>(find.descendant(
-        of: find.byType(CustomTextField),
-        matching: find.byType(Container),
-      ));
-      
       // The internal ConstrainedBox or Container should have the height applied
       final Size size = tester.getSize(find.byType(CustomTextField));
       expect(size.height, equals(targetHeight));

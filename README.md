@@ -64,8 +64,36 @@ Write more expressive and type-safe code:
 
 Internet checks and network images need extra packages, so they are separate packages now and `extensionresoft` depends on Flutter only:
 
-- [`internet_status`](https://pub.dev/packages/internet_status): real internet-access checks (DNS, socket, HTTP), a status stream and an offline banner (`InternetConnectionChecker`, `InternetResult`, `ConnectionBanner`).
-- [`any_source_image`](https://pub.dev/packages/any_source_image): one image widget for a network URL, an asset or a file (`AppImage`, `AppCircleImage`, `ImageBackground`, and the `'path'.img()` and `circleImage()` helpers).
+- [`internet_status`](https://pub.dev/packages/internet_status): real internet-access checks (DNS, socket, HTTP), a status stream and an offline banner (`InternetConnectionChecker`, `InternetResult`, `ConnectionBanner`, `ConnectionBannerStyle`).
+- [`any_source_image`](https://pub.dev/packages/any_source_image): one image widget for a network URL, an asset or a file (`AppImage`, `AppCircleImage`, `ImageSourceType`, `ImageBackground`, and the `'path'.img()` and `circleImage()` helpers).
+
+#### Upgrading from 1.x
+
+Only code that used the classes above is affected. `CustomTextField`, `PinEntry`, `CustomRangeSlider`, `CustomRatingBar`, the animations, `Either`/`Option` and the other extensions are unchanged.
+
+1. Add the package or packages you need next to `extensionresoft`:
+
+   ```yaml
+   dependencies:
+     extensionresoft: ^2.0.0
+     internet_status: ^1.0.0     # if you used the connectivity classes
+     any_source_image: ^1.0.0    # if you used the image classes
+   ```
+
+2. Update the imports in files that use the moved classes:
+
+   ```dart
+   // before
+   import 'package:extensionresoft/extensionresoft.dart';
+
+   // after (keep the line above too if the file uses other extensionresoft features)
+   import 'package:internet_status/internet_status.dart';    // InternetConnectionChecker, InternetResult, ConnectionBanner
+   import 'package:any_source_image/any_source_image.dart';  // AppImage, AppCircleImage, ImageBackground, 'path'.img()
+   ```
+
+3. Run `flutter pub get`. The moved APIs are the same, so no other code changes are needed.
+
+`connectivity_plus`, `rxdart` and `cached_network_image` are no longer pulled in by `extensionresoft`. If your app imports them directly, add them to your own `pubspec.yaml`. Staying on `^1.5.1` keeps everything as it was.
 
 ### 🎭 Animation Utilities
 Create smooth, performant animations with minimal code:
