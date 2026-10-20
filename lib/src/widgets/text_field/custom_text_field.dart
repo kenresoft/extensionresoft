@@ -533,7 +533,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
       ValidationSeverity.error => 'Error',
       ValidationSeverity.warning => 'Warning',
       ValidationSeverity.info => 'Information',
-      _ => 'Error'
+      _ => 'Error',
     };
   }
 
@@ -831,7 +831,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     return switch (result.severity) {
       ValidationSeverity.error => theme.colorScheme.error,
       ValidationSeverity.warning => const Color(0xFFF57C00),
-      ValidationSeverity.info => theme.colorScheme.primary
+      ValidationSeverity.info => theme.colorScheme.primary,
     };
   }
 
@@ -884,7 +884,7 @@ class _CustomTextFieldState<T> extends State<CustomTextField<T>>
     final fontSize = textStyle.fontSize ?? 16;
     final scaledFontSize = textScaler.scale(fontSize);
 
-    // Account for line height to prevent clipping. 
+    // Account for line height to prevent clipping.
     // Most fonts have a line height of ~1.2-1.5x font size.
     // We use a generous multiplier to reserve enough space for descenders (q, y, p, etc.)
     final effectiveLineHeight = scaledFontSize * (textStyle.height ?? 1.5);
@@ -1205,7 +1205,7 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
       ValidationSeverity.error => widget.errorStyle,
       ValidationSeverity.warning => widget.warningStyle,
       ValidationSeverity.info => widget.infoStyle,
-      _ => null
+      _ => null,
     };
   }
 
@@ -1214,7 +1214,7 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
       ValidationSeverity.error => theme.colorScheme.error,
       ValidationSeverity.warning => const Color(0xFFF57C00),
       ValidationSeverity.info => theme.colorScheme.primary,
-      _ => theme.colorScheme.error
+      _ => theme.colorScheme.error,
     };
   }
 
@@ -1238,7 +1238,7 @@ class _CustomFeedbackWidgetState extends State<CustomFeedbackWidget>
       ValidationSeverity.error => Icons.error_outline_rounded,
       ValidationSeverity.warning => Icons.warning_amber_outlined,
       ValidationSeverity.info => Icons.info_outline_rounded,
-      _ => widget.validationResult != null ? null : Icons.help_outline
+      _ => widget.validationResult != null ? null : Icons.help_outline,
     };
   }
 

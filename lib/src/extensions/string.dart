@@ -4,7 +4,6 @@
 
 import 'package:flutter/material.dart';
 
-
 /// Extension on String to create Text widgets with customizable properties.
 extension TextExtension on String {
   /// Capitalizes the first letter of the string.
